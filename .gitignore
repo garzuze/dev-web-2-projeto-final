@@ -1,0 +1,11 @@
+# IDEs
+.idea/
+
+# Angular
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.angular/
+/frontend/.vscode/
+
+# Maven
+/backend/target/
