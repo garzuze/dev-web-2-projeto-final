@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: manutencao-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: manutencao
+      POSTGRES_USER: manutencao
+      POSTGRES_PASSWORD: manutencao
+      TZ: America/Sao_Paulo
+    ports:
+      # Prefixo 127.0.0.1 de proposito: sem ele o Docker publica a porta em
+      # TODAS as interfaces e o banco fica alcancavel por quem estiver na mesma
+      # rede (wifi da faculdade, por exemplo) com uma senha trivial.
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U manutencao -d manutencao"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Interface web para inspecionar o banco: http://localhost:8081
+  # Login: sistema PostgreSQL / servidor db / usuario manutencao / senha manutencao / base manutencao
+  adminer:
+    image: adminer:latest
+    container_name: manutencao-adminer
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8081:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:

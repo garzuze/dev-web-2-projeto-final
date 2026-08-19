@@ -1,0 +1,26 @@
+# --- Sistema operacional ---
+.DS_Store
+Thumbs.db
+
+# --- Editores / IDEs ---
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+*.swp
+
+# --- Node / Angular (o frontend tem seu proprio .gitignore tambem) ---
+node_modules/
+dist/
+.angular/
+
+# --- Java / Maven (o backend tem seu proprio .gitignore tambem) ---
+target/
+
+# --- Segredos e configuracao local ---
+.env
+.env.local
+*-local.properties
+application-local.properties
