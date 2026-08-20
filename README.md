@@ -15,7 +15,7 @@ Sistema de Controle de Manutenção de Equipamentos — UFPR / SEPT / TADS.
 ## Estrutura
 
 ```
-frontend/   Angular 21 (standalone, SCSS, sem SSR)
+frontend/   Angular 21 (standalone, tailwind, sem SSR)
 backend/    Spring Boot 4.1 (Maven, Java 25)
 ```
 
