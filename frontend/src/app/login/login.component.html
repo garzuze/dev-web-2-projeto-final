@@ -1,0 +1,33 @@
+<div>
+
+    <h2>Manutenção de Equipamentos</h2> <!--TODO: decidir um nome para o sistema -->
+    <p>Bem-vindo! Faça login no sistema.</p>
+
+    <hr>
+
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+
+        <div>
+            <label for="email">E-mail do usuário:</label><br>
+            <input type="email" id="email" name="email" [(ngModel)]="loginData.email" required>
+        </div>
+        <br>
+
+        <div>
+            <label for="password">Senha de acesso:</label><br>
+            <input type="password" id="password" name="password" [(ngModel)]="loginData.password" required>
+        </div>
+        <br>
+
+        <button type="submit" [disabled]="!loginForm.form.valid">
+            Entrar no Sistema
+        </button>
+
+    </form>
+
+    <br>
+
+    <div>
+        <a href="#">Não tem conta? Realizar Autocadastro</a> <!-- RF001-->
+    </div>
+</div>
