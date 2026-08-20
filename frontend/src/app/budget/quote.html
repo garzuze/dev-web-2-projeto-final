@@ -1,0 +1,34 @@
+<div>
+  <h1>Aprovação de Orçamento</h1>
+  <p>Solicitação #{{ requestMock?.id }}</p>
+
+  <hr />
+
+  <div>
+    <h3>Equipamento</h3>
+    <p>{{ requestMock?.equipmentDescription }}</p>
+
+    <h3>Categoria</h3>
+    <p>{{ requestMock?.equipmentCategory }}</p>
+
+    <h3>Descrição do Defeito</h3>
+    <p>{{ requestMock?.defectDescription }}</p>
+  </div>
+
+  <hr />
+
+  <div>
+    <h2>Valor Orçado</h2>
+    <p>Inclui peças e mão de obra</p>
+    <p>
+      <strong>R$ {{ requestMock?.quoteAmount | number: '1.2-2' }}</strong>
+    </p>
+  </div>
+
+  <hr />
+
+  <div>
+    <button (click)="rejectService()">Rejeitar Serviço</button>
+    <button (click)="approveService()">Aprovar Serviço</button>
+  </div>
+</div>
