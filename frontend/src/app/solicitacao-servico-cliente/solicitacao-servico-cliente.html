@@ -1,0 +1,86 @@
+<div class="dashboard-container">
+  <aside class="sidebar">
+    <div class="sidebar-profile">
+      <div class="avatar-placeholder">👤</div>
+      <div class="user-info">
+        <h3>Painel do Cliente</h3>
+        <span class="user-status">Online</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <ul class="nav-list">
+        <li><a href="#" class="nav-link"><span>📋</span> Meus Dados</a></li>
+        <li><a href="#" class="nav-link"><span>⚙️</span> Configurações</a></li>
+        <!-- Link Ativo (simulando a tela atual) -->
+        <li class="active">
+          <a routerLink="/solicitacao-servico-cliente" class="nav-link">
+            <span>➕</span> Solicitar Manutenção (RF004)
+          </a>
+        </li>
+        <li><a href="#" class="nav-link"><span>🔍</span> Filtrar Solicitação</a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout"><span>🚪</span> Sair do Sistema</button>
+    </div>
+  </aside>
+  <main class="main-content">
+    <header class="content-header">
+      <h2>Minhas Solicitações de Manutenção</h2>
+      <button class="btn-primary" routerLink="/nova-solicitacao">+ Nova Solicitação</button>
+    </header>
+    <div class="cards-grid">
+      <article class="card-solicitacao">
+        <header class="card-header">
+          <span class="protocolo">#REQ-2026-089</span>
+          <span class="badge badge-pendente">Aguardando</span>
+        </header>
+        <div class="card-body">
+          <h4>Ar Condicionado sem gelar</h4>
+          <p class="data-solicitacao">Solicitado em: 18/08/2026</p>
+          <p class="descricao">O equipamento da sala de reuniões liga, mas não esfria o ambiente durante a tarde.</p>
+        </div>
+        <footer class="card-footer">
+          <button class="btn-outline">Ver Detalhes</button>
+        </footer>
+      </article>
+      <article class="card-solicitacao">
+        <header class="card-header">
+          <span class="protocolo">#REQ-2026-088</span>
+          <span class="badge badge-andamento">Em Atendimento</span>
+        </header>
+        <div class="card-body">
+          <h4>Reparo na Rede Elétrica</h4>
+          <p class="data-solicitacao">Solicitado em: 15/08/2026</p>
+          <p class="descricao">Troca dos disjuntores com mau contato no quadro principal do andar térreo.</p>
+        </div>
+        <footer class="card-footer">
+          <button class="btn-outline">Ver Detalhes</button>
+        </footer>
+      </article>
+      <article class="card-solicitacao">
+        <header class="card-header">
+          <span class="protocolo">#REQ-2026-085</span>
+          <span class="badge badge-concluido">Finalizado</span>
+        </header>
+        <div class="card-body">
+          <h4>Troca de Lâmpadas Queimadas</h4>
+          <p class="data-solicitacao">Solicitado em: 10/08/2026</p>
+          <p class="descricao">Substituição de 5 lâmpadas fluorescentes no corredor principal.</p>
+        </div>
+        <footer class="card-footer">
+          <button class="btn-outline">Ver Detalhes</button>
+        </footer>
+      </article>
+    </div>
+    <nav class="paginador" aria-label="Navegação de páginas">
+      <button class="btn-page" disabled>&laquo; Anterior</button>
+      <ul class="page-numbers">
+        <li><button class="page-current">1</button></li>
+        <li><button class="page-num">2</button></li>
+        <li><button class="page-num">3</button></li>
+      </ul>
+      <button class="btn-page">Próxima &raquo;</button>
+    </nav>
+  </main>
+</div>
