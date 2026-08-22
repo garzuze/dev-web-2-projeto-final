@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, RouterLink],
     templateUrl: './login.component.html'
 })
 export class LoginComponent {
@@ -18,7 +19,7 @@ export class LoginComponent {
         console.log('Tentativa de acesso com dados:', this.loginData);
 
         if (this.loginData.email && this.loginData.password) {
-            alert('ta feio eu sei mas quando decidir qual framework de css usar vai melhorar.');
+            alert('nao ta mais feio pq temo tailwind agora mais ainda nao tem uma tela para mandar o user kkk :) .');
         } else {
             alert('Parabens vc sabe usar devtools ! :)');
         }
