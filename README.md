@@ -10,7 +10,7 @@ Sistema de Controle de Manutenção de Equipamentos — UFPR / SEPT / TADS.
 | Java (JDK)  | 25.0.4+7 (LTS)       |
 | Angular     | 21.2.21              |
 | Spring Boot | 4.1.0                |
-| PostgreSQL  | —                    |
+| PostgreSQL  | 17 (via Docker)      |
 
 ## Estrutura
 
@@ -21,10 +21,22 @@ backend/    Spring Boot 4.1 (Maven, Java 25)
 
 ## Rodando
 
+O banco sobe pelo Docker e precisa estar de pé **antes** do backend, o Flyway
+roda as migrations no boot da aplicacao.
+
 ```bash
+docker compose up -d          # Postgres 17 em localhost:5432
 cd frontend && npm start      # http://localhost:4200
 cd backend  && ./mvnw spring-boot:run
 ```
+
+Os dados ficam no volume `manutencao-pgdata`, entao `docker compose down`
+seguido de `docker compose up -d` preserva o banco. Para zerar de vez:
+`docker compose down -v`.
+
+Se o `up` falhar com `address already in use`, voce tem um Postgres local
+ocupando a 5432 — pare o do sistema (`sudo systemctl stop postgresql`) em vez
+de trocar a porta, senao sua `application.properties` diverge da do time.
 
 # Especificação
 
