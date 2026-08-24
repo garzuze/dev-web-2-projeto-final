@@ -20,8 +20,6 @@ public class Category {
     @Column(nullable = false, unique = true, length = 60)
     private String name;
 
-    // soft delete: categoria desativada some das listagens, mas o historico
-    // das solicitacoes que ja a usaram continua intacto (card S6-P6)
     @Column(nullable = false)
     private boolean active = true;
 }
