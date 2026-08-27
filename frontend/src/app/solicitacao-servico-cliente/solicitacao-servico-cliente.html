@@ -1,86 +1,85 @@
-<div class="dashboard-container">
-  <aside class="sidebar">
-    <div class="sidebar-profile">
-      <div class="avatar-placeholder">👤</div>
-      <div class="user-info">
-        <h3>Painel do Cliente</h3>
-        <span class="user-status">Online</span>
-      </div>
+<div class="flex min-h-screen bg-[#f4f7f6] font-sans">
+  <aside class="w-64 bg-white shadow-[1px_0_10px_rgba(0,0,0,0.03)] flex flex-col">
+    <div class="p-6 border-b border-gray-100">
+      <h2 class="text-xl font-bold text-slate-900">ManutençãoZica.com</h2>
     </div>
-    <nav class="sidebar-nav">
-      <ul class="nav-list">
-        <li><a href="#" class="nav-link"><span>📋</span> Meus Dados</a></li>
-        <li><a href="#" class="nav-link"><span>⚙️</span> Configurações</a></li>
-        <!-- Link Ativo (simulando a tela atual) -->
-        <li class="active">
-          <a routerLink="/solicitacao-servico-cliente" class="nav-link">
-            <span>➕</span> Solicitar Manutenção (RF004)
-          </a>
-        </li>
-        <li><a href="#" class="nav-link"><span>🔍</span> Filtrar Solicitação</a></li>
-      </ul>
+    
+    <nav class="flex flex-col p-4 gap-2 mt-2">
+      <a href="#" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-md transition-colors">
+        Dados user
+      </a>
+      <a href="#" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-md transition-colors">
+        Settings
+      </a>
+      <!-- Menu Ativo -->
+      <a href="#" class="px-4 py-2 text-sm font-semibold bg-[#f4f7f6] text-slate-900 rounded-md">
+        Solicitar manutenção
+      </a>
+      <a href="#" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-md transition-colors">
+        Filtrar solicitação
+      </a>
     </nav>
-    <div class="sidebar-footer">
-      <button class="btn-logout"><span>🚪</span> Sair do Sistema</button>
-    </div>
   </aside>
-  <main class="main-content">
-    <header class="content-header">
-      <h2>Minhas Solicitações de Manutenção</h2>
-      <button class="btn-primary" routerLink="/nova-solicitacao">+ Nova Solicitação</button>
-    </header>
-    <div class="cards-grid">
-      <article class="card-solicitacao">
-        <header class="card-header">
-          <span class="protocolo">#REQ-2026-089</span>
-          <span class="badge badge-pendente">Aguardando</span>
-        </header>
-        <div class="card-body">
-          <h4>Ar Condicionado sem gelar</h4>
-          <p class="data-solicitacao">Solicitado em: 18/08/2026</p>
-          <p class="descricao">O equipamento da sala de reuniões liga, mas não esfria o ambiente durante a tarde.</p>
+
+  <main class="flex-1 p-10 overflow-y-auto flex justify-center items-start">
+    <div class="w-full max-w-3xl bg-white rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-10">
+      
+      <h1 class="text-2xl font-bold text-center text-slate-900 mb-10">
+        Solicitar manutenção
+      </h1>
+
+      <form [formGroup]="manutencaoForm" (ngSubmit)="onSubmit()">
+        
+        <div class="mb-8">
+          <h3 class="text-sm font-bold text-slate-900 mb-4">Dados do Equipamento</h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex flex-col">
+              <label class="text-xs font-semibold text-slate-700 mb-1.5">Tipo de equipamento *</label>
+              <input 
+                type="text" 
+                formControlName="tipo"
+                placeholder="Ex: Notebook, Desktop, Impressora" 
+                class="px-3 py-2 border border-gray-200 rounded-md text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:border-[#b4cdd5] focus:ring-1 focus:ring-[#b4cdd5]"
+              >
+            </div>
+            
+            <div class="flex flex-col">
+              <label class="text-xs font-semibold text-slate-700 mb-1.5">Marca / Modelo *</label>
+              <input 
+                type="text" 
+                formControlName="modelo"
+                placeholder="Ex: Dell Inspiron 15" 
+                class="px-3 py-2 border border-gray-200 rounded-md text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:border-[#b4cdd5] focus:ring-1 focus:ring-[#b4cdd5]"
+              >
+            </div>
+          </div>
         </div>
-        <footer class="card-footer">
-          <button class="btn-outline">Ver Detalhes</button>
-        </footer>
-      </article>
-      <article class="card-solicitacao">
-        <header class="card-header">
-          <span class="protocolo">#REQ-2026-088</span>
-          <span class="badge badge-andamento">Em Atendimento</span>
-        </header>
-        <div class="card-body">
-          <h4>Reparo na Rede Elétrica</h4>
-          <p class="data-solicitacao">Solicitado em: 15/08/2026</p>
-          <p class="descricao">Troca dos disjuntores com mau contato no quadro principal do andar térreo.</p>
+
+        <div class="mb-8">
+          <h3 class="text-sm font-bold text-slate-900 mb-4">Detalhes da Solicitação</h3>
+          
+          <div class="flex flex-col">
+            <label class="text-xs font-semibold text-slate-700 mb-1.5">Descrição do problema *</label>
+            <textarea 
+              rows="5" 
+              formControlName="descricao"
+              placeholder="Descreva com detalhes o que está acontecendo com o seu equipamento..." 
+              class="px-3 py-2 border border-gray-200 rounded-md text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:border-[#b4cdd5] focus:ring-1 focus:ring-[#b4cdd5] resize-none"
+            ></textarea>
+          </div>
         </div>
-        <footer class="card-footer">
-          <button class="btn-outline">Ver Detalhes</button>
-        </footer>
-      </article>
-      <article class="card-solicitacao">
-        <header class="card-header">
-          <span class="protocolo">#REQ-2026-085</span>
-          <span class="badge badge-concluido">Finalizado</span>
-        </header>
-        <div class="card-body">
-          <h4>Troca de Lâmpadas Queimadas</h4>
-          <p class="data-solicitacao">Solicitado em: 10/08/2026</p>
-          <p class="descricao">Substituição de 5 lâmpadas fluorescentes no corredor principal.</p>
+
+        <div class="flex justify-end pt-4">
+          <button 
+            type="submit" 
+            [disabled]="manutencaoForm.invalid"
+            class="bg-[#b4cdd5] hover:bg-[#a3bfc8] text-slate-900 font-medium text-sm py-2 px-8 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            Enviar
+          </button>
         </div>
-        <footer class="card-footer">
-          <button class="btn-outline">Ver Detalhes</button>
-        </footer>
-      </article>
+        
+      </form>
     </div>
-    <nav class="paginador" aria-label="Navegação de páginas">
-      <button class="btn-page" disabled>&laquo; Anterior</button>
-      <ul class="page-numbers">
-        <li><button class="page-current">1</button></li>
-        <li><button class="page-num">2</button></li>
-        <li><button class="page-num">3</button></li>
-      </ul>
-      <button class="btn-page">Próxima &raquo;</button>
-    </nav>
   </main>
 </div>
