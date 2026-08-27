@@ -8,6 +8,7 @@ import br.ufpr.tads.manutencao.dto.LoginResponse;
 import br.ufpr.tads.manutencao.dto.UserProfile;
 import br.ufpr.tads.manutencao.exception.InvalidCredentialsException;
 import br.ufpr.tads.manutencao.model.Customer;
+import br.ufpr.tads.manutencao.model.Employee;
 import br.ufpr.tads.manutencao.model.User;
 import br.ufpr.tads.manutencao.repository.UserRepository;
 
@@ -42,7 +43,10 @@ public class LoginService {
     if (user instanceof Customer) {
       return UserProfile.CUSTOMER;
     }
-    return UserProfile.EMPLOYEE;
+    if (user instanceof Employee) {
+      return UserProfile.EMPLOYEE;
+    }
+    throw new InvalidCredentialsException();
   }
 
 }
