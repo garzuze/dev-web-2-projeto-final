@@ -15,38 +15,38 @@ import br.ufpr.tads.manutencao.repository.UserRepository;
 @Service
 public class LoginService {
 
-  private final UserRepository userRepository;
-  private final PasswordService passwordService;
+    private final UserRepository userRepository;
+    private final PasswordService passwordService;
 
-  public LoginService(UserRepository userRepository, PasswordService passwordService) {
-    this.userRepository = userRepository;
-    this.passwordService = passwordService;
-  }
-
-  @Transactional(readOnly = true)
-  public LoginResponse login(LoginRequest request) {
-    User user = userRepository.findByEmail(request.email().trim().toLowerCase())
-        .orElseThrow(InvalidCredentialsException::new);
-
-    if (!user.isActive()) {
-      throw new InvalidCredentialsException();
+    public LoginService(UserRepository userRepository, PasswordService passwordService) {
+        this.userRepository = userRepository;
+        this.passwordService = passwordService;
     }
 
-    if (!passwordService.matches(request.password(), user.getSalt(), user.getPasswordHash())) {
-      throw new InvalidCredentialsException();
+    @Transactional(readOnly = true)
+    public LoginResponse login(LoginRequest request) {
+        User user = userRepository.findByEmail(request.email().trim().toLowerCase())
+                .orElseThrow(InvalidCredentialsException::new);
+
+        if (!user.isActive()) {
+            throw new InvalidCredentialsException();
+        }
+
+        if (!passwordService.matches(request.password(), user.getSalt(), user.getPasswordHash())) {
+            throw new InvalidCredentialsException();
+        }
+
+        return new LoginResponse(user.getId(), user.getName(), user.getEmail(), profileOf(user));
     }
 
-    return new LoginResponse(user.getId(), user.getName(), user.getEmail(), profileOf(user));
-  }
-
-  private UserProfile profileOf(User user) {
-    if (user instanceof Customer) {
-      return UserProfile.CUSTOMER;
+    private UserProfile profileOf(User user) {
+        if (user instanceof Customer) {
+            return UserProfile.CUSTOMER;
+        }
+        if (user instanceof Employee) {
+            return UserProfile.EMPLOYEE;
+        }
+        throw new InvalidCredentialsException();
     }
-    if (user instanceof Employee) {
-      return UserProfile.EMPLOYEE;
-    }
-    throw new InvalidCredentialsException();
-  }
 
 }

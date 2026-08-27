@@ -16,10 +16,10 @@ import lombok.Setter;
 @Setter
 public class Customer extends User {
 
-  @Column(nullable = false, unique = true, length = 11)
-  private String cpf;
+    @Column(nullable = false, unique = true, length = 11)
+    private String cpf;
 
-  @Column(nullable = false, length = 11)
-  private String phone;
+    @Column(nullable = false, length = 11)
+    private String phone;
 
 }

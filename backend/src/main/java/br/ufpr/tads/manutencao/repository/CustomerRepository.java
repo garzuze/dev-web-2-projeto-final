@@ -6,6 +6,6 @@ import br.ufpr.tads.manutencao.model.Customer;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-  boolean existsByCpf(String cpf);
+    boolean existsByCpf(String cpf);
 
 }

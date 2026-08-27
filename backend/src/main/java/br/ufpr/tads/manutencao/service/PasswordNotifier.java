@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class PasswordNotifier {
 
-  private static final Logger log = LoggerFactory.getLogger(PasswordNotifier.class);
+    private static final Logger log = LoggerFactory.getLogger(PasswordNotifier.class);
 
-  public void send(String email, String password) {
-    log.info("Generated password for {}: {}", email, password);
-  }
+    public void send(String email, String password) {
+        log.info("Generated password for {}: {}", email, password);
+    }
 
 }

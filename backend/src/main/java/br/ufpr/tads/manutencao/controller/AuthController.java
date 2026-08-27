@@ -19,23 +19,23 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-  private final SignUpService signUpService;
-  private final LoginService loginService;
+    private final SignUpService signUpService;
+    private final LoginService loginService;
 
-  public AuthController(SignUpService signUpService, LoginService loginService) {
-    this.signUpService = signUpService;
-    this.loginService = loginService;
-  }
+    public AuthController(SignUpService signUpService, LoginService loginService) {
+        this.signUpService = signUpService;
+        this.loginService = loginService;
+    }
 
-  @PostMapping("/sign-up")
-  @ResponseStatus(HttpStatus.CREATED)
-  public SignUpResponse signUp(@Valid @RequestBody SignUpRequest request) {
-    return signUpService.signUp(request);
-  }
+    @PostMapping("/sign-up")
+    @ResponseStatus(HttpStatus.CREATED)
+    public SignUpResponse signUp(@Valid @RequestBody SignUpRequest request) {
+        return signUpService.signUp(request);
+    }
 
-  @PostMapping("/login")
-  public LoginResponse login(@Valid @RequestBody LoginRequest request) {
-    return loginService.login(request);
-  }
+    @PostMapping("/login")
+    public LoginResponse login(@Valid @RequestBody LoginRequest request) {
+        return loginService.login(request);
+    }
 
 }

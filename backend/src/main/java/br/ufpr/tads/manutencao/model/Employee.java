@@ -18,7 +18,7 @@ import lombok.Setter;
 @Setter
 public class Employee extends User {
 
-  @Column(nullable = false)
-  private LocalDate birthDate;
+    @Column(nullable = false)
+    private LocalDate birthDate;
 
 }
