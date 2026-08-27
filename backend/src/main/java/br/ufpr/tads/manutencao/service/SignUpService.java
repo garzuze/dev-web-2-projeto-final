@@ -21,16 +21,16 @@ public class SignUpService {
   private final CustomerRepository customerRepository;
   private final AddressRepository addressRepository;
   private final PasswordService passwordService;
-  private final PasswordDelivery passwordDelivery;
+  private final PasswordNotifier passwordNotifier;
 
   public SignUpService(UserRepository userRepository, CustomerRepository customerRepository,
       AddressRepository addressRepository, PasswordService passwordService,
-      PasswordDelivery passwordDelivery) {
+      PasswordNotifier passwordNotifier) {
     this.userRepository = userRepository;
     this.customerRepository = customerRepository;
     this.addressRepository = addressRepository;
     this.passwordService = passwordService;
-    this.passwordDelivery = passwordDelivery;
+    this.passwordNotifier = passwordNotifier;
   }
 
   @Transactional
@@ -57,7 +57,7 @@ public class SignUpService {
 
     Customer saved = customerRepository.save(customer);
     addressRepository.save(newAddress(request.address(), saved));
-    passwordDelivery.send(saved.getEmail(), password);
+    passwordNotifier.send(saved.getEmail(), password);
 
     return new SignUpResponse(saved.getId(), saved.getName(), saved.getEmail());
   }

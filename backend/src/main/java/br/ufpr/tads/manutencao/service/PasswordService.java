@@ -34,7 +34,7 @@ public class PasswordService {
       byte[] hashed = digest.digest((salt + rawPassword).getBytes(StandardCharsets.UTF_8));
       return encoder.encodeToString(hashed);
     } catch (NoSuchAlgorithmException cause) {
-      throw new IllegalStateException(ALGORITHM + " não disponível nesta JVM", cause);
+      throw new IllegalStateException(ALGORITHM + " is not available in this JVM", cause);
     }
   }
 

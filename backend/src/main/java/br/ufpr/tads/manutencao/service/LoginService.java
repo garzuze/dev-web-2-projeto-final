@@ -8,7 +8,6 @@ import br.ufpr.tads.manutencao.dto.LoginResponse;
 import br.ufpr.tads.manutencao.dto.UserProfile;
 import br.ufpr.tads.manutencao.exception.InvalidCredentialsException;
 import br.ufpr.tads.manutencao.model.Customer;
-import br.ufpr.tads.manutencao.model.Employee;
 import br.ufpr.tads.manutencao.model.User;
 import br.ufpr.tads.manutencao.repository.UserRepository;
 
@@ -40,11 +39,10 @@ public class LoginService {
   }
 
   private UserProfile profileOf(User user) {
-    return switch (user) {
-      case Customer customer -> UserProfile.CUSTOMER;
-      case Employee employee -> UserProfile.EMPLOYEE;
-      default -> throw new IllegalStateException("Perfil não mapeado para " + user.getClass());
-    };
+    if (user instanceof Customer) {
+      return UserProfile.CUSTOMER;
+    }
+    return UserProfile.EMPLOYEE;
   }
 
 }
