@@ -1,15 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  imports: [],
   selector: 'app-solicitacao-servico-cliente',
-  styleUrl: './solicitacao-servico-cliente.scss',
+  standalone: true, 
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './solicitacao-servico-cliente.html',
 })
-export class SolicitacaoServicoCliente {
-  // Função que será disparada pelo clique no HTML
-  enviarSolicitacao() {
-    alert('Sua solicitação foi registrada no sistema!');
-    // No futuro, aqui vai o código para enviar os dados ao Banco de Dados
+export class SolicitacaoServicoCliente implements OnInit {
+
+  manutencaoForm!: FormGroup;
+  constructor(private fb: FormBuilder) {}
+
+  ngOnInit(): void {
+    this.manutencaoForm = this.fb.group({
+      tipo: ['', Validators.required],
+      modelo: ['', Validators.required],
+      descricao: ['', [Validators.required, Validators.minLength(10)]]
+    });
+  }
+
+  onSubmit(): void {
+    if (this.manutencaoForm.valid) {
+      console.log('Dados da solicitação:', this.manutencaoForm.value);
+    } else {
+      this.manutencaoForm.markAllAsTouched();
+    }
   }
 }
