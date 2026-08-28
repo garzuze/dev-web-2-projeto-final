@@ -1,0 +1,184 @@
+<div class="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
+
+  <!-- Container Principal -->
+  <div class="w-full max-w-2xl bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 shadow-sm">
+
+    <!-- Topo / Identificação e Badge de Status -->
+    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 pb-4 mb-6">
+      <div>
+        <span class="text-xs font-semibold uppercase tracking-wider text-gray-400">Solicitação de Manutenção</span>
+        <h1 class="text-2xl font-bold text-gray-900 tracking-tight">#REQ-000{{ requestMock.id }}</h1>
+      </div>
+
+      <!-- Badge de Status Dinâmico -->
+      <div>
+        <span *ngIf="requestMock.currentStatus === 'ORÇADA'" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span>
+          Orçada
+        </span>
+
+        <span *ngIf="requestMock.currentStatus === 'APROVADA'" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
+          Aprovada
+        </span>
+
+        <span *ngIf="requestMock.currentStatus === 'REJEITADA'" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200">
+          <span class="w-1.5 h-1.5 rounded-full bg-rose-500 mr-1.5"></span>
+          Rejeitada
+        </span>
+
+        <span *ngIf="requestMock.currentStatus === 'ARRUMADA'" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-200">
+          <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1.5"></span>
+          Arrumada
+        </span>
+
+        <span *ngIf="requestMock.currentStatus === 'PAGA'" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-purple-50 text-purple-800 border border-purple-200">
+          <span class="w-1.5 h-1.5 rounded-full bg-purple-500 mr-1.5"></span>
+          Paga
+        </span>
+      </div>
+    </div>
+
+    <!-- Alerta de Feedback -->
+    <div *ngIf="feedbackMessage" class="mb-6 p-4 rounded-xl text-sm flex items-start justify-between gap-3 transition-all duration-200" [ngClass]="{
+        'bg-emerald-50 border border-emerald-200 text-emerald-900': feedbackType === 'success',
+        'bg-rose-50 border border-rose-200 text-rose-900': feedbackType === 'error',
+        'bg-slate-100 border border-slate-200 text-slate-800': feedbackType === 'info'
+      }">
+      <div class="flex items-center gap-2">
+        <span *ngIf="feedbackType === 'success'">✅</span>
+        <span *ngIf="feedbackType === 'error'">❌</span>
+        <span *ngIf="feedbackType === 'info'">ℹ️</span>
+        <p class="font-medium">{{ feedbackMessage }}</p>
+      </div>
+      <button (click)="dismissFeedback()" class="text-gray-400 hover:text-gray-600 text-xs font-bold px-1 cursor-pointer">
+        ✕
+      </button>
+    </div>
+
+    <!-- Dados da Solicitação -->
+    <div class="space-y-4 text-gray-700 text-sm">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="bg-gray-50 border border-gray-200/80 rounded-xl p-3.5">
+          <span class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Equipamento</span>
+          <p class="font-semibold text-gray-900 text-base">{{ requestMock.equipmentDescription }}</p>
+        </div>
+
+        <div class="bg-gray-50 border border-gray-200/80 rounded-xl p-3.5">
+          <span class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Categoria</span>
+          <p class="font-semibold text-gray-900 text-base">{{ requestMock.equipmentCategory }}</p>
+        </div>
+      </div>
+
+      <div class="bg-gray-50 border border-gray-200/80 rounded-xl p-3.5">
+        <span class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Descrição do Defeito Relatado</span>
+        <p class="text-gray-800 leading-relaxed">{{ requestMock.defectDescription }}</p>
+      </div>
+
+      <!-- Motivo da Rejeição (se houver) -->
+      <div *ngIf="requestMock.rejectionReason && requestMock.currentStatus === 'REJEITADA'" class="bg-rose-50 border border-rose-200 rounded-xl p-3.5">
+        <span class="block text-xs font-bold text-rose-800 uppercase tracking-wider mb-1">Motivo da Rejeição</span>
+        <p class="text-rose-900 font-medium">{{ requestMock.rejectionReason }}</p>
+      </div>
+    </div>
+
+    <!-- Valor Orçado com Destaque -->
+    <div class="my-6 p-6 rounded-2xl bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-100 border border-primary-700/40 text-center shadow-inner">
+      <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Valor Total do Orçamento</span>
+      <div class="mt-2 text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
+        R$ {{ requestMock.quoteAmount | number: '1.2-2' }}
+      </div>
+      <p class="text-xs text-gray-500 mt-1 font-medium">Inclui peças de reposição e serviço técnico especializado</p>
+    </div>
+
+    <!-- Botões de Ação Conforme o Estado -->
+    <div class="mt-6 pt-4 border-t border-gray-100">
+
+      <!-- Ações para Estado ORÇADA -->
+      <div *ngIf="requestMock.currentStatus === 'ORÇADA'" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <button type="button" (click)="openRejectModal()" class="w-full py-2.5 px-4 text-sm font-semibold text-rose-700 bg-white border border-rose-200 rounded-lg shadow-sm hover:bg-rose-50 hover:border-rose-300 focus:outline-none focus:ring-4 focus:ring-rose-100 transition-all duration-200 cursor-pointer text-center">
+          Rejeitar Serviço
+        </button>
+
+        <button type="button" (click)="approveService()" class="w-full py-2.5 px-4 text-sm font-semibold text-gray-900 bg-primary-700 rounded-lg shadow-sm hover:bg-primary-800 hover:text-white active:scale-[0.99] focus:outline-none focus:ring-4 focus:ring-primary-700/30 transition-all duration-200 cursor-pointer text-center">
+          Aprovar Serviço
+        </button>
+      </div>
+
+      <!-- Ação para Estado REJEITADA -->
+      <div *ngIf="requestMock.currentStatus === 'REJEITADA'" class="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p class="text-xs text-gray-500">Deseja reconsiderar? O serviço voltará para o fluxo de manutenção.</p>
+        <button type="button" (click)="rescueService()" class="w-full sm:w-auto py-2.5 px-5 text-sm font-semibold text-gray-900 bg-amber-300 rounded-lg shadow-sm hover:bg-amber-400 focus:outline-none focus:ring-4 focus:ring-amber-200 transition-all duration-200 cursor-pointer whitespace-nowrap">
+          Resgatar Serviço
+        </button>
+      </div>
+
+      <!-- Ação quando já Aprovada -->
+      <div *ngIf="requestMock.currentStatus === 'APROVADA'" class="text-center">
+        <p class="text-sm text-gray-600 font-medium">✅ Solicitação aprovada e aguardando execução do serviço pelo técnico.</p>
+      </div>
+
+      <!-- Ação quando Arrumada -->
+      <div *ngIf="requestMock.currentStatus === 'ARRUMADA'" class="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p class="text-sm text-gray-700 font-medium">Manutenção finalizada! Prossiga para efetuar o pagamento.</p>
+        <a routerLink="/payment" class="w-full sm:w-auto py-2.5 px-5 text-sm font-semibold text-gray-900 bg-primary-700 rounded-lg shadow-sm hover:bg-primary-800 hover:text-white focus:outline-none focus:ring-4 focus:ring-primary-700/30 transition-all duration-200 cursor-pointer text-center">
+          Pagar Serviço
+        </a>
+      </div>
+    </div>
+
+    <!-- Navegação de Retorno -->
+    <div class="mt-6 text-center">
+      <a routerLink="/" class="text-xs font-semibold text-gray-500 hover:text-primary-800 transition-colors">
+        ← Voltar à página inicial
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Barra Auxiliar de Simulação de Status para Testes -->
+  <div class="w-full max-w-2xl mt-4 p-3 bg-white/80 backdrop-blur-xs rounded-xl border border-gray-200 text-xs text-gray-600 flex flex-wrap items-center justify-between gap-2">
+    <span class="font-medium text-gray-700">Simular Estado da Solicitação:</span>
+    <div class="flex flex-wrap gap-1.5">
+      <button (click)="setStatusForTesting('ORÇADA')" class="px-2.5 py-1 rounded bg-gray-100 hover:bg-amber-100 font-medium cursor-pointer">Orçada</button>
+      <button (click)="setStatusForTesting('REJEITADA')" class="px-2.5 py-1 rounded bg-gray-100 hover:bg-rose-100 font-medium cursor-pointer">Rejeitada</button>
+      <button (click)="setStatusForTesting('ARRUMADA')" class="px-2.5 py-1 rounded bg-gray-100 hover:bg-blue-100 font-medium cursor-pointer">Arrumada</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Modal de Justificativa de Rejeição -->
+<div *ngIf="isRejectModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 backdrop-blur-xs p-4 animate-in fade-in duration-200">
+  <div class="w-full max-w-lg bg-white rounded-2xl border border-gray-100 p-6 sm:p-8 shadow-2xl space-y-4">
+
+    <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+      <h3 class="text-lg font-bold text-gray-900">Motivo da Rejeição do Orçamento</h3>
+      <button (click)="closeRejectModal()" class="text-gray-400 hover:text-gray-600 font-bold text-sm cursor-pointer">
+        ✕
+      </button>
+    </div>
+
+    <p class="text-xs text-gray-600">
+      Por favor, informe ao técnico o motivo pelo qual você está rejeitando o orçamento apresentado para a solicitação <strong>#REQ-000{{ requestMock.id }}</strong>.
+    </p>
+
+    <div>
+      <label for="rejectionReason" class="block text-xs font-semibold uppercase text-gray-600 mb-1.5">
+        Justificativa da Rejeição *
+      </label>
+      <textarea id="rejectionReason" name="rejectionReason" rows="4" [(ngModel)]="rejectionReason" placeholder="Ex: Valor acima do orçamento planejado, decidi adquirir um novo equipamento..." class="w-full p-3 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition placeholder-gray-400 resize-none"></textarea>
+    </div>
+
+    <div class="flex items-center justify-end gap-3 pt-2">
+      <button type="button" (click)="closeRejectModal()" class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer">
+        Cancelar
+      </button>
+
+      <button type="button" (click)="confirmRejectService()" class="px-4 py-2 text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-rose-200 transition-all duration-200 cursor-pointer">
+        Confirmar Rejeição
+      </button>
+    </div>
+
+  </div>
+</div>

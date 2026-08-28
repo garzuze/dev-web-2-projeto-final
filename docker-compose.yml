@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: manutencao-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: manutencao
+      POSTGRES_USER: manutencao
+      POSTGRES_PASSWORD: manutencao
+    volumes:
+      - manutencao-pgdata:/var/lib/postgresql/data
+
+volumes:
+  manutencao-pgdata:
