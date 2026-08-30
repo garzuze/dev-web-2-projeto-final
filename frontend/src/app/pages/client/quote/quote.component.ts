@@ -6,9 +6,10 @@ import { ActivatedRoute } from '@angular/router';
 import { RejectionModalComponent } from './rejection-modal/rejection-modal.component';
 import { NotificationService } from '../../../services/notification.service';
 import { NotificationType } from '../../../models/notification.model';
+import { ApproveModalComponent } from './approve-modal/approve-modal.component';
 
 @Component({
-  imports: [CurrencyPipe, DatePipe, LowerCasePipe, RejectionModalComponent],
+  imports: [CurrencyPipe, DatePipe, LowerCasePipe, RejectionModalComponent, ApproveModalComponent],
   selector: 'app-quote',
   styleUrl: './quote.component.scss',
   templateUrl: './quote.component.html',
@@ -19,6 +20,7 @@ export class QuoteComponent {
   private activatedRoute = inject(ActivatedRoute);
   public requestData?: MaintenanceRequest;
   public isRejectionModalOpen: boolean = false;
+  public isApproveModalOpen: boolean = false;
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((params) => {
       const id = Number(params.get('id'));
@@ -53,7 +55,13 @@ export class QuoteComponent {
       });
     }
   }
-  onConfirmRequest() {
+  onApprove() {
+    this.isApproveModalOpen = true;
+  }
+  onCancelApprove() {
+    this.isApproveModalOpen = false;
+  }
+  onConfirmApprove() {
     if (this.requestData?.id)
       this.maintenanceRequestService.approveRequest(this.requestData.id).subscribe({
         next: () => {
@@ -61,6 +69,7 @@ export class QuoteComponent {
             'Orçamento aprovado com sucesso',
             NotificationType.success,
           );
+          this.isApproveModalOpen = false;
         },
         error: (err) => {
           this.notificationService.showNotification(
