@@ -21,6 +21,7 @@ export class QuoteComponent {
   public requestData?: MaintenanceRequest;
   public isRejectionModalOpen: boolean = false;
   public isApproveModalOpen: boolean = false;
+  public isApproving: boolean = false;
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((params) => {
       const id = Number(params.get('id'));
@@ -62,9 +63,11 @@ export class QuoteComponent {
     this.isApproveModalOpen = false;
   }
   onConfirmApprove() {
-    if (this.requestData?.id)
+    if (this.requestData?.id) {
+      this.isApproving = true;
       this.maintenanceRequestService.approveRequest(this.requestData.id).subscribe({
         next: () => {
+          this.isApproving = false;
           this.notificationService.showNotification(
             'Orçamento aprovado com sucesso',
             NotificationType.success,
@@ -72,11 +75,13 @@ export class QuoteComponent {
           this.isApproveModalOpen = false;
         },
         error: (err) => {
+          this.isApproving = false;
           this.notificationService.showNotification(
             'Erro ao aprovar orçamento',
             NotificationType.error,
           );
         },
       });
+    }
   }
 }
