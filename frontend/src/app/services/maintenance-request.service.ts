@@ -10,9 +10,9 @@ export class MaintenanceRequestService {
   getMaintenanceRequestById(id: number): Observable<MaintenanceRequest> {
     return of({
       id: id,
-      clientId: 1,
-      categoryId: 2,
-      statusId: 2,
+      clientName: 'Vitor Felipe',
+      categoryName: 'Computadores',
+      statusName: 'Aguardando Aprovação',
       equipmentDescription: 'Notebook Dell',
       defectDescription: 'Não liga',
       openingDateTime: new Date().toISOString(),
