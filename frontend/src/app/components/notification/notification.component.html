@@ -1,0 +1,10 @@
+@if (notificationService.message(); as notif) {
+  <div
+    [class.bg-green-600]="notif?.type === notificationType.success"
+    [class.bg-red-600]="notif.type === notificationType.error"
+    [class.bg-amber-600]="notif.type === notificationType.alert"
+    class="fixed bottom-4 right-4 p-4 text-white font-medium rounded-lg shadow-lg animate-slide-up"
+  >
+    {{ notif.message }}
+  </div>
+}
