@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { MaintenanceRequest } from '../models/maintenanceRequest.model';
+import { MaintenanceRequest, RequestStatus } from '../models/maintenanceRequest.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +12,7 @@ export class MaintenanceRequestService {
       id: id,
       clientName: 'Vitor Felipe',
       categoryName: 'Computadores',
-      statusName: 'Aguardando Aprovação',
+      statusName: RequestStatus.Quoted,
       equipmentDescription: 'Notebook Dell',
       defectDescription: 'Não liga',
       openingDateTime: new Date().toISOString(),
