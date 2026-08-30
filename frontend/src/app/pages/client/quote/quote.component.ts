@@ -4,6 +4,8 @@ import { MaintenanceRequest } from '../../../models/maintenanceRequest.model';
 import { CurrencyPipe, DatePipe, LowerCasePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { RejectionModalComponent } from './rejection-modal/rejection-modal.component';
+import { NotificationService } from '../../../services/notification.service';
+import { NotificationType } from '../../../models/notification.model';
 
 @Component({
   imports: [CurrencyPipe, DatePipe, LowerCasePipe, RejectionModalComponent],
@@ -13,6 +15,7 @@ import { RejectionModalComponent } from './rejection-modal/rejection-modal.compo
 })
 export class QuoteComponent {
   private maintenanceRequestService = inject(MaintenanceRequestService);
+  private notificationService = inject(NotificationService);
   private activatedRoute = inject(ActivatedRoute);
   public requestData?: MaintenanceRequest;
   public isRejectionModalOpen: boolean = false;
@@ -31,10 +34,23 @@ export class QuoteComponent {
     this.isRejectionModalOpen = false;
   }
   onConfirmReject($event: string) {
-    this.isRejectionModalOpen = false;
     console.log($event);
     if (this.requestData?.id) {
-      this.maintenanceRequestService.rejectRequest(this.requestData.id, $event);
+      this.maintenanceRequestService.rejectRequest(this.requestData.id, $event).subscribe({
+        next: (res) => {
+          this.notificationService.showNotification(
+            'Orçamento rejeitado com sucesso!',
+            NotificationType.success,
+          );
+          this.isRejectionModalOpen = false;
+        },
+        error: (err) => {
+          this.notificationService.showNotification(
+            'Erro ao rejeitar orçamento',
+            NotificationType.error,
+          );
+        },
+      });
     }
   }
 }
