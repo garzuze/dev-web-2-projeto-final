@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   imports: [],
@@ -6,4 +6,7 @@ import { Component } from '@angular/core';
   styleUrl: './rejection-modal.component.scss',
   templateUrl: './rejection-modal.component.html',
 })
-export class RejectionModalComponent {}
+export class RejectionModalComponent {
+  @Output() cancel = new EventEmitter<void>();
+  @Output() confirm = new EventEmitter<string>();
+}
