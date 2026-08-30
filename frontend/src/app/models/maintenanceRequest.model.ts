@@ -1,8 +1,8 @@
 export interface MaintenanceRequest {
   id: number;
-  clientId: number;
-  categoryId: number;
-  statusId: number;
+  clientName: string;
+  categoryName: string;
+  statusName: string;
   equipmentDescription: string;
   defectDescription: string;
   openingDateTime: string;
