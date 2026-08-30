@@ -1,15 +1,16 @@
-import { Injectable, Service, signal } from '@angular/core';
-import { NotificationType } from '../models/notification.model';
+import { Injectable, signal } from '@angular/core';
+import { NotificationInterface, NotificationType } from '../models/notification.model';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
-  public message = signal<{ message: string; type: NotificationType } | null>(null);
+  public messages = signal<NotificationInterface[]>([]);
 
   showNotification(message: string, type: NotificationType) {
-    this.message.set({ message: message, type: type });
+    let id = Date.now();
+    this.messages.update((messages) => [...messages, { message, type, id }]);
 
     setTimeout(() => {
-      this.message.set(null);
+      this.messages.update((messages) => messages.filter((message) => message.id !== id));
     }, 3000);
   }
 }

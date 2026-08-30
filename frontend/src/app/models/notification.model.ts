@@ -3,3 +3,9 @@ export enum NotificationType {
   error = 'Erro',
   alert = 'Alerta',
 }
+
+export interface NotificationInterface {
+  id: number;
+  message: string;
+  type: NotificationType;
+}
