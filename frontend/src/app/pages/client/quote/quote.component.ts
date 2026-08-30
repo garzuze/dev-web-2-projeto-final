@@ -53,4 +53,21 @@ export class QuoteComponent {
       });
     }
   }
+  onConfirmRequest() {
+    if (this.requestData?.id)
+      this.maintenanceRequestService.approveRequest(this.requestData.id).subscribe({
+        next: () => {
+          this.notificationService.showNotification(
+            'Orçamento aprovado com sucesso',
+            NotificationType.success,
+          );
+        },
+        error: (err) => {
+          this.notificationService.showNotification(
+            'Erro ao aprovar orçamento',
+            NotificationType.error,
+          );
+        },
+      });
+  }
 }
