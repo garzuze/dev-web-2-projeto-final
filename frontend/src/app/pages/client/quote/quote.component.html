@@ -73,7 +73,11 @@
 </div>
 
 @if (isRejectionModalOpen) {
-  <app-rejection-modal (cancel)="onCancelReject()" (confirm)="onConfirmReject($event)" />
+  <app-rejection-modal
+    (cancel)="onCancelReject()"
+    (confirm)="onConfirmReject($event)"
+    [isRejecting]="isRejecting"
+  />
 }
 
 @if (isApproveModalOpen) {

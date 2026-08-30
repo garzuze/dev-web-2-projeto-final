@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   imports: [],
@@ -9,4 +9,5 @@ import { Component, EventEmitter, Output } from '@angular/core';
 export class RejectionModalComponent {
   @Output() cancel = new EventEmitter<void>();
   @Output() confirm = new EventEmitter<string>();
+  @Input() isRejecting = false;
 }
