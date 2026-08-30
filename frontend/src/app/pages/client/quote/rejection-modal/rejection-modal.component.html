@@ -10,19 +10,19 @@
         rows="5"
         class="w-full resize-none rounded-lg border border-gray-300 p-3 text-gray-900 outline-none transition focus:border-primary-800 focus:ring-2 focus:ring-primary-800/20"
         placeholder="Descreva o motivo de cancelar..."
-        (input)="null"
+        (input)="(null)"
       ></textarea>
     </div>
     <div class="flex justify-end gap-3">
       <button
-        class="rounded-lg border border-gray-300 px-5 py-2 font-medium text-gray-700 transition hover:bg-gray-200 focus:bg-gray-200 focus:ring-2 focus:ring-gray-50 cursor-pointer"
+        class="rounded-lg border border-gray-300 px-5 py-2 font-medium text-gray-700 transition hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-50 cursor-pointer"
         type="button"
         (click)="cancel.emit()"
       >
         Cancelar
       </button>
       <button
-        class="rounded-lg bg-red-600 px-5 py-2 font-medium text-white transition hover:bg-red-800 focus:bg-red-800 focus:ring-2 focus:ring-red-50 disabled:bg-gray-300 cursor-pointer disabled:cursor-not-allowed"
+        class="rounded-lg bg-red-600 px-5 py-2 font-medium text-white transition hover:bg-red-800 focus:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-50 disabled:bg-gray-300 cursor-pointer disabled:cursor-not-allowed"
         type="button"
         [disabled]="(reason.value?.trim().length ?? 0) < 10"
         (click)="confirm.emit(reason.value)"
