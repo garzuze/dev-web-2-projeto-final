@@ -14,6 +14,7 @@ export class QuoteComponent {
   private maintenanceRequestService = inject(MaintenanceRequestService);
   private activatedRoute = inject(ActivatedRoute);
   public requestData?: MaintenanceRequest;
+  public isRejectionModalOpen: boolean = false;
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((params) => {
       const id = Number(params.get('id'));
@@ -21,5 +22,8 @@ export class QuoteComponent {
         this.requestData = request;
       });
     });
+  }
+  onReject() {
+    this.isRejectionModalOpen = true;
   }
 }
