@@ -3,9 +3,10 @@ import { MaintenanceRequestService } from '../../../services/maintenance-request
 import { MaintenanceRequest } from '../../../models/maintenanceRequest.model';
 import { CurrencyPipe, DatePipe, LowerCasePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { RejectionModalComponent } from './rejection-modal/rejection-modal.component';
 
 @Component({
-  imports: [CurrencyPipe, DatePipe, LowerCasePipe],
+  imports: [CurrencyPipe, DatePipe, LowerCasePipe, RejectionModalComponent],
   selector: 'app-quote',
   styleUrl: './quote.component.scss',
   templateUrl: './quote.component.html',
@@ -25,5 +26,15 @@ export class QuoteComponent {
   }
   onReject() {
     this.isRejectionModalOpen = true;
+  }
+  onCancelReject() {
+    this.isRejectionModalOpen = false;
+  }
+  onConfirmReject($event: string) {
+    this.isRejectionModalOpen = false;
+    console.log($event);
+    if (this.requestData?.id) {
+      this.maintenanceRequestService.rejectRequest(this.requestData.id, $event);
+    }
   }
 }
