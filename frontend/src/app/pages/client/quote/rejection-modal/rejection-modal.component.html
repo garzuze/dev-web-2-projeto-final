@@ -28,8 +28,7 @@
       <button
         class="rounded-lg bg-red-600 px-5 py-2 font-medium text-white transition hover:bg-red-800 focus:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-50 disabled:bg-gray-300 cursor-pointer disabled:cursor-not-allowed"
         type="button"
-        [disabled]="(reason.value?.trim().length ?? 0) < 10"
-        [disabled]="isRejecting"
+        [disabled]="(reason.value?.trim().length ?? 0) < 10 || isRejecting"
         (click)="confirm.emit(reason.value)"
       >
         @if (!isRejecting) {
