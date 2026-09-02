@@ -92,6 +92,7 @@ export class QuoteComponent {
             NotificationType.success,
           );
           this.isRejectionModalOpen = false;
+          this.router.navigate(['/client/request']);
         },
         error: (err) => {
           this.isRejecting = false;
@@ -154,6 +155,7 @@ export class QuoteComponent {
             NotificationType.success,
           );
           this.isRejectionModalOpen = false;
+          this.router.navigate(['/client/request']);
         },
         error: (err) => {
           this.isRescuing = false;
