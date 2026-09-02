@@ -1,0 +1,31 @@
+<div
+  class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
+  role="dialog"
+  aria-modal="true"
+>
+  <div class="w-full max-w-md rounded-xl border-2 border-gray-200 bg-white p-6 shadow">
+    <h2 class="mb-6 text-2xl font-extrabold text-gray-900 md:text-3xl">
+      Deseja realmente resgatar a solicitação e aprová-la?
+    </h2>
+    <div class="flex justify-end gap-3">
+      <button
+        class="rounded-lg border border-gray-300 px-5 py-2 font-medium text-gray-700 transition hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-50 cursor-pointer"
+        type="button"
+        (click)="cancel.emit()"
+      >
+        Cancelar
+      </button>
+      <button
+        class="rounded-lg bg-blue-600 px-5 py-2 font-medium text-white transition hover:bg-blue-800 focus:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-50 cursor-pointer disabled:bg-gray-300"
+        [disabled]="isRescuing"
+        (click)="confirm.emit()"
+      >
+        @if (!isRescuing) {
+          Resgatar Solicitação
+        } @else {
+          Resgatando...
+        }
+      </button>
+    </div>
+  </div>
+</div>
