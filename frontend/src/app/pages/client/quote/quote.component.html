@@ -6,55 +6,8 @@
     </h1>
     <p class="text-gray-500">Acompanhe os detalhes do seu orçamento de manutenção.</p>
   </div>
-  <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
-    <div
-      class="flex flex-col gap-4 border-b border-gray-200 p-6 md:flex-row md:items-center md:justify-between"
-    >
-      <div>
-        <p class="text-sm text-gray-500">Data de abertura:</p>
-        <p class="mt-1 font-medium text-gray-900">
-          {{ requestData?.openingDateTime | date: 'dd/MM/yyyy' }}
-        </p>
-      </div>
-      <div class="flex flex-wrap gap-2">
-        <span class="rounded-full bg-gray-200 px-3 py-1 text-sm font-medium text-primary-800">{{
-          requestData?.categoryName
-        }}</span>
-        <span
-          [class]="
-            'rounded-full px-3 py-1 text-sm font-medium first-letter:uppercase ' +
-            getStatusClass(requestData?.statusName)
-          "
-          >{{ requestData?.statusName | lowercase }}</span
-        >
-      </div>
-    </div>
-    <div class="grid border-b-2 border-gray-200 gap-6 p-6 md:grid-cols-2">
-      <div>
-        <p class="mb-2 text-sm font-medium text-gray-500">Equipamento:</p>
-        <p class="text-base leading-relaxed text-gray-900">
-          {{ requestData?.equipmentDescription }}
-        </p>
-      </div>
-      <div>
-        <p class="mb-2 text-sm font-medium text-gray-500">Problema Relatado</p>
-        <p class="text-base leading-relaxed text-gray-900">
-          {{ requestData?.defectDescription }}
-        </p>
-      </div>
-    </div>
-    <div class="bg-gray-50 p-6 border-b-2 border-gray-200">
-      <div class="flex flex-col gap-2 sm:flex-row sm:justify-between">
-        <div>
-          <p class="text-sm font-medium text-gray-500">Valor do orçamento</p>
-          <p class="text-sm text-gray-400">Valor estimado para o serviço</p>
-        </div>
-        <p class="text-2xl font-extrabold text-primary-800">
-          {{ requestData?.quoteValue | currency: 'BRL' }}
-        </p>
-      </div>
-    </div>
-    <div class="rounded-b-xl bg-gray-50 p-6">
+  <app-request-details-card [requestData]="requestData">
+    @if (requestData?.statusName === requestStatus.Quoted) {
       <div class="grid gap-3 sm:grid-cols-2">
         <button
           type="button"
@@ -71,8 +24,8 @@
           Rejeitar
         </button>
       </div>
-    </div>
-  </div>
+    }
+  </app-request-details-card>
 </div>
 
 @if (isRejectionModalOpen) {

@@ -2,14 +2,15 @@ import { Component, inject } from '@angular/core';
 import { MaintenanceRequestService } from '../../../services/maintenance-request.service';
 import { MaintenanceRequest, RequestStatus } from '../../../models/maintenanceRequest.model';
 import { CurrencyPipe, DatePipe, LowerCasePipe } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RejectionModalComponent } from './rejection-modal/rejection-modal.component';
 import { NotificationService } from '../../../services/notification.service';
 import { NotificationType } from '../../../models/notification.model';
 import { ApproveModalComponent } from './approve-modal/approve-modal.component';
+import { RequestDetailsCardComponent } from '../../../components/request-details-card/request-details-card.component';
 
 @Component({
-  imports: [CurrencyPipe, DatePipe, LowerCasePipe, RejectionModalComponent, ApproveModalComponent],
+  imports: [RejectionModalComponent, ApproveModalComponent, RequestDetailsCardComponent],
   selector: 'app-quote',
   styleUrl: './quote.component.scss',
   templateUrl: './quote.component.html',
@@ -18,15 +19,45 @@ export class QuoteComponent {
   private maintenanceRequestService = inject(MaintenanceRequestService);
   private notificationService = inject(NotificationService);
   private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
   public requestData?: MaintenanceRequest;
+  public requestStatus = RequestStatus;
   public isRejectionModalOpen: boolean = false;
   public isApproveModalOpen: boolean = false;
   public isApproving: boolean = false;
   public isRejecting: boolean = false;
+
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((params) => {
       const id = Number(params.get('id'));
       this.maintenanceRequestService.getMaintenanceRequestById(id).subscribe((request) => {
+        if (!request) {
+          this.notificationService.showNotification(
+            'Solicitação não encontrada',
+            NotificationType.error,
+          );
+          this.router.navigate(['/client/request']);
+          return;
+        }
+        if (
+          request.statusName !== RequestStatus.Quoted &&
+          request.statusName !== RequestStatus.Rejected
+        ) {
+          if (request.statusName === RequestStatus.Open) {
+            this.notificationService.showNotification(
+              'Esta solicitação ainda está sendo orçada. O orçamento não está disponível no momento.',
+              NotificationType.alert,
+            );
+          } else {
+            this.notificationService.showNotification(
+              'Este orçamento já foi processado e não está mais disponível.',
+              NotificationType.alert,
+            );
+          }
+
+          this.router.navigate(['/client/request']);
+          return;
+        }
         this.requestData = request;
       });
     });
@@ -87,29 +118,6 @@ export class QuoteComponent {
           );
         },
       });
-    }
-  }
-
-  getStatusClass(status?: string): string {
-    switch (status) {
-      case RequestStatus.Open:
-        return 'bg-gray-100 text-gray-800';
-      case RequestStatus.Quoted:
-        return 'bg-amber-800/10 text-amber-900';
-      case RequestStatus.Rejected:
-        return 'bg-red-100 text-red-800';
-      case RequestStatus.Approved:
-        return 'bg-yellow-100 text-yellow-800';
-      case RequestStatus.Redirected:
-        return 'bg-purple-100 text-purple-800';
-      case RequestStatus.Arranged:
-        return 'bg-blue-100 text-blue-800';
-      case RequestStatus.Paid:
-        return 'bg-orange-100 text-orange-800';
-      case RequestStatus.Completed:
-        return 'bg-emerald-100 text-emerald-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
     }
   }
 }
