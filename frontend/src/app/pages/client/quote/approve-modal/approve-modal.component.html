@@ -16,7 +16,7 @@
         Cancelar
       </button>
       <button
-        class="rounded-lg bg-green-600 px-5 py-2 font-medium text-white transition hover:bg-green-800 focus:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-50 cursor-pointer"
+        class="rounded-lg bg-green-600 px-5 py-2 font-medium text-white transition hover:bg-green-800 focus:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-50 cursor-pointer disabled:bg-gray-300"
         [disabled]="isApproving"
         (click)="confirm.emit()"
       >
