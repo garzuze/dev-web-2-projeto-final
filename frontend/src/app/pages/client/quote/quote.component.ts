@@ -124,6 +124,7 @@ export class QuoteComponent {
             NotificationType.success,
           );
           this.isApproveModalOpen = false;
+          this.router.navigate(['/client/request']);
         },
         error: (err) => {
           this.isApproving = false;

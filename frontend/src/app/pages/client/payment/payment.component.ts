@@ -4,9 +4,10 @@ import { NotificationService } from '../../../services/notification.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MaintenanceRequest, RequestStatus } from '../../../models/maintenanceRequest.model';
 import { NotificationType } from '../../../models/notification.model';
+import { RequestDetailsCardComponent } from '../../../components/request-details-card/request-details-card.component';
 
 @Component({
-  imports: [],
+  imports: [RequestDetailsCardComponent],
   selector: 'app-payment',
   styleUrl: './payment.component.scss',
   templateUrl: './payment.component.html',
