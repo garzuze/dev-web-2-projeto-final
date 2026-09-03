@@ -9,6 +9,7 @@ import { CurrencyPipe, DatePipe, LowerCasePipe } from '@angular/common';
   templateUrl: './request-details-card.component.html',
 })
 export class RequestDetailsCardComponent {
+  public requestStatus = RequestStatus;
   @Input({ required: true }) requestData?: MaintenanceRequest;
   getStatusClass(status?: string): string {
     switch (status) {

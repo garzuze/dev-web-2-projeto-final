@@ -40,12 +40,23 @@
     </div>
   </div>
 
-  <!-- Orçamento -->
+  <!-- Orçamento/Pagamento -->
   @if (requestData?.quoteValue) {
     <div class="bg-gray-50 p-6 border-b-2 border-gray-200">
       <div class="flex flex-col gap-2 sm:flex-row sm:justify-between">
         <div>
-          <p class="text-sm font-medium text-gray-500">Valor do orçamento</p>
+          <p class="text-sm font-medium text-gray-500">
+            @if (requestData?.statusName === requestStatus.Arranged) {
+              Valor do Pagamento
+            } @else if (
+              requestData?.statusName === requestStatus.Quoted ||
+              requestData?.statusName === requestStatus.Rejected
+            ) {
+              Valor do Orçamento
+            } @else {
+              Valor da requisição
+            }
+          </p>
           <p class="text-sm text-gray-400">Valor estimado para o serviço</p>
         </div>
         <p class="text-2xl font-extrabold text-primary-800">
