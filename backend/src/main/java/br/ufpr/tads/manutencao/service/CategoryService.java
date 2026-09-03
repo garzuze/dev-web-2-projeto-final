@@ -1,12 +1,14 @@
-package br.ufpr.tads.manutencao.category;
+package br.ufpr.tads.manutencao.service;
 
 import java.util.List;
 
+import br.ufpr.tads.manutencao.dto.LoginResponse;
+import br.ufpr.tads.manutencao.model.Customer;
+import br.ufpr.tads.manutencao.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.ufpr.tads.manutencao.category.dto.CategoryRequest;
-import br.ufpr.tads.manutencao.category.dto.CategoryResponse;
+import br.ufpr.tads.manutencao.dto.CategoryRequest;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
@@ -19,25 +21,25 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public List<CategoryResponse> list() {
+    public List<LoginResponse.CategoryResponse> list() {
         return categoryRepository.findByActiveTrueOrderByNameAsc()
                 .stream()
-                .map(CategoryResponse::of)
+                .map(LoginResponse.CategoryResponse::of)
                 .toList();
     }
 
     @Transactional
-    public CategoryResponse create(CategoryRequest request) {
-        Category category = new Category();
+    public LoginResponse.CategoryResponse create(CategoryRequest request) {
+        Customer.Category category = new Customer.Category();
         category.setName(requireAvailableName(request.name(), null));
-        return CategoryResponse.of(categoryRepository.save(category));
+        return LoginResponse.CategoryResponse.of(categoryRepository.save(category));
     }
 
     @Transactional
-    public CategoryResponse update(Long id, CategoryRequest request) {
-        Category category = activeById(id);
+    public LoginResponse.CategoryResponse update(Long id, CategoryRequest request) {
+        Customer.Category category = activeById(id);
         category.setName(requireAvailableName(request.name(), id));
-        return CategoryResponse.of(category);
+        return LoginResponse.CategoryResponse.of(category);
     }
 
     @Transactional
@@ -45,9 +47,9 @@ public class CategoryService {
         activeById(id).setActive(false);
     }
 
-    private Category activeById(Long id) {
+    private Customer.Category activeById(Long id) {
         return categoryRepository.findById(id)
-                .filter(Category::isActive)
+                .filter(Customer.Category::isActive)
                 .orElseThrow(() -> new EntityNotFoundException("Categoria " + id + " não encontrada"));
     }
 

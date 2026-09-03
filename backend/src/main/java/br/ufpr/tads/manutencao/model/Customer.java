@@ -1,10 +1,6 @@
 package br.ufpr.tads.manutencao.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,4 +18,19 @@ public class Customer extends User {
     @Column(nullable = false, length = 11)
     private String phone;
 
+  @Entity
+  @Getter
+  @Setter
+  public static class Category {
+
+      @Id
+      @GeneratedValue(strategy = GenerationType.IDENTITY)
+      private Long id;
+
+      @Column(nullable = false, length = 60)
+      private String name;
+
+      @Column(nullable = false)
+      private boolean active = true;
+  }
 }
