@@ -34,16 +34,23 @@
             >
           </div>
 
+
+          @if (errorMessage()) {
+            <p class="text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg p-2.5">
+              {{ errorMessage() }}
+            </p>
+          }
+
           <button 
             type="submit" 
-            [disabled]="!loginForm.form.valid"
+            [disabled]="!loginForm.form.valid || loading()"
             class="w-full py-2.5 px-4 text-sm font-semibold text-gray-900 bg-primary-700 rounded-lg shadow-sm
                    hover:bg-primary-800 hover:text-white active:scale-[0.99]
                    focus:outline-none focus:ring-4 focus:ring-primary-700/30
                    disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-primary-700 disabled:hover:text-gray-900
                    transition-all duration-200 cursor-pointer"
           >
-            Entrar
+            {{ loading() ? 'Entrando...' : 'Entrar' }}
           </button>
 
         </form>
