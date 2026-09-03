@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ModalContainerComponent } from '../../../../components/modal-container/modal-container.component';
 
 @Component({
-  imports: [],
+  imports: [ModalContainerComponent],
   selector: 'app-approve-modal',
   styleUrl: './approve-modal.component.scss',
   templateUrl: './approve-modal.component.html',

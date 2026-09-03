@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ModalContainerComponent } from '../../../../components/modal-container/modal-container.component';
 
 @Component({
-  imports: [],
+  imports: [ModalContainerComponent],
   selector: 'app-rejection-modal',
   styleUrl: './rejection-modal.component.scss',
   templateUrl: './rejection-modal.component.html',
