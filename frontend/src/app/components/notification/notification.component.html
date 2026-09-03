@@ -1,0 +1,14 @@
+  <div class="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
+    @for (item of notificationService.messages().slice(0, 5); track item.id) {
+      <div
+        [class.bg-green-600]="item?.type === notificationType.success"
+        [class.bg-red-600]="item.type === notificationType.error"
+        [class.bg-amber-600]="item.type === notificationType.alert"
+        class="p-4 text-white font-medium rounded-lg shadow-lg animate-slide-up"
+        role="alert"
+        aria-live="polite"
+      >
+        {{ item.message }}
+      </div>
+    }
+  </div>
