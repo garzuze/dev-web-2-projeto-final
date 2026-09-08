@@ -1,0 +1,120 @@
+<app-modal-container>
+  <h2 class="mb-6 text-2xl font-extrabold text-gray-900 md:text-3xl">Realizar Pagamento</h2>
+  <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-3">
+    <div>
+      <p class="font-medium text-gray-700 mb-3">Forma de Pagamento</p>
+      <div class="flex flex-col md:flex-row gap-3">
+        <div class="flex gap-2 items-center">
+          <input
+            type="radio"
+            formControlName="paymentMethod"
+            id="pix"
+            value="pix"
+            class="accent-emerald-600 w-4 h-4"
+          />
+          <label for="pix" class="text-gray-700 cursor-pointer">PIX</label>
+        </div>
+        <div class="flex gap-2 items-center">
+          <input
+            type="radio"
+            formControlName="paymentMethod"
+            id="cartao_debito"
+            value="cartao_debito"
+            class="accent-emerald-600 w-4 h-4"
+          />
+          <label for="cartao_debito" class="text-gray-700 cursor-pointer">Cartão de débito</label>
+        </div>
+        <div class="flex gap-2 items-center">
+          <input
+            type="radio"
+            formControlName="paymentMethod"
+            id="cartao_credito"
+            value="cartao_credito"
+            class="accent-emerald-600 w-4 h-4"
+          />
+          <label for="cartao_credito" class="text-gray-700 cursor-pointer">Cartão de crédito</label>
+        </div>
+      </div>
+    </div>
+    @if (paymentForm.get('paymentMethod')?.value === 'cartao_debito') {
+      <div class="flex flex-col gap-3 border-t border-gray-200 pt-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Nome do Titular</label>
+          <input
+            type="text"
+            formControlName="cardHolder"
+            placeholder="Nome como impresso no cartão"
+            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Número do Cartão</label>
+          <input
+            type="text"
+            formControlName="cardNumber"
+            placeholder="0000 0000 0000 0000"
+            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+          />
+        </div>
+        <div class="flex gap-3">
+          <div class="w-1/2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Validade</label>
+            <input
+              type="text"
+              formControlName="expiryDate"
+              placeholder="MM/AA"
+              class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+            />
+          </div>
+          <div class="w-1/2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">CVV</label>
+            <input
+              type="text"
+              formControlName="cvv"
+              placeholder="123"
+              class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+            />
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (paymentForm.get('paymentMethod')?.value === 'pix') {
+      <div class="border-t border-gray-200 pt-4 text-center">
+        <p class="text-sm text-gray-600 mb-3">Escaneie o QR Code ou utilize a chave PIX abaixo:</p>
+        <div
+          class="bg-gray-100 p-4 rounded-lg flex justify-center items-center h-40 w-40 mx-auto mb-3 border-2 border-dashed border-gray-300"
+        >
+          <span class="text-gray-400 text-sm font-medium">QR Code</span>
+        </div>
+        <div class="bg-gray-100 p-3 rounded-lg border border-gray-200">
+          <p class="font-mono text-xs text-gray-700 break-all select-all">
+            00020126580014br.gov.bcb.pix0136teste-chave-123-abc-456...
+          </p>
+        </div>
+      </div>
+    }
+
+    <div class="flex justify-end gap-3 mt-3">
+      <button
+        class="rounded-lg border border-gray-300 px-5 py-2 font-medium text-gray-700 transition hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-50 cursor-pointer"
+        type="button"
+        (click)="cancel.emit()"
+      >
+        Cancelar
+      </button>
+      <button
+        class="rounded-lg bg-emerald-600 px-5 py-2 font-medium text-white transition hover:bg-emerald-800 focus:bg-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-50 disabled:bg-gray-300 cursor-pointer disabled:cursor-not-allowed"
+        type="button"
+        [disabled]="isPaymenting"
+        (click)="confirm.emit()"
+      >
+        @if (!isPaymenting) {
+          Confirmar Pagamento
+        } @else {
+          Confirmando...
+        }
+      </button>
+    </div>
+  </form>
+</app-modal-container>

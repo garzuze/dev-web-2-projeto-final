@@ -5,9 +5,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MaintenanceRequest, RequestStatus } from '../../../models/maintenanceRequest.model';
 import { NotificationType } from '../../../models/notification.model';
 import { RequestDetailsCardComponent } from '../../../components/request-details-card/request-details-card.component';
+import { PaymentModalComponent } from './payment-modal/payment-modal.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
-  imports: [RequestDetailsCardComponent],
+  imports: [RequestDetailsCardComponent, PaymentModalComponent],
   selector: 'app-payment',
   styleUrl: './payment.component.scss',
   templateUrl: './payment.component.html',
@@ -20,6 +22,8 @@ export class PaymentComponent {
   public requestData?: MaintenanceRequest;
   public requestStatus = RequestStatus;
 
+  public isPaymentModalOpen: boolean = false;
+  public isPaymenting: boolean = false;
   ngOnInit(): void {
     this.activatedRoutes.paramMap.subscribe((params) => {
       const id = Number(params.get('id'));
@@ -53,4 +57,14 @@ export class PaymentComponent {
       });
     });
   }
+
+  onPayment() {
+    this.isPaymentModalOpen = true;
+  }
+
+  onCancelPayment() {
+    this.isPaymentModalOpen = false;
+  }
+
+  onConfirmPayment() {}
 }
