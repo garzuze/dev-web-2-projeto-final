@@ -1,4 +1,4 @@
-package br.ufpr.tads.manutencao.category.dto;
+package br.ufpr.tads.manutencao.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

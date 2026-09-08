@@ -1,7 +1,9 @@
-package br.ufpr.tads.manutencao.category;
+package br.ufpr.tads.manutencao.controller;
 
 import java.util.List;
 
+import br.ufpr.tads.manutencao.dto.LoginResponse;
+import br.ufpr.tads.manutencao.service.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.ufpr.tads.manutencao.category.dto.CategoryRequest;
-import br.ufpr.tads.manutencao.category.dto.CategoryResponse;
+import br.ufpr.tads.manutencao.dto.CategoryRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -28,18 +29,18 @@ public class CategoryController {
     }
 
     @GetMapping
-    public List<CategoryResponse> list() {
+    public List<LoginResponse.CategoryResponse> list() {
         return categoryService.list();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoryResponse create(@Valid @RequestBody CategoryRequest request) {
+    public LoginResponse.CategoryResponse create(@Valid @RequestBody CategoryRequest request) {
         return categoryService.create(request);
     }
 
     @PutMapping("/{id}")
-    public CategoryResponse update(@PathVariable Long id, @Valid @RequestBody CategoryRequest request) {
+    public LoginResponse.CategoryResponse update(@PathVariable Long id, @Valid @RequestBody CategoryRequest request) {
         return categoryService.update(id, request);
     }
     
