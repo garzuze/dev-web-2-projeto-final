@@ -1,0 +1,55 @@
+<app-modal-container>
+  <h2 class="mb-6 text-2xl font-extrabold text-gray-900">
+    {{ category ? 'Editar categoria' : 'Nova categoria' }}
+  </h2>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="mb-2 flex flex-col gap-2">
+      <label for="name" class="font-medium text-gray-700">Nome</label>
+      <input
+        id="name"
+        type="text"
+        formControlName="name"
+        maxlength="50"
+        autocomplete="off"
+        class="w-full rounded-lg border border-gray-300 p-3 text-gray-900 outline-none transition focus:border-primary-800 focus:ring-2 focus:ring-primary-800/20"
+        placeholder="Ex.: Notebook"
+      />
+    </div>
+
+    @if (name.touched && name.invalid) {
+      <p class="mb-2 text-sm text-red-700" role="alert">
+        @if (name.hasError('required')) {
+          O nome e obrigatorio.
+        } @else if (name.hasError('minlength')) {
+          O nome deve ter pelo menos 2 caracteres.
+        } @else {
+          O nome deve ter no maximo 50 caracteres.
+        }
+      </p>
+    }
+
+    @if (errorMessage()) {
+      <p class="mb-2 rounded-lg bg-red-50 p-3 text-sm text-red-700" role="alert">
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <div class="mt-6 flex justify-end gap-3">
+      <button
+        class="cursor-pointer rounded-lg border border-gray-300 px-5 py-2 font-medium text-gray-700 transition hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-50"
+        type="button"
+        (click)="cancel.emit()"
+      >
+        Cancelar
+      </button>
+      <button
+        class="cursor-pointer rounded-lg bg-primary-800 px-5 py-2 font-medium text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary-800/20 disabled:cursor-not-allowed disabled:bg-gray-300"
+        type="submit"
+        [disabled]="saving()"
+      >
+        {{ saving() ? 'Salvando...' : 'Salvar' }}
+      </button>
+    </div>
+  </form>
+</app-modal-container>
