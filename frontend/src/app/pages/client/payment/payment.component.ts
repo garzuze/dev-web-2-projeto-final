@@ -7,6 +7,7 @@ import { NotificationType } from '../../../models/notification.model';
 import { RequestDetailsCardComponent } from '../../../components/request-details-card/request-details-card.component';
 import { PaymentModalComponent } from './payment-modal/payment-modal.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { paymentData } from '../../../models/payment.model';
 
 @Component({
   imports: [RequestDetailsCardComponent, PaymentModalComponent],
@@ -66,5 +67,28 @@ export class PaymentComponent {
     this.isPaymentModalOpen = false;
   }
 
-  onConfirmPayment() {}
+  onConfirmPayment(paymentData: paymentData) {
+    console.log(paymentData);
+    if (this.requestData?.id) {
+      this.isPaymenting = true;
+      this.maintenanceRequestService.payRequest(this.requestData.id).subscribe({
+        next: (res) => {
+          this.isPaymenting = false;
+          this.notificationService.showNotification(
+            'Serviço pago com sucesso!',
+            NotificationType.success,
+          );
+          this.isPaymentModalOpen = false;
+          this.router.navigate(['/client/request']);
+        },
+        error: () => {
+          this.isPaymenting = false;
+          this.notificationService.showNotification(
+            'Erro ao pagar serviço.',
+            NotificationType.error,
+          );
+        },
+      });
+    }
+  }
 }

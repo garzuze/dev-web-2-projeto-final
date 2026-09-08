@@ -24,7 +24,7 @@
 @if (isPaymentModalOpen) {
   <app-payment-modal
     (cancel)="onCancelPayment()"
-    (confirm)="onConfirmPayment()"
+    (confirm)="onConfirmPayment($event)"
     [isPaymenting]="isPaymenting"
   />
 }

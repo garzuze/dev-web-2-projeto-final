@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ModalContainerComponent } from '../../../../components/modal-container/modal-container.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { paymentData } from '../../../../models/payment.model';
 
 @Component({
   imports: [ModalContainerComponent, ReactiveFormsModule],
@@ -10,7 +11,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 })
 export class PaymentModalComponent {
   @Output() cancel = new EventEmitter<void>();
-  @Output() confirm = new EventEmitter<any>();
+  @Output() confirm = new EventEmitter<paymentData>();
   @Input() isPaymenting: boolean = false;
 
   paymentForm: FormGroup;
