@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ViaCepService } from './via-cep.service';
+import { AuthService, SignUpRequest } from '../core/auth.service';
 
 
 @Component({
@@ -14,6 +15,8 @@ import { ViaCepService } from './via-cep.service';
 export class Autocadastro {
   private formBuilder = inject(FormBuilder);
   private servicoCep = inject(ViaCepService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   form = this.formBuilder.group({
     nome: ['', Validators.required],
@@ -50,7 +53,37 @@ export class Autocadastro {
     }
 
     cadastrar() {
-      console.log('Formulário é válido?', this.form.valid);
-      console.log('Exemplo de payload:', this.form.value);
+      if (this.form.invalid) {
+        return;
+      }
+
+      const dados = this.form.getRawValue();
+       const payload: SignUpRequest = {
+        name: dados.nome || '',
+        cpf: (dados.cpf || '').replace(/\D/g, ''),
+        email: dados.email || '',
+        phone: (dados.telefone || '').replace(/\D/g, ''),
+        address: {
+          zipCode: (dados.cep || '').replace(/\D/g, ''),
+          street: dados.rua || '',
+          number: dados.numero || '',
+          district: dados.bairro || '',
+          city: dados.cidade || '',
+          state: dados.estado || '',
+          complement: dados.complemento || ''
+        }
+      };
+     
+       this.authService.signUp(payload).subscribe({
+        next: (resposta) => {
+          alert('Cadastro realizado com sucesso! Sua senha de acesso foi enviada para o seu e-mail.');
+          this.router.navigate(['/login']);
+        },
+        error: (erro) => {
+          console.error('Erro ao cadastrar:', erro);
+          alert('Erro ao realizar cadastro. Verifique se o CPF ou e-mail já estão cadastrados.');
+        }
+      });
+      
     }
 }
