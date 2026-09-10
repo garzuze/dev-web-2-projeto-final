@@ -4,20 +4,27 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-solicitacao-servico-cliente',
-  standalone: true, 
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './solicitacao-servico-cliente.html',
 })
 export class SolicitacaoServicoCliente implements OnInit {
 
   manutencaoForm!: FormGroup;
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.manutencaoForm = this.fb.group({
       tipo: ['', Validators.required],
       modelo: ['', Validators.required],
-      descricao: ['', [Validators.required, Validators.minLength(10)]]
+      patrimonio: [''],
+      predio: [''],
+      sala: [''],
+      ramal: [''],
+      descricao: ['', [Validators.required, Validators.minLength(10)]],
+      urgencia: ['baixa', Validators.required],
+      turno_manha: [false],
+      turno_tarde: [false]
     });
   }
 

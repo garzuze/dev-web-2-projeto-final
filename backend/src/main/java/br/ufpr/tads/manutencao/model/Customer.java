@@ -19,7 +19,7 @@ public class Customer extends User {
     private String phone;
 
   @Entity
-  @Table (name = "category")
+  @Table(name = "category")
   @Getter
   @Setter
   public static class Category {
