@@ -1,0 +1,75 @@
+<section class="mx-auto max-w-4xl p-6">
+  <div class="mb-6 flex items-center justify-between">
+    <h1 class="text-3xl font-extrabold text-gray-900">Categorias de equipamento</h1>
+    <button
+      class="cursor-pointer rounded-lg bg-primary-800 px-5 py-2 font-medium text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary-800/20"
+      type="button"
+      (click)="onNew()"
+    >
+      Nova categoria
+    </button>
+  </div>
+
+  @if (loading()) {
+    <p class="text-gray-500">Carregando...</p>
+  } @else if (categories().length === 0) {
+    <p class="rounded-lg border border-dashed border-gray-300 p-8 text-center text-gray-500">
+      Nenhuma categoria cadastrada ainda.
+    </p>
+  } @else {
+    <table class="w-full overflow-hidden rounded-xl border border-gray-200 text-left">
+      <caption class="sr-only">Categorias ativas</caption>
+      <thead class="bg-gray-100 text-sm uppercase text-gray-600">
+        <tr>
+          <th scope="col" class="px-4 py-3">Nome</th>
+          <th scope="col" class="px-4 py-3 text-right">Acoes</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (category of categories(); track category.id) {
+          <tr class="border-t border-gray-200">
+            <td class="px-4 py-3 text-gray-900">{{ category.name }}</td>
+            <td class="px-4 py-3 text-right">
+              <button
+                class="cursor-pointer rounded-lg border border-gray-300 px-3 py-1 font-medium text-gray-700 transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-50"
+                type="button"
+                [attr.aria-label]="'Editar categoria ' + category.name"
+                (click)="onEdit(category)"
+              >
+                Editar
+              </button>
+              <button
+                class="ml-2 cursor-pointer rounded-lg border border-red-300 px-3 py-1 font-medium text-red-700 transition hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-50"
+                type="button"
+                [attr.aria-label]="'Remover categoria ' + category.name"
+                (click)="onRemove(category)"
+              >
+                Remover
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>
+
+@if (isFormOpen) {
+  <app-category-modal
+    [category]="editing"
+    (cancel)="onFormCancel()"
+    (saved)="onSaved($event)"
+  />
+}
+
+@if (removing) {
+  <app-confirm-dialog
+    title="Remover categoria"
+    [message]="'Remover a categoria ' + removing.name + '?'"
+    confirmLabel="Remover"
+    busyLabel="Removendo..."
+    [busy]="isRemoving"
+    (cancel)="onCancelRemove()"
+    (confirm)="onConfirmRemove()"
+  />
+}

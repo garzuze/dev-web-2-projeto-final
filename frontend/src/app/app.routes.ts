@@ -6,6 +6,8 @@ import { Routes } from '@angular/router';
 import { LandingPage } from './landing-page/landing-page';
 import { Autocadastro } from './autocadastro/autocadastro';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { CategoriesComponent } from './pages/employee/categories';
+import { employeeGuard } from './core/employee.guard';
 
 export const routes: Routes = [
   { path: '', component: LandingPage },
@@ -14,5 +16,10 @@ export const routes: Routes = [
   { path: 'client/request', component: SolicitacaoServicoCliente },
   { path: 'client/quote/:id', component: QuoteComponent },
   { path: 'client/payment/:id', component: PaymentComponent },
+  {
+    path: 'employee/categories',
+    component: CategoriesComponent,
+    canActivate: [employeeGuard],
+  },
   { path: '**', component: NotFoundComponent },
 ];
