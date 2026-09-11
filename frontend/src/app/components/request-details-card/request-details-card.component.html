@@ -69,45 +69,62 @@
   <!-- Área de Histórico -->
   @if (requestData?.history && requestData!.history.length > 0) {
     <div class="bg-gray-50 p-6 rounded-b-xl border-b-2 border-gray-200 border-dashed">
-      <h3 class="mb-4 text-sm font-bold text-gray-700 uppercase">Histórico da Solicitação</h3>
-      <ul class="border-l-2 border-primary-800 ml-3 flex flex-col-reverse gap-6">
-        @for (item of requestData.history; track item.id) {
-          <li class="relative pl-6">
-            <span
-              class="absolute -left-2 top-4 h-4 w-4 rounded-full bg-primary-800 border-2 border-gray-50"
-            ></span>
-            <div
-              class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex flex-col gap-3 transition-transform hover:-translate-y-1"
-            >
-              <div class="flex justify-between items-center flex-wrap gap-2">
-                <span class="font-medium text-gray-500">
-                  {{ item.dateTime | date: 'dd/MM/yyyy HH:mm' }}
-                </span>
-                <span
-                  class="px-3 py-1 rounded-2xl text-xs font-semibold"
-                  [ngClass]="getStatusClass(item.newStatus)"
-                  >Status alterado para {{ item.newStatus }}</span
-                >
-              </div>
-              <div class="flex flex-col gap-3">
-                @if (item.employeeName) {
-                  <p class="text-sm text-gray-600">
-                    <strong class="text-gray-700 font-semibold">Atendido por:</strong>
-                    {{ item.employeeName }}
-                  </p>
-                }
-                @if (item.notes) {
-                  <p
-                    class="text-sm text-gray-700 bg-gray-100/65 p-3 rounded-lg border border-gray-200/80"
+      <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-3">
+        <h3 class="text-base md:text-sm font-bold text-gray-700 uppercase">
+          Histórico da Solicitação
+        </h3>
+        <button
+          class="w-fit text-center px-3 py-1 rounded-2xl text-sm md:text-xs text-white font-semibold bg-gray-400 cursor-pointer"
+          (click)="toggleHistory()"
+        >
+          @if (showHistory) {
+            Ocultar Histórico
+          } @else {
+            Mostrar Histórico
+          }
+        </button>
+      </div>
+
+      @if (showHistory) {
+        <ul class="border-l-2 border-primary-800 ml-3 flex flex-col-reverse gap-6">
+          @for (item of requestData.history; track item.id) {
+            <li class="relative pl-6">
+              <span
+                class="absolute -left-2 top-4 h-4 w-4 rounded-full bg-primary-800 border-2 border-gray-50"
+              ></span>
+              <div
+                class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex flex-col gap-3 transition-transform hover:-translate-y-1"
+              >
+                <div class="flex justify-between items-center flex-wrap gap-2">
+                  <span class="font-medium text-gray-500">
+                    {{ item.dateTime | date: 'dd/MM/yyyy HH:mm' }}
+                  </span>
+                  <span
+                    class="px-3 py-1 rounded-2xl text-xs font-semibold"
+                    [ngClass]="getStatusClass(item.newStatus)"
+                    >Status alterado para {{ item.newStatus }}</span
                   >
-                    {{ item.notes }}
-                  </p>
-                }
+                </div>
+                <div class="flex flex-col gap-3">
+                  @if (item.employeeName) {
+                    <p class="text-sm text-gray-600">
+                      <strong class="text-gray-700 font-semibold">Atendido por:</strong>
+                      {{ item.employeeName }}
+                    </p>
+                  }
+                  @if (item.notes) {
+                    <p
+                      class="text-sm text-gray-700 bg-gray-100/65 p-3 rounded-lg border border-gray-200/80"
+                    >
+                      {{ item.notes }}
+                    </p>
+                  }
+                </div>
               </div>
-            </div>
-          </li>
-        }
-      </ul>
+            </li>
+          }
+        </ul>
+      }
     </div>
   }
 

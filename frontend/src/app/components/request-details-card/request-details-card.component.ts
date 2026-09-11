@@ -10,6 +10,12 @@ import { CurrencyPipe, DatePipe, LowerCasePipe, NgClass } from '@angular/common'
 })
 export class RequestDetailsCardComponent {
   public requestStatus = RequestStatus;
+  showHistory: boolean = false;
+
+  toggleHistory(): void {
+    this.showHistory = !this.showHistory;
+  }
+
   @Input({ required: true }) requestData?: MaintenanceRequest;
   getStatusClass(status?: string): string {
     switch (status) {
