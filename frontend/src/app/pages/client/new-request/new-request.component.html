@@ -1,0 +1,105 @@
+<div class="container py-8 md:py-12">
+  <div class="mx-auto max-w-2xl">
+    <div class="mb-8">
+      <p class="mb-2 text-sm font-medium text-primary-800">Nova solicitação</p>
+      <h1 class="mb-2 text-3xl font-extrabold text-gray-900 md:text-4xl">Solicitar manutenção</h1>
+      <p class="text-gray-500">Informe para qual equipamento precisa de reparo.</p>
+    </div>
+
+    <form
+      [formGroup]="form"
+      (ngSubmit)="submit()"
+      class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
+    >
+      <div class="mb-4 flex flex-col gap-2">
+        <label for="equipmentDescription" class="font-medium text-gray-700">
+          Descrição do equipamento
+        </label>
+        <input
+          id="equipmentDescription"
+          type="text"
+          formControlName="equipmentDescription"
+          [maxlength]="equipmentDescriptionMaxLength"
+          autocomplete="off"
+          class="w-full rounded-lg border border-gray-300 p-3 text-gray-900 outline-none transition focus:border-primary-800 focus:ring-2 focus:ring-primary-800/20"
+          placeholder="Ex.: Notebook Lenovo Ideapad 3"
+        />
+        <p class="text-right text-xs text-gray-400">
+          {{ equipmentDescription.value.length }}/{{ equipmentDescriptionMaxLength }} caracteres
+        </p>
+        @if (submitted() && equipmentDescription.invalid) {
+          <p class="text-sm text-red-700" role="alert">
+            @if (equipmentDescription.hasError('required')) {
+              A descrição do equipamento é obrigatória.
+            } @else if (equipmentDescription.hasError('minlength')) {
+              A descrição do equipamento deve ter no mínimo
+              {{ equipmentDescriptionMinLength }} caracteres.
+            } @else {
+              A descrição do equipamento deve ter no máximo
+              {{ equipmentDescriptionMaxLength }} caracteres.
+            }
+          </p>
+        }
+      </div>
+
+      <div class="mb-4 flex flex-col gap-2">
+        <label for="categoryId" class="font-medium text-gray-700">Categoria</label>
+        <select
+          id="categoryId"
+          formControlName="categoryId"
+          class="w-full rounded-lg border border-gray-300 p-3 text-gray-900 outline-none transition focus:border-primary-800 focus:ring-2 focus:ring-primary-800/20"
+        >
+          <option [ngValue]="null" disabled>
+            {{ loadingCategories() ? 'Carregando categorias...' : 'Selecione uma categoria' }}
+          </option>
+          @for (category of categories(); track category.id) {
+            <option [ngValue]="category.id">{{ category.name }}</option>
+          }
+        </select>
+        @if (submitted() && categoryId.invalid) {
+          <p class="text-sm text-red-700" role="alert">A categoria é obrigatória.</p>
+        }
+      </div>
+
+      <div class="mb-2 flex flex-col gap-2">
+        <label for="defectDescription" class="font-medium text-gray-700">
+          Descrição do defeito
+        </label>
+        <textarea
+          id="defectDescription"
+          formControlName="defectDescription"
+          rows="4"
+          [maxlength]="defectDescriptionMaxLength"
+          class="w-full rounded-lg border border-gray-300 p-3 text-gray-900 outline-none transition focus:border-primary-800 focus:ring-2 focus:ring-primary-800/20"
+          placeholder="Descreva o problema apresentado pelo equipamento"
+        ></textarea>
+        <p class="text-right text-xs text-gray-400">
+          {{ defectDescription.value.length }}/{{ defectDescriptionMaxLength }} caracteres
+        </p>
+        @if (submitted() && defectDescription.invalid) {
+          <p class="text-sm text-red-700" role="alert">
+            @if (defectDescription.hasError('required')) {
+              A descrição do defeito é obrigatória.
+            } @else if (defectDescription.hasError('minlength')) {
+              A descrição do defeito deve ter no mínimo
+              {{ defectDescriptionMinLength }} caracteres.
+            } @else {
+              A descrição do defeito deve ter no máximo
+              {{ defectDescriptionMaxLength }} caracteres.
+            }
+          </p>
+        }
+      </div>
+
+      <div class="mt-6 flex justify-end">
+        <button
+          type="submit"
+          class="cursor-pointer rounded-lg bg-primary-800 px-5 py-2 font-medium text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary-800/20 disabled:cursor-not-allowed disabled:bg-gray-300"
+          [disabled]="submitting() || noCategoriesAvailable()"
+        >
+          {{ submitting() ? 'Enviando...' : 'Solicitar manutenção' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
