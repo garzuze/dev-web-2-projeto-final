@@ -1,15 +1,21 @@
 import { Component, Input } from '@angular/core';
 import { MaintenanceRequest, RequestStatus } from '../../models/maintenanceRequest.model';
-import { CurrencyPipe, DatePipe, LowerCasePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, LowerCasePipe, NgClass } from '@angular/common';
 
 @Component({
-  imports: [DatePipe, LowerCasePipe, CurrencyPipe],
+  imports: [DatePipe, LowerCasePipe, CurrencyPipe, NgClass],
   selector: 'app-request-details-card',
   styleUrl: './request-details-card.component.scss',
   templateUrl: './request-details-card.component.html',
 })
 export class RequestDetailsCardComponent {
   public requestStatus = RequestStatus;
+  showHistory: boolean = false;
+
+  toggleHistory(): void {
+    this.showHistory = !this.showHistory;
+  }
+
   @Input({ required: true }) requestData?: MaintenanceRequest;
   getStatusClass(status?: string): string {
     switch (status) {

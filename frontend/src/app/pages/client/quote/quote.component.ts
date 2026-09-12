@@ -119,8 +119,12 @@ export class QuoteComponent {
       this.maintenanceRequestService.approveRequest(this.requestData.id).subscribe({
         next: () => {
           this.isApproving = false;
+          const valorFormatado = new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+          }).format(this.requestData?.quoteValue || 0);
           this.notificationService.showNotification(
-            'Orçamento aprovado com sucesso',
+            `Serviço Aprovado no Valor ${valorFormatado}`,
             NotificationType.success,
           );
           this.isApproveModalOpen = false;
