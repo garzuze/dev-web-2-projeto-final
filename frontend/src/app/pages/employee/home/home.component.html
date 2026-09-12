@@ -1,0 +1,76 @@
+<div class="container py-8 md:py-12">
+  <div class="mb-8 flex justify-between items-center">
+    <div>
+      <p class="mb-2 text-sm font-medium text-primary-800">Painel do Funcionário</p>
+      <h1 class="mb-2 text-3xl font-extrabold text-gray-900 md:text-4xl">Solicitações Abertas</h1>
+      <p class="text-gray-500">Atenção imediata necessária: solicitações aguardando orçamento.</p>
+    </div>
+  </div>
+
+  @if (openRequests.length === 0) {
+    <div class="rounded-xl border border-gray-200 bg-white shadow-sm p-12 text-center">
+      <svg
+        class="mx-auto mb-4 h-12 w-12 text-gray-400"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 -960 960 960"
+        fill="currentColor"
+      >
+        <path
+          d="m424-296 282-282-56-56-226 226-114-114-56 56 170 170Zm56 216q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"
+        />
+      </svg>
+      <h3 class="text-lg font-medium text-gray-900">Tudo em dia!</h3>
+      <p class="mt-2 text-sm text-gray-500">Não há solicitações aguardando orçamento no momento.</p>
+    </div>
+  } @else {
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      @for (request of openRequests; track request.id) {
+        <div
+          class="flex flex-col rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow"
+        >
+          <!-- Cabeçalho do Card -->
+          <div class="border-b border-gray-100 p-4">
+            <div class="flex items-center justify-between mb-3">
+              <span
+                class="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-800 border border-gray-200"
+              >
+                #{{ request.id }}
+              </span>
+              <span class="text-xs font-medium text-gray-500">
+                {{ request.openingDateTime | date: 'dd/MM/yyyy HH:mm' }}
+              </span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 line-clamp-1 mb-1">
+              {{ request.clientName }}
+            </h3>
+            <span
+              class="inline-block rounded-full bg-gray-100 text-primary-800 px-2 py-1 text-xs font-medium"
+            >
+              {{ request.categoryName }}
+            </span>
+          </div>
+
+          <!-- Corpo do Card -->
+          <div class="p-4 flex-1 border-b border-gray-100">
+            <p class="mb-2 text-sm font-medium text-gray-500">Equipamento</p>
+            <p class="text-sm leading-relaxed text-gray-900">
+              {{ request.equipmentDescription | slice: 0 : 30
+              }}{{ request.equipmentDescription.length > 30 ? '...' : '' }}
+            </p>
+          </div>
+
+          <!-- Rodapé do Card -->
+          <div class="p-4 bg-gray-50 rounded-b-xl">
+            <button
+              type="button"
+              class="w-full rounded-lg bg-gray-400 px-4 py-2.5 text-center text-sm font-medium text-white transition hover:bg-gray-500/90 focus:outline-none focus:ring-1 focus:ring-gray-300 shadow-sm cursor-pointer"
+              (click)="goToQuote(request.id)"
+            >
+              Efetuar Orçamento
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
