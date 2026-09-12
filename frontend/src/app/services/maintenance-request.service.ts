@@ -78,6 +78,37 @@ export class MaintenanceRequestService {
       success: true,
     });
   }
+  
+  createRequest(request: {
+    clientId: number;
+    clientName: string;
+    categoryName: string;
+    equipmentDescription: string;
+    defectDescription: string;
+  }): Observable<MaintenanceRequest> {
+    const id = Date.now();
+    const newRequest: MaintenanceRequest = {
+      id,
+      openingDateTime: new Date().toISOString(),
+      statusName: RequestStatus.Open,
+      clientId: request.clientId,
+      clientName: request.clientName,
+      categoryName: request.categoryName,
+      equipmentDescription: request.equipmentDescription,
+      defectDescription: request.defectDescription,
+      history: [
+        {
+          id,
+          requestId: id,
+          dateTime: new Date().toISOString(),
+          newStatus: RequestStatus.Open,
+          notes: 'Solicitação aberta pelo cliente.',
+        },
+      ],
+    };
+    MAINTENANCE_REQUEST_MOCK.push(newRequest);
+    return of(newRequest);
+  }
 
   // Paga uma requisição de manutençao
   payRequest(
