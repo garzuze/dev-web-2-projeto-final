@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { delay, Observable, of } from 'rxjs';
 import { MaintenanceRequest, RequestStatus } from '../models/maintenanceRequest.model';
 import { MAINTENANCE_REQUEST_MOCK } from '../mocks/maintenance-request.mock';
 
@@ -7,10 +7,43 @@ import { MAINTENANCE_REQUEST_MOCK } from '../mocks/maintenance-request.mock';
   providedIn: 'root',
 })
 export class MaintenanceRequestService {
+  getAllRequests(): Observable<MaintenanceRequest[] | undefined> {
+    return of(MAINTENANCE_REQUEST_MOCK);
+  }
+
+  getOpenRequests(): Observable<MaintenanceRequest[] | undefined> {
+    const filteredRequests = MAINTENANCE_REQUEST_MOCK.filter(
+      (request) => request.statusName === RequestStatus.Open,
+    );
+    return of(filteredRequests);
+  }
+
   // Busca a informação de um requisição de manutenção específica
   getMaintenanceRequestById(id: number): Observable<MaintenanceRequest | undefined> {
     const request = MAINTENANCE_REQUEST_MOCK.find((r) => r.id === id);
     return of(request);
+  }
+
+  quoteRequest(id: number, quoteValue: number) {
+    const request = MAINTENANCE_REQUEST_MOCK.find((r) => r.id === id);
+    if (request) {
+      const previousStatus = request.statusName;
+      request.statusName = RequestStatus.Quoted;
+      request.quoteValue = quoteValue;
+      request.history.push({
+        id: Date.now(),
+        requestId: id,
+        dateTime: new Date().toISOString(),
+        previousStatus: previousStatus,
+        newStatus: RequestStatus.Quoted,
+        notes: 'Orçamento criado pelo funcionário.',
+      });
+    }
+    return of({
+      message: 'Orçamento registrado com sucesso',
+      success: true,
+    });
+
   }
 
   // Aprova o orçamento de manutenção
