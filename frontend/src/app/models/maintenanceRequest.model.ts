@@ -1,6 +1,6 @@
 export enum RequestStatus {
   Open = 'ABERTA',
-  Quoted = 'ORCADA',
+  Quoted = 'ORÇADA',
   Rejected = 'REJEITADA',
   Approved = 'APROVADA',
   Redirected = 'REDIRECIONADA',
