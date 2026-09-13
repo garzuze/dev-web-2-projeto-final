@@ -1,0 +1,151 @@
+<div class="container py-8 md:py-12">
+  <div class="mb-6">
+    <p class="mb-2 text-sm font-medium text-primary-800">Solicitações</p>
+    <h1 class="mb-2 text-3xl font-extrabold text-gray-900 md:text-4xl">
+      Solicitações de Manutenção
+    </h1>
+    <p class="text-gray-500">Consulte e gerencie as solicitações de manutenção.</p>
+  </div>
+
+  <!-- Filtros -->
+  <div class="mb-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+    <h2 class="mb-2 text-lg font-bold text-gray-800">Filtrar solicitações</h2>
+    <form class="flex flex-col gap-4 md:flex-row md:items-end">
+      <div class="flex flex-col gap-2">
+        <label for="filter" class="text-sm font-medium text-gray-700">
+          Selecione o tipo de filtro
+        </label>
+        <select
+          name="filter"
+          id="filter"
+          [(ngModel)]="filter"
+          (change)="onFilterChange()"
+          class="rounded-lg border border-gray-300 bg-white p-3 text-gray-700 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-500"
+        >
+          <option value="every">Todas</option>
+          <option value="today">Hoje</option>
+          <option value="period">Período</option>
+        </select>
+      </div>
+
+      @if (filter === 'period') {
+        <div class="flex flex-col gap-2">
+          <label for="filterDataStart" class="text-sm font-medium text-gray-700">
+            Data de início
+          </label>
+          <input
+            type="date"
+            [(ngModel)]="filterDataStart"
+            id="filterDataStart"
+            (change)="onFilterChange()"
+            class="rounded-lg border border-gray-300 bg-white p-3 text-gray-700 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-500"
+          />
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="filterDataEnd" class="text-sm font-medium text-gray-700"> Data de fim </label>
+          <input
+            type="date"
+            [(ngModel)]="filterDataEnd"
+            id="filterDataEnd"
+            (change)="onFilterChange()"
+            class="rounded-lg border border-gray-300 bg-white p-3 text-gray-700 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-500"
+          />
+        </div>
+      }
+    </form>
+  </div>
+
+  <!-- Tabela -->
+  <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+    <div class="max-h-96 overflow-x-auto overflow-y-auto">
+      <table class="w-full min-w-md">
+        <thead class="border-b border-gray-200 bg-gray-100">
+          <tr class="*:px-6 *:py-4 *:text-left *:text-sm *:font-semibold *:text-gray-700">
+            <th>Id</th>
+            <th>Cliente</th>
+            <th>Descrição</th>
+            <th>Data de Abertura</th>
+            <th>Status</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-gray-200">
+          @for (item of filteredRequests; track item.id) {
+            <tr class="transition-colors hover:bg-gray-50">
+              <td class="px-6 py-4 text-sm font-medium text-gray-900">#{{ item.id }}</td>
+              <td class="px-6 py-4 text-sm text-gray-700">
+                {{ item.clientName }}
+              </td>
+              <td class="max-w-xs px-6 py-4 text-sm text-gray-600">
+                {{ item.defectDescription }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600">
+                {{ item.openingDateTime | date: 'dd/MM/yyyy HH:mm' }}
+              </td>
+              <td class="px-6 py-4">
+                <span
+                  class="inline-flex rounded-full px-3 py-1 text-xs font-semibold"
+                  [ngClass]="getStatusClass(item.statusName)"
+                >
+                  {{ item.statusName }}
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                @switch (item.statusName) {
+                  @case (requestStatus.Open) {
+                    <button
+                      [routerLink]="['/employee/quote', item.id]"
+                      class="cursor-pointer rounded-lg bg-gray-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                    >
+                      Efetuar Orçamento
+                    </button>
+                  }
+                  @case (requestStatus.Paid) {
+                    <button
+                      [routerLink]="['/employee/completed', item.id]"
+                      class="cursor-pointer rounded-lg bg-gray-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                    >
+                      Finalizar Solicitação
+                    </button>
+                  }
+                  @case (requestStatus.Approved) {
+                    <button
+                      [routerLink]="['/employee/arranged', item.id]"
+                      class="cursor-pointer rounded-lg bg-gray-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                    >
+                      Efetuar Manutenção
+                    </button>
+                  }
+                  @case (requestStatus.Redirected) {
+                    <button
+                      [routerLink]="['/employee/arranged', item.id]"
+                      class="cursor-pointer rounded-lg bg-gray-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                    >
+                      Efetuar Manutenção
+                    </button>
+                  }
+                  @default {
+                    <span class="text-sm text-gray-400"> Sem ação </span>
+                  }
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="px-6 py-12 text-center">
+                <p class="text-sm font-medium text-gray-600">
+                  Não há solicitações aguardando orçamento no momento.
+                </p>
+
+                <p class="mt-1 text-sm text-gray-400">
+                  Tente alterar o filtro para visualizar outras solicitações.
+                </p>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
