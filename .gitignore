@@ -11,3 +11,5 @@
 /backend/target/
 
 .vscode/
+
+**/application-local.properties
