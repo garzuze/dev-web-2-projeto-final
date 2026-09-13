@@ -3,13 +3,13 @@ package br.ufpr.tads.manutencao.repository;
 import java.util.List;
 import java.util.Optional;
 
-import br.ufpr.tads.manutencao.model.Customer;
+import br.ufpr.tads.manutencao.model.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CategoryRepository extends JpaRepository<Customer.Category, Long> {
+public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    List<Customer.Category> findByActiveTrueOrderByNameAsc();
+    List<Category> findByActiveTrueOrderByNameAsc();
 
-    Optional<Customer.Category> findByNameIgnoreCaseAndActiveTrue(String name);
+    Optional<Category> findByNameIgnoreCaseAndActiveTrue(String name);
 
 }
