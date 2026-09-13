@@ -10,6 +10,9 @@ import { Autocadastro } from './autocadastro/autocadastro';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { CategoriesComponent } from './pages/employee/categories';
 import { employeeGuard } from './core/employee.guard';
+import { HomeComponent } from './pages/employee/home/home.component';
+import { QuoteFormComponent } from './pages/employee/quote-form/quote-form.component';
+import { RequestListComponent } from './pages/employee/request-list/request-list.component';
 
 export const routes: Routes = [
   { path: '', component: LandingPage },
@@ -25,5 +28,18 @@ export const routes: Routes = [
     component: CategoriesComponent,
     canActivate: [employeeGuard],
   },
+  {
+    path: 'employee/quote/:id',
+    component: QuoteFormComponent,
+  },
+  {
+    path: 'employee/home',
+    component: HomeComponent,
+  },
+  {
+    path: 'employee/requests',
+    component: RequestListComponent,
+  },
+  { path: 'employee', redirectTo: 'employee/home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },
 ];
