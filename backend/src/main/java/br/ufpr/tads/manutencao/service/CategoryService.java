@@ -3,7 +3,7 @@ package br.ufpr.tads.manutencao.service;
 import java.util.List;
 
 import br.ufpr.tads.manutencao.dto.LoginResponse;
-import br.ufpr.tads.manutencao.model.Customer;
+import br.ufpr.tads.manutencao.model.Category;
 import br.ufpr.tads.manutencao.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,14 +30,14 @@ public class CategoryService {
 
     @Transactional
     public LoginResponse.CategoryResponse create(CategoryRequest request) {
-        Customer.Category category = new Customer.Category();
+        Category category = new Category();
         category.setName(requireAvailableName(request.name(), null));
         return LoginResponse.CategoryResponse.of(categoryRepository.save(category));
     }
 
     @Transactional
     public LoginResponse.CategoryResponse update(Long id, CategoryRequest request) {
-        Customer.Category category = activeById(id);
+        Category category = activeById(id);
         category.setName(requireAvailableName(request.name(), id));
         return LoginResponse.CategoryResponse.of(category);
     }
@@ -47,9 +47,9 @@ public class CategoryService {
         activeById(id).setActive(false);
     }
 
-    private Customer.Category activeById(Long id) {
+    private Category activeById(Long id) {
         return categoryRepository.findById(id)
-                .filter(Customer.Category::isActive)
+                .filter(Category::isActive)
                 .orElseThrow(() -> new EntityNotFoundException("Categoria " + id + " não encontrada"));
     }
 

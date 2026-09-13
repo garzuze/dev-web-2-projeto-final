@@ -17,21 +17,4 @@ public class Customer extends User {
 
     @Column(nullable = false, length = 11)
     private String phone;
-
-  @Entity
-  @Table(name = "category")
-  @Getter
-  @Setter
-  public static class Category {
-
-      @Id
-      @GeneratedValue(strategy = GenerationType.IDENTITY)
-      private Long id;
-
-      @Column(nullable = false, length = 60)
-      private String name;
-
-      @Column(nullable = false)
-      private boolean active = true;
-  }
 }
