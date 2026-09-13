@@ -1,0 +1,67 @@
+<div class="container py-8 md:py-12">
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <p class="mb-2 text-sm font-medium text-primary-800">Processo de Orçamento</p>
+      <h1 class="mb-2 text-3xl font-extrabold text-gray-900 md:text-4xl">
+        Elaborar Orçamento #{{ requestData?.id }}
+      </h1>
+      <p class="text-gray-500">Analise os detalhes da solicitação e informe o valor estimado.</p>
+    </div>
+  </div>
+
+  @if (requestData) {
+    <app-request-details-card [requestData]="requestData">
+      <div class="rounded-b-xl bg-white p-6">
+        <form [formGroup]="quoteForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6 max-w-md">
+          <div class="flex flex-col gap-2">
+            <label for="quoteValue" class="text-sm font-medium text-gray-700"
+              >Valor Estimado do Serviço (R$)</label
+            >
+            <input
+              id="quoteValue"
+              type="number"
+              step="0.01"
+              min="0"
+              placeholder="0,00"
+              formControlName="quoteValue"
+              class="rounded-lg border border-gray-300 p-3 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              (blur)="formatQuoteValue()"
+            />
+
+            @if (
+              quoteForm.get('quoteValue')?.touched &&
+              quoteForm.get('quoteValue')?.hasError('required')
+            ) {
+              <p class="mt-1 text-sm text-red-500">O valor do orçamento é obrigatório.</p>
+            }
+            @if (
+              quoteForm.get('quoteValue')?.touched && quoteForm.get('quoteValue')?.hasError('min')
+            ) {
+              <p class="mt-1 text-sm text-red-500">O valor mínimo permitido é R$ 0,01.</p>
+            }
+          </div>
+          <div class="flex justify-end gap-4">
+            <button
+              type="button"
+              (click)="onCancel()"
+              class="rounded-lg border border-gray-300 px-5 py-2 font-medium text-gray-700 transition hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-50 cursor-pointer"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              [disabled]="quoteForm.invalid || isSubmitting"
+              class="rounded-lg bg-gray-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-gray-300 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer transition-colors"
+            >
+              @if (isSubmitting) {
+                Salvando
+              } @else {
+                Salvar Orçamento
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </app-request-details-card>
+  }
+</div>
