@@ -1,7 +1,9 @@
-import { SolicitacaoServicoCliente } from './solicitacao-servico-cliente/solicitacao-servico-cliente';
 import { LoginComponent } from './login/login.component';
+import { HomeComponent } from './pages/client/home';
 import { QuoteComponent } from './pages/client/quote/';
 import { PaymentComponent } from './pages/client/payment';
+import { NewRequestComponent } from './pages/client/new-request';
+import { RequestDetailComponent } from './pages/client/request-detail/request-detail.component';
 import { Routes } from '@angular/router';
 import { LandingPage } from './landing-page/landing-page';
 import { Autocadastro } from './autocadastro/autocadastro';
@@ -16,7 +18,9 @@ export const routes: Routes = [
   { path: '', component: LandingPage },
   { path: 'login', component: LoginComponent },
   { path: 'autocadastro', component: Autocadastro },
-  { path: 'client/request', component: SolicitacaoServicoCliente },
+  { path: 'client/request', component: HomeComponent },
+  { path: 'client/request/new', component: NewRequestComponent },
+  { path: 'client/request/:id', component: RequestDetailComponent },
   { path: 'client/quote/:id', component: QuoteComponent },
   { path: 'client/payment/:id', component: PaymentComponent },
   {

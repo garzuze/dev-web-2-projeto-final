@@ -39,7 +39,7 @@ export class LoginComponent {
         this.loading.set(false);
         this.auth.setLoggedUser(user);
         // RF002: o proprio backend diz o perfil, o front so encaminha
-        this.router.navigate([user.profile === 'EMPLOYEE' ? '/' : '/solicitacao-servico-cliente']);
+        this.router.navigate([user.profile === 'EMPLOYEE' ? '/' : '/client/request']);
       },
       error: (error: HttpErrorResponse) => {
         this.loading.set(false);
