@@ -8,9 +8,10 @@ import { MaintenanceRequestService } from '../../../services/maintenance-request
 import { NotificationService } from '../../../services/notification.service';
 import { NotificationType } from '../../../models/notification.model';
 import { CATEGORY_MOCK } from '../../../mocks/category.mock';
+import { ClientHeaderComponent } from '../../../components/client-header/client-header.component';
 
 @Component({
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, ClientHeaderComponent],
   selector: 'app-new-request',
   templateUrl: './new-request.component.html',
 })

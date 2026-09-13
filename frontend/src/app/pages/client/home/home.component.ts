@@ -7,11 +7,12 @@ import { AuthService } from '../../../core/auth.service';
 import { MaintenanceRequestService } from '../../../services/maintenance-request.service';
 import { RequestStatus } from '../../../models/maintenanceRequest.model';
 import { StatusBadgeComponent } from '../../../components/status-badge/status-badge.component';
+import { ClientHeaderComponent } from '../../../components/client-header/client-header.component';
 
 const EQUIPMENT_DESCRIPTION_PREVIEW_LENGTH = 30;
 
 @Component({
-  imports: [DatePipe, RouterLink, StatusBadgeComponent],
+  imports: [DatePipe, RouterLink, StatusBadgeComponent, ClientHeaderComponent],
   selector: 'app-home',
   templateUrl: './home.component.html',
 })

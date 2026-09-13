@@ -7,9 +7,10 @@ import { NotificationService } from '../../../services/notification.service';
 import { NotificationType } from '../../../models/notification.model';
 import { MaintenanceRequest, RequestStatus } from '../../../models/maintenanceRequest.model';
 import { RequestDetailsCardComponent } from '../../../components/request-details-card/request-details-card.component';
+import { ClientHeaderComponent } from '../../../components/client-header/client-header.component';
 
 @Component({
-  imports: [RequestDetailsCardComponent, RouterLink],
+  imports: [RequestDetailsCardComponent, RouterLink, ClientHeaderComponent],
   selector: 'app-request-detail',
   templateUrl: './request-detail.component.html',
 })
