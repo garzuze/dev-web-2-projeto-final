@@ -13,6 +13,16 @@ export class MaintenanceRequestService {
     return of(request);
   }
 
+  // Lista as solicitações de um cliente ordenadas de forma crescente por data/hora
+  getMaintenanceRequestsByClientId(clientId: number): Observable<MaintenanceRequest[]> {
+    const clientRequests = MAINTENANCE_REQUEST_MOCK.filter((r) => r.clientId === clientId);
+    // Dados fictícios do mock para teste caso o cliente não tenha nenhuma solicitação criada
+    const requests = (
+      clientRequests.length > 0 ? clientRequests : [...MAINTENANCE_REQUEST_MOCK]
+    ).sort((a, b) => new Date(a.openingDateTime).getTime() - new Date(b.openingDateTime).getTime());
+    return of(requests);
+  }
+
   // Aprova o orçamento de manutenção
   approveRequest(id: number): Observable<{ message: string; success: boolean }> {
     const request = MAINTENANCE_REQUEST_MOCK.find((r) => r.id === id);
@@ -78,7 +88,7 @@ export class MaintenanceRequestService {
       success: true,
     });
   }
-  
+
   createRequest(request: {
     clientId: number;
     clientName: string;

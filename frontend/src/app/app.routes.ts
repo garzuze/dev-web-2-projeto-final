@@ -1,4 +1,5 @@
 import { LoginComponent } from './login/login.component';
+import { HomeComponent } from './pages/client/home';
 import { QuoteComponent } from './pages/client/quote/';
 import { PaymentComponent } from './pages/client/payment';
 import { NewRequestComponent } from './pages/client/new-request';
@@ -13,6 +14,7 @@ export const routes: Routes = [
   { path: '', component: LandingPage },
   { path: 'login', component: LoginComponent },
   { path: 'autocadastro', component: Autocadastro },
+  { path: 'client/request', component: HomeComponent },
   { path: 'client/request/new', component: NewRequestComponent },
   { path: 'client/quote/:id', component: QuoteComponent },
   { path: 'client/payment/:id', component: PaymentComponent },
