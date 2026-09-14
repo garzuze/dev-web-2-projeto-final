@@ -10,7 +10,7 @@ import { Autocadastro } from './autocadastro/autocadastro';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { CategoriesComponent } from './pages/employee/categories';
 import { employeeGuard } from './core/employee.guard';
-import { HomeComponent } from './pages/employee/home/home.component';
+import { HomeEmployeeComponent } from './pages/employee/home/home-employee.component';
 import { QuoteFormComponent } from './pages/employee/quote-form/quote-form.component';
 import { RequestListComponent } from './pages/employee/request-list/request-list.component';
 
@@ -26,7 +26,7 @@ export const routes: Routes = [
   {
     path: 'employee/categories',
     component: CategoriesComponent,
-    canActivate: [employeeGuard],
+    //canActivate: [employeeGuard],
   },
   {
     path: 'employee/quote/:id',
@@ -34,7 +34,7 @@ export const routes: Routes = [
   },
   {
     path: 'employee/home',
-    component: HomeComponent,
+    component: HomeEmployeeComponent,
   },
   {
     path: 'employee/requests',
