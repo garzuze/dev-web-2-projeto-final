@@ -8,10 +8,10 @@ import { MaintenanceRequest } from '../../../models/maintenanceRequest.model';
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
+  templateUrl: './home-employee.component.html',
+  styleUrl: './home-employee.component.scss',
 })
-export class HomeComponent implements OnInit {
+export class HomeEmployeeComponent implements OnInit {
   private maintenanceRequestService = inject(MaintenanceRequestService);
   private router = inject(Router);
 
