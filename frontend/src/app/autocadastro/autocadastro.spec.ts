@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { Autocadastro } from './autocadastro';
 
 describe('Autocadastro', () => {
@@ -8,6 +9,7 @@ describe('Autocadastro', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Autocadastro],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Autocadastro);
