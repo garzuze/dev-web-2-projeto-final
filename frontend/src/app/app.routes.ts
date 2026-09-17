@@ -10,8 +10,7 @@ import { Autocadastro } from './autocadastro/autocadastro';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { CategoriesComponent } from './pages/employee/categories';
 import { EmployeesComponent } from './pages/employee/employees';
-import { employeeGuard } from './core/employee.guard';
-import { HomeEmployeeComponent } from './pages/employee/home/home-employee.component';
+import { HomeEmployeeComponent } from './pages/employee/home';
 import { QuoteFormComponent } from './pages/employee/quote-form/quote-form.component';
 import { RequestListComponent } from './pages/employee/request-list/request-list.component';
 
