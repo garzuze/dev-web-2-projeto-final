@@ -1,46 +1,60 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 
-import { Category, CategoryService } from '../../../core/category.service';
+import { EmployeeService } from '../../../core/employee.service';
+import { Employee } from '../../../models/employee.model';
 import { ConfirmDialogComponent } from '../../../components/confirm-dialog/confirm-dialog.component';
 import { NotificationService } from '../../../services/notification.service';
 import { NotificationType } from '../../../models/notification.model';
-import { CategoryModalComponent } from './category-modal/category-modal.component';
+import { EmployeeModalComponent } from './employee-modal';
 import { EmployeeHeaderComponent } from '../../../components/employee-header/employee-header.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
-  imports: [ConfirmDialogComponent, CategoryModalComponent, EmployeeHeaderComponent],
-  selector: 'app-categories',
-  templateUrl: './categories.component.html',
+  imports: [ConfirmDialogComponent, EmployeeModalComponent, EmployeeHeaderComponent, DatePipe],
+  selector: 'app-employees',
+  templateUrl: './employees.component.html',
 })
-export class CategoriesComponent implements OnInit {
-  private readonly categoryService = inject(CategoryService);
+export class EmployeesComponent implements OnInit {
+  private readonly employeeService = inject(EmployeeService);
   private readonly notifications = inject(NotificationService);
 
-  readonly categories = signal<Category[]>([]);
+  readonly employees = signal<Employee[]>([]);
   readonly loading = signal(true);
+  readonly currentUserId = signal<number | null>(null);
 
-  /** Aberto com editing=null e criacao; com editing preenchido e edicao. */
   isFormOpen = false;
-  editing: Category | null = null;
+  editing: Employee | null = null;
 
-  removing: Category | null = null;
+  removing: Employee | null = null;
   isRemoving = false;
 
   ngOnInit() {
+    this.loadCurrentUser();
     this.reload();
+  }
+
+  private loadCurrentUser() {
+    // depois vamos trocar isso por um auth service ou coisa do tipo
+    this.employeeService.getCurrentUser().subscribe({
+      next: (user) => {
+        if (user) {
+          this.currentUserId.set(user.id);
+        }
+      },
+    });
   }
 
   reload() {
     this.loading.set(true);
-    this.categoryService.list().subscribe({
-      next: (categories) => {
-        this.categories.set(categories);
+    this.employeeService.list().subscribe({
+      next: (employees) => {
+        this.employees.set(employees);
         this.loading.set(false);
       },
       error: () => {
         this.loading.set(false);
         this.notifications.showNotification(
-          'Nao foi possivel carregar as categorias.',
+          'Não foi possível carregar os funcionários.',
           NotificationType.error,
         );
       },
@@ -52,8 +66,8 @@ export class CategoriesComponent implements OnInit {
     this.isFormOpen = true;
   }
 
-  onEdit(category: Category) {
-    this.editing = category;
+  onEdit(employee: Employee) {
+    this.editing = employee;
     this.isFormOpen = true;
   }
 
@@ -61,18 +75,26 @@ export class CategoriesComponent implements OnInit {
     this.isFormOpen = false;
   }
 
-  onSaved(saved: Category) {
+  onSaved(saved: Employee) {
     const wasEditing = this.editing !== null;
     this.isFormOpen = false;
     this.notifications.showNotification(
-      wasEditing ? `Categoria "${saved.name}" atualizada.` : `Categoria "${saved.name}" criada.`,
+      wasEditing ? `Funcionário "${saved.name}" atualizado.` : `Funcionário "${saved.name}" criado.`,
       NotificationType.success,
     );
     this.reload();
   }
 
-  onRemove(category: Category) {
-    this.removing = category;
+  onRemove(employee: Employee) {
+    if (employee.id === this.currentUserId()) {
+      this.notifications.showNotification(
+        'Você não pode remover a si.',
+        NotificationType.error,
+      );
+      return;
+    }
+
+    this.removing = employee;
   }
 
   onCancelRemove() {
@@ -84,12 +106,12 @@ export class CategoriesComponent implements OnInit {
 
     const target = this.removing;
     this.isRemoving = true;
-    this.categoryService.deactivate(target.id).subscribe({
+    this.employeeService.deactivate(target.id).subscribe({
       next: () => {
         this.isRemoving = false;
         this.removing = null;
         this.notifications.showNotification(
-          `Categoria "${target.name}" removida.`,
+          `Funcionário "${target.name}" removido.`,
           NotificationType.success,
         );
         this.reload();
@@ -98,7 +120,7 @@ export class CategoriesComponent implements OnInit {
         this.isRemoving = false;
         this.removing = null;
         this.notifications.showNotification(
-          'Nao foi possivel remover a categoria.',
+          'Não foi possível remover o funcionário.',
           NotificationType.error,
         );
       },
