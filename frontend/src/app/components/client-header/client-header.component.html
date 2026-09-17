@@ -26,17 +26,19 @@
       </div>
 
       <div class="order-2 flex items-center gap-3 lg:order-3">
-        <div class="flex items-center gap-2">
-          <span
-            class="flex h-9 w-9 items-center justify-center rounded-full bg-primary-800 text-sm font-semibold text-white"
-          >
-            JS
-          </span>
-          <div class="hidden flex-col leading-tight sm:flex">
-            <span class="text-sm font-medium text-gray-900">João da Silva</span>
-            <span class="text-xs text-gray-500">Cliente</span>
+        @if (currentUser) {
+          <div class="flex items-center gap-2">
+            <span
+              class="flex h-9 w-9 items-center justify-center rounded-full bg-primary-800 text-sm font-semibold text-white"
+            >
+              {{ initials }}
+            </span>
+            <div class="hidden flex-col leading-tight sm:flex">
+              <span class="text-sm font-medium text-gray-900">{{ currentUser.name }}</span>
+              <span class="text-xs text-gray-500">Cliente</span>
+            </div>
           </div>
-        </div>
+        }
         <a
           routerLink="/login"
           class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
