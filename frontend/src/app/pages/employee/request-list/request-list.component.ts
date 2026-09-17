@@ -5,9 +5,10 @@ import { MaintenanceRequest, RequestStatus } from '../../../models/maintenanceRe
 import { MaintenanceRequestService } from '../../../services/maintenance-request.service';
 import { getStatusClass } from '../../../utils/status-helpers.util';
 import { RouterLink } from '@angular/router';
+import { EmployeeHeaderComponent } from '../../../components/employee-header/employee-header.component';
 
 @Component({
-  imports: [FormsModule, CommonModule, RouterLink],
+  imports: [FormsModule, CommonModule, RouterLink, EmployeeHeaderComponent],
   selector: 'app-request-list',
   styleUrl: './request-list.component.scss',
   templateUrl: './request-list.component.html',
