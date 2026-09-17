@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MaintenanceRequestService } from '../../../services/maintenance-request.service';
 import { MaintenanceRequest } from '../../../models/maintenanceRequest.model';
+import { EmployeeHeaderComponent } from '../../../components/employee-header/employee-header.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, EmployeeHeaderComponent],
   templateUrl: './home-employee.component.html',
   styleUrl: './home-employee.component.scss',
 })
