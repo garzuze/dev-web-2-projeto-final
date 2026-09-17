@@ -7,11 +7,12 @@ import { MaintenanceRequest, RequestStatus } from '../../../models/maintenanceRe
 import { RequestDetailsCardComponent } from '../../../components/request-details-card/request-details-card.component';
 import { NotificationService } from '../../../services/notification.service';
 import { NotificationType } from '../../../models/notification.model';
+import { EmployeeHeaderComponent } from '../../../components/employee-header/employee-header.component';
 
 @Component({
   selector: 'app-quote-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RequestDetailsCardComponent],
+  imports: [CommonModule, ReactiveFormsModule, RequestDetailsCardComponent, EmployeeHeaderComponent],
   templateUrl: './quote-form.component.html',
   styleUrl: './quote-form.component.scss',
 })
