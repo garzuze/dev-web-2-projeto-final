@@ -5,9 +5,10 @@ import { ConfirmDialogComponent } from '../../../components/confirm-dialog/confi
 import { NotificationService } from '../../../services/notification.service';
 import { NotificationType } from '../../../models/notification.model';
 import { CategoryModalComponent } from './category-modal/category-modal.component';
+import { EmployeeHeaderComponent } from '../../../components/employee-header/employee-header.component';
 
 @Component({
-  imports: [ConfirmDialogComponent, CategoryModalComponent],
+  imports: [ConfirmDialogComponent, CategoryModalComponent, EmployeeHeaderComponent],
   selector: 'app-categories',
   templateUrl: './categories.component.html',
 })
