@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { QuoteFormComponent } from './quote-form.component';
 
@@ -8,10 +9,10 @@ describe('QuoteFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [QuoteFormComponent]
-    })
-    .compileComponents();
-    
+      imports: [QuoteFormComponent],
+      providers: [provideRouter([])],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(QuoteFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
