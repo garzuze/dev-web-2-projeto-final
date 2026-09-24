@@ -18,7 +18,9 @@ const EQUIPMENT_DESCRIPTION_PREVIEW_LENGTH = 30;
 })
 export class HomeComponent {
   private readonly auth = inject(AuthService);
-  private readonly maintenanceRequestService = inject(MaintenanceRequestService);
+  private readonly maintenanceRequestService = inject(
+    MaintenanceRequestService,
+  );
 
   readonly requestStatus = RequestStatus;
 
@@ -31,7 +33,9 @@ export class HomeComponent {
 
   readonly requests = this.requestsResource.value;
   readonly isLoading = this.requestsResource.isLoading;
-  readonly isEmpty = computed(() => !this.isLoading() && this.requests().length === 0);
+  readonly isEmpty = computed(
+    () => !this.isLoading() && this.requests().length === 0,
+  );
 
   truncateEquipmentDescription(description: string): string {
     return description.length > EQUIPMENT_DESCRIPTION_PREVIEW_LENGTH

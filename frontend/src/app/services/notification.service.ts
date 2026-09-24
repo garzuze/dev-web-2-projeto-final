@@ -1,5 +1,8 @@
 import { Injectable, signal } from '@angular/core';
-import { NotificationInterface, NotificationType } from '../models/notification.model';
+import {
+  NotificationInterface,
+  NotificationType,
+} from '../models/notification.model';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
@@ -10,7 +13,9 @@ export class NotificationService {
     this.messages.update((messages) => [...messages, { message, type, id }]);
 
     setTimeout(() => {
-      this.messages.update((messages) => messages.filter((message) => message.id !== id));
+      this.messages.update((messages) =>
+        messages.filter((message) => message.id !== id),
+      );
     }, 3000);
   }
 }

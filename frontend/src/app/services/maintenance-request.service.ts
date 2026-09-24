@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { delay, Observable, of } from 'rxjs';
-import { MaintenanceRequest, RequestStatus } from '../models/maintenanceRequest.model';
+import {
+  MaintenanceRequest,
+  RequestStatus,
+} from '../models/maintenanceRequest.model';
 import { MAINTENANCE_REQUEST_MOCK } from '../mocks/maintenance-request.mock';
 
 @Injectable({
@@ -19,7 +22,9 @@ export class MaintenanceRequestService {
   }
 
   // Busca a informação de um requisição de manutenção específica
-  getMaintenanceRequestById(id: number): Observable<MaintenanceRequest | undefined> {
+  getMaintenanceRequestById(
+    id: number,
+  ): Observable<MaintenanceRequest | undefined> {
     const request = MAINTENANCE_REQUEST_MOCK.find((r) => r.id === id);
     return of(request);
   }
@@ -46,17 +51,27 @@ export class MaintenanceRequestService {
   }
 
   // Lista as solicitações de um cliente ordenadas de forma crescente por data/hora
-  getMaintenanceRequestsByClientId(clientId: number): Observable<MaintenanceRequest[]> {
-    const clientRequests = MAINTENANCE_REQUEST_MOCK.filter((r) => r.clientId === clientId);
+  getMaintenanceRequestsByClientId(
+    clientId: number,
+  ): Observable<MaintenanceRequest[]> {
+    const clientRequests = MAINTENANCE_REQUEST_MOCK.filter(
+      (r) => r.clientId === clientId,
+    );
     // Dados fictícios do mock para teste caso o cliente não tenha nenhuma solicitação criada
     const requests = (
       clientRequests.length > 0 ? clientRequests : [...MAINTENANCE_REQUEST_MOCK]
-    ).sort((a, b) => new Date(a.openingDateTime).getTime() - new Date(b.openingDateTime).getTime());
+    ).sort(
+      (a, b) =>
+        new Date(a.openingDateTime).getTime() -
+        new Date(b.openingDateTime).getTime(),
+    );
     return of(requests);
   }
 
   // Aprova o orçamento de manutenção
-  approveRequest(id: number): Observable<{ message: string; success: boolean }> {
+  approveRequest(
+    id: number,
+  ): Observable<{ message: string; success: boolean }> {
     const request = MAINTENANCE_REQUEST_MOCK.find((r) => r.id === id);
     if (request) {
       const previousStatus = request.statusName;
@@ -155,7 +170,11 @@ export class MaintenanceRequestService {
   // Paga uma requisição de manutençao
   payRequest(
     id: number,
-  ): Observable<{ message: string; success: boolean; paymentDateTime: string }> {
+  ): Observable<{
+    message: string;
+    success: boolean;
+    paymentDateTime: string;
+  }> {
     const request = MAINTENANCE_REQUEST_MOCK.find((r) => r.id === id);
     if (request) {
       const previousStatus = request.statusName;

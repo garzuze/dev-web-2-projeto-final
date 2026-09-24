@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output, inject, signal } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  inject,
+  signal,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Employee } from '../../../../models/employee.model';
@@ -22,7 +30,10 @@ export class EmployeeModalComponent implements OnInit {
   readonly errorMessage = signal('');
 
   readonly form = this.formBuilder.nonNullable.group({
-    name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+    name: [
+      '',
+      [Validators.required, Validators.minLength(2), Validators.maxLength(100)],
+    ],
     email: ['', [Validators.required, Validators.email]],
     birthDate: ['', Validators.required],
   });
@@ -60,7 +71,12 @@ export class EmployeeModalComponent implements OnInit {
     this.errorMessage.set('');
 
     const request = this.employee
-      ? this.employeeService.update(this.employee.id, name.trim(), email.trim(), birthDate)
+      ? this.employeeService.update(
+          this.employee.id,
+          name.trim(),
+          email.trim(),
+          birthDate,
+        )
       : this.employeeService.create(name.trim(), email.trim(), birthDate);
 
     request.subscribe({
@@ -70,7 +86,7 @@ export class EmployeeModalComponent implements OnInit {
       },
       error: () => {
         this.saving.set(false);
-        this.errorMessage.set("Erro ao cadastrar funcionário!");
+        this.errorMessage.set('Erro ao cadastrar funcionário!');
       },
     });
   }

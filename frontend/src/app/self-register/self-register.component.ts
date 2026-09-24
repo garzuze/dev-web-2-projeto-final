@@ -1,10 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
-import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ViaCepService } from './via-cep.service';
 import { AuthService, SignUpRequest } from '../core/auth.service';
 import { Header } from '../components/header/header';
-
 
 @Component({
   imports: [RouterLink, ReactiveFormsModule, Header],
@@ -76,12 +75,16 @@ export class SelfRegister {
 
     this.authService.signUp(payload).subscribe({
       next: (resposta) => {
-        alert('Cadastro realizado com sucesso! Sua senha de acesso foi enviada para o seu e-mail.');
+        alert(
+          'Cadastro realizado com sucesso! Sua senha de acesso foi enviada para o seu e-mail.',
+        );
         this.router.navigate(['/login']);
       },
       error: (erro) => {
         console.error('Erro ao cadastrar:', erro);
-        alert('Erro ao realizar cadastro. Verifique se o CPF ou e-mail já estão cadastrados.');
+        alert(
+          'Erro ao realizar cadastro. Verifique se o CPF ou e-mail já estão cadastrados.',
+        );
       },
     });
   }

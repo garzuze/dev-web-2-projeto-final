@@ -10,7 +10,12 @@ import { EmployeeHeaderComponent } from '../../../components/employee-header/emp
 import { DatePipe } from '@angular/common';
 
 @Component({
-  imports: [ConfirmDialogComponent, EmployeeModalComponent, EmployeeHeaderComponent, DatePipe],
+  imports: [
+    ConfirmDialogComponent,
+    EmployeeModalComponent,
+    EmployeeHeaderComponent,
+    DatePipe,
+  ],
   selector: 'app-employees',
   templateUrl: './employees.component.html',
 })
@@ -79,7 +84,9 @@ export class EmployeesComponent implements OnInit {
     const wasEditing = this.editing !== null;
     this.isFormOpen = false;
     this.notifications.showNotification(
-      wasEditing ? `Funcionário "${saved.name}" atualizado.` : `Funcionário "${saved.name}" criado.`,
+      wasEditing
+        ? `Funcionário "${saved.name}" atualizado.`
+        : `Funcionário "${saved.name}" criado.`,
       NotificationType.success,
     );
     this.reload();

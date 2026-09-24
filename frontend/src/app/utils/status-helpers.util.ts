@@ -1,4 +1,4 @@
-import { RequestStatus } from "../models/maintenanceRequest.model";
+import { RequestStatus } from '../models/maintenanceRequest.model';
 
 export function getStatusClass(status?: string): string {
   switch (status) {
@@ -22,4 +22,3 @@ export function getStatusClass(status?: string): string {
       return 'bg-gray-100 text-gray-800';
   }
 }
-

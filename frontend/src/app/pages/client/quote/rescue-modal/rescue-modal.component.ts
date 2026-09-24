@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ModalContainerComponent } from "../../../../components/modal-container/modal-container.component";
+import { ModalContainerComponent } from '../../../../components/modal-container/modal-container.component';
 
 @Component({
   imports: [ModalContainerComponent],

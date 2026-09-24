@@ -1,4 +1,7 @@
-import { MaintenanceRequest, RequestStatus } from '../models/maintenanceRequest.model';
+import {
+  MaintenanceRequest,
+  RequestStatus,
+} from '../models/maintenanceRequest.model';
 
 export const MAINTENANCE_REQUEST_MOCK: MaintenanceRequest[] = [
   {
@@ -217,7 +220,8 @@ export const MAINTENANCE_REQUEST_MOCK: MaintenanceRequest[] = [
 
     maintenanceDateTime: '2026-08-21T14:00:00',
     maintenanceEmployeeName: 'Ratinho Junior',
-    maintenanceDescription: 'Substituição da bateria e testes de funcionamento.',
+    maintenanceDescription:
+      'Substituição da bateria e testes de funcionamento.',
     clientInstructions: 'Evitar utilizar carregadores não originais.',
 
     history: [
@@ -334,7 +338,8 @@ export const MAINTENANCE_REQUEST_MOCK: MaintenanceRequest[] = [
     maintenanceEmployeeName: 'Tarcisio Freitas',
     maintenanceDescription:
       'Substituição do módulo da câmera traseira e realização de testes de funcionamento.',
-    clientInstructions: 'Evitar contato do aparelho com água e utilizar capa protetora.',
+    clientInstructions:
+      'Evitar contato do aparelho com água e utilizar capa protetora.',
 
     paymentDateTime: '2026-08-13T16:00:00',
     completionDateTime: '2026-08-13T16:30:00',

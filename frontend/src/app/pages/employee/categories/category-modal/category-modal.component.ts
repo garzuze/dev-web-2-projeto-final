@@ -1,5 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnInit, Output, inject, signal } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  inject,
+  signal,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Category, CategoryService } from '../../../../core/category.service';
@@ -27,7 +35,10 @@ export class CategoryModalComponent implements OnInit {
   readonly errorMessage = signal('');
 
   readonly form = this.formBuilder.nonNullable.group({
-    name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+    name: [
+      '',
+      [Validators.required, Validators.minLength(2), Validators.maxLength(50)],
+    ],
   });
 
   get name() {
@@ -51,8 +62,8 @@ export class CategoryModalComponent implements OnInit {
     this.errorMessage.set('');
 
     const request$ = this.category
-        ? this.categoryService.update(this.category.id, name)
-        : this.categoryService.create(name);
+      ? this.categoryService.update(this.category.id, name)
+      : this.categoryService.create(name);
 
     request$.subscribe({
       next: (category) => {

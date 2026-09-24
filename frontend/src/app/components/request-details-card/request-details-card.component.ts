@@ -1,5 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { MaintenanceRequest, RequestStatus } from '../../models/maintenanceRequest.model';
+import {
+  MaintenanceRequest,
+  RequestStatus,
+} from '../../models/maintenanceRequest.model';
 import { CurrencyPipe, DatePipe, LowerCasePipe } from '@angular/common';
 import { getStatusClass } from '../../utils/status-helpers.util';
 import { TimelineComponent } from '../timeline/timeline.component';
