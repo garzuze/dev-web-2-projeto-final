@@ -17,16 +17,24 @@ export class SelfRegister {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  form = this.formBuilder.group({
-    nome: ['', Validators.required],
+  get f() {
+    return this.form.controls;
+  }
+
+  get name() {
+    return this.f.name;
+  }
+
+  readonly form = this.formBuilder.nonNullable.group({
+    name: ['', Validators.required, Validators.minLength(3), Validators.maxLength(120)],
     cpf: ['', Validators.required],
-    telefone: ['', Validators.required],
+    phone: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     cep: ['', Validators.required],
     estado: ['', Validators.required],
     cidade: ['', Validators.required],
     bairro: ['', Validators.required],
-    rua: ['', Validators.required],
+    street: ['', Validators.required],
     numero: ['', Validators.required],
     complemento: [''],
   });
@@ -35,41 +43,42 @@ export class SelfRegister {
     const cep = this.form.get('cep')?.value?.replace(/\D/g, '') || '';
 
     if (cep.length === 8) {
-      this.servicoCep.buscarCep(cep).subscribe((retorno) => {
-        if (retorno.erro) {
+      this.servicoCep.buscarCep(cep).subscribe((response) => {
+        if (response.erro) { // response.erro? Isso existe mesmo? Por quê não tipar esse response?
           alert('CEP não encontrado!');
           return;
         }
 
         this.form.patchValue({
-          rua: retorno.logradouro,
-          bairro: retorno.bairro,
-          cidade: retorno.localidade,
-          estado: retorno.uf,
+          street: response.logradouro,
+          bairro: response.bairro,
+          cidade: response.localidade,
+          estado: response.uf,
         });
       });
     }
   }
 
-  cadastrar() {
+  save() {
     if (this.form.invalid) {
+      this.form.markAllAsTouched();
       return;
     }
 
-    const dados = this.form.getRawValue();
+    const formData = this.form.getRawValue();
     const payload: SignUpRequest = {
-      name: dados.nome || '',
-      cpf: (dados.cpf || '').replace(/\D/g, ''),
-      email: dados.email || '',
-      phone: (dados.telefone || '').replace(/\D/g, ''),
+      name: formData.name || '',
+      cpf: (formData.cpf || '').replace(/\D/g, ''),
+      email: formData.email || '',
+      phone: (formData.phone || '').replace(/\D/g, ''),
       address: {
-        zipCode: (dados.cep || '').replace(/\D/g, ''),
-        street: dados.rua || '',
-        number: dados.numero || '',
-        district: dados.bairro || '',
-        city: dados.cidade || '',
-        state: dados.estado || '',
-        complement: dados.complemento || '',
+        zipCode: (formData.cep || '').replace(/\D/g, ''),
+        street: formData.street || '',
+        number: formData.numero || '',
+        district: formData.bairro || '',
+        city: formData.cidade || '',
+        state: formData.estado || '',
+        complement: formData.complemento || '',
       },
     };
 
