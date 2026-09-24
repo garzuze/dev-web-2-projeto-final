@@ -11,6 +11,9 @@ import { AuthService, LoginResponse } from '../../core/auth.service';
 export class ClientHeaderComponent {
   private readonly auth = inject(AuthService);
 
+  // Controla o estado do menu lateral
+  isSidebarOpen: boolean = false;
+
   get currentUser(): LoginResponse | null {
     return this.auth.currentUser;
   }
@@ -20,5 +23,15 @@ export class ClientHeaderComponent {
     const first = parts.at(0) ?? '';
     const last = parts.length > 1 ? (parts.at(-1) ?? '') : '';
     return (first.charAt(0) + last.charAt(0)).toUpperCase();
+  }
+
+  // Altera a abertura/fechamento do menu
+  toggleSidebar(): void {
+    this.isSidebarOpen = !this.isSidebarOpen;
+  }
+
+  // Garante que feche ao clicar em um link (útil em mobile)
+  closeSidebar(): void {
+    this.isSidebarOpen = false;
   }
 }
