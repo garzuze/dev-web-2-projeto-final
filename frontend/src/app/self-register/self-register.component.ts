@@ -8,11 +8,11 @@ import { Header } from '../components/header/header';
 
 @Component({
   imports: [RouterLink, ReactiveFormsModule, Header],
-  selector: 'app-autocadastro',
-  styleUrl: './autocadastro.scss',
-  templateUrl: './autocadastro.html',
+  selector: 'app-self-register',
+  styleUrl: './self-register.component.scss',
+  templateUrl: './self-register.component.html',
 })
-export class Autocadastro {
+export class SelfRegister {
   private formBuilder = inject(FormBuilder);
   private servicoCep = inject(ViaCepService);
   private authService = inject(AuthService);
