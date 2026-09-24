@@ -11,9 +11,15 @@ import { RequestDetailsCardComponent } from '../../../components/request-details
 import { PaymentModalComponent } from './payment-modal/payment-modal.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { paymentData } from '../../../models/payment.model';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 
 @Component({
-  imports: [RequestDetailsCardComponent, PaymentModalComponent],
+  imports: [
+    RequestDetailsCardComponent,
+    PaymentModalComponent,
+    DatePipe,
+    CurrencyPipe,
+  ],
   selector: 'app-payment',
   styleUrl: './payment.component.scss',
   templateUrl: './payment.component.html',
@@ -28,6 +34,8 @@ export class PaymentComponent {
 
   public isPaymentModalOpen: boolean = false;
   public isPaymenting: boolean = false;
+  public isPaymentSuccessful: boolean = false;
+  public selectedPaymentMethod: string = '';
   ngOnInit(): void {
     this.activatedRoutes.paramMap.subscribe((params) => {
       const id = Number(params.get('id'));
@@ -73,18 +81,20 @@ export class PaymentComponent {
   }
 
   onConfirmPayment(paymentData: paymentData) {
-    console.log(paymentData);
     if (this.requestData?.id) {
       this.isPaymenting = true;
       this.maintenanceRequestService.payRequest(this.requestData.id).subscribe({
         next: (res) => {
           this.isPaymenting = false;
+          this.isPaymentModalOpen = false;
+
+          this.selectedPaymentMethod = paymentData.paymentMethod;
+          this.isPaymentSuccessful = true;
+
           this.notificationService.showNotification(
             'Serviço pago com sucesso!',
             NotificationType.success,
           );
-          this.isPaymentModalOpen = false;
-          this.router.navigate(['/client/request']);
         },
         error: () => {
           this.isPaymenting = false;
@@ -95,5 +105,9 @@ export class PaymentComponent {
         },
       });
     }
+  }
+
+  finishPaymentFlow() {
+    this.router.navigate(['/client/request']);
   }
 }
