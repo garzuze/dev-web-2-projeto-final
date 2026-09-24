@@ -8,7 +8,11 @@ import { CategoryModalComponent } from './category-modal/category-modal.componen
 import { EmployeeHeaderComponent } from '../../../components/employee-header/employee-header.component';
 
 @Component({
-  imports: [ConfirmDialogComponent, CategoryModalComponent, EmployeeHeaderComponent],
+  imports: [
+    ConfirmDialogComponent,
+    CategoryModalComponent,
+    EmployeeHeaderComponent,
+  ],
   selector: 'app-categories',
   templateUrl: './categories.component.html',
 })
@@ -65,7 +69,9 @@ export class CategoriesComponent implements OnInit {
     const wasEditing = this.editing !== null;
     this.isFormOpen = false;
     this.notifications.showNotification(
-      wasEditing ? `Categoria "${saved.name}" atualizada.` : `Categoria "${saved.name}" criada.`,
+      wasEditing
+        ? `Categoria "${saved.name}" atualizada.`
+        : `Categoria "${saved.name}" criada.`,
       NotificationType.success,
     );
     this.reload();

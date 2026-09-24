@@ -6,7 +6,7 @@ import { NewRequestComponent } from './pages/client/new-request';
 import { RequestDetailComponent } from './pages/client/request-detail/request-detail.component';
 import { Routes } from '@angular/router';
 import { LandingPage } from './landing-page/landing-page';
-import { Autocadastro } from './autocadastro/autocadastro';
+import { SelfRegister } from './self-register/self-register.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { CategoriesComponent } from './pages/employee/categories';
 import { EmployeesComponent } from './pages/employee/employees';
@@ -17,7 +17,7 @@ import { RequestListComponent } from './pages/employee/request-list/request-list
 export const routes: Routes = [
   { path: '', component: LandingPage },
   { path: 'login', component: LoginComponent },
-  { path: 'autocadastro', component: Autocadastro },
+  { path: 'self-register', component: SelfRegister },
   { path: 'client/request', component: HomeComponent },
   { path: 'client/request/new', component: NewRequestComponent },
   { path: 'client/request/:id', component: RequestDetailComponent },

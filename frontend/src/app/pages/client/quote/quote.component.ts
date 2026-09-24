@@ -1,6 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { MaintenanceRequestService } from '../../../services/maintenance-request.service';
-import { MaintenanceRequest, RequestStatus } from '../../../models/maintenanceRequest.model';
+import {
+  MaintenanceRequest,
+  RequestStatus,
+} from '../../../models/maintenanceRequest.model';
 import { CurrencyPipe, DatePipe, LowerCasePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RejectionModalComponent } from './rejection-modal/rejection-modal.component';
@@ -39,36 +42,38 @@ export class QuoteComponent {
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((params) => {
       const id = Number(params.get('id'));
-      this.maintenanceRequestService.getMaintenanceRequestById(id).subscribe((request) => {
-        if (!request) {
-          this.notificationService.showNotification(
-            'Solicitação não encontrada',
-            NotificationType.error,
-          );
-          this.router.navigate(['/client/request']);
-          return;
-        }
-        if (
-          request.statusName !== RequestStatus.Quoted &&
-          request.statusName !== RequestStatus.Rejected
-        ) {
-          if (request.statusName === RequestStatus.Open) {
+      this.maintenanceRequestService
+        .getMaintenanceRequestById(id)
+        .subscribe((request) => {
+          if (!request) {
             this.notificationService.showNotification(
-              'Esta solicitação ainda está sendo orçada. O orçamento não está disponível no momento.',
-              NotificationType.alert,
+              'Solicitação não encontrada',
+              NotificationType.error,
             );
-          } else {
-            this.notificationService.showNotification(
-              'Este orçamento já foi processado e não está mais disponível.',
-              NotificationType.alert,
-            );
+            this.router.navigate(['/client/request']);
+            return;
           }
+          if (
+            request.statusName !== RequestStatus.Quoted &&
+            request.statusName !== RequestStatus.Rejected
+          ) {
+            if (request.statusName === RequestStatus.Open) {
+              this.notificationService.showNotification(
+                'Esta solicitação ainda está sendo orçada. O orçamento não está disponível no momento.',
+                NotificationType.alert,
+              );
+            } else {
+              this.notificationService.showNotification(
+                'Este orçamento já foi processado e não está mais disponível.',
+                NotificationType.alert,
+              );
+            }
 
-          this.router.navigate(['/client/request']);
-          return;
-        }
-        this.requestData = request;
-      });
+            this.router.navigate(['/client/request']);
+            return;
+          }
+          this.requestData = request;
+        });
     });
   }
 
@@ -84,24 +89,26 @@ export class QuoteComponent {
     console.log($event);
     if (this.requestData?.id) {
       this.isRejecting = true;
-      this.maintenanceRequestService.rejectRequest(this.requestData.id, $event).subscribe({
-        next: (res) => {
-          this.isRejecting = false;
-          this.notificationService.showNotification(
-            'Orçamento rejeitado com sucesso!',
-            NotificationType.success,
-          );
-          this.isRejectionModalOpen = false;
-          this.router.navigate(['/client/request']);
-        },
-        error: (err) => {
-          this.isRejecting = false;
-          this.notificationService.showNotification(
-            'Erro ao rejeitar orçamento',
-            NotificationType.error,
-          );
-        },
-      });
+      this.maintenanceRequestService
+        .rejectRequest(this.requestData.id, $event)
+        .subscribe({
+          next: (res) => {
+            this.isRejecting = false;
+            this.notificationService.showNotification(
+              'Orçamento rejeitado com sucesso!',
+              NotificationType.success,
+            );
+            this.isRejectionModalOpen = false;
+            this.router.navigate(['/client/request']);
+          },
+          error: (err) => {
+            this.isRejecting = false;
+            this.notificationService.showNotification(
+              'Erro ao rejeitar orçamento',
+              NotificationType.error,
+            );
+          },
+        });
     }
   }
 
@@ -116,28 +123,30 @@ export class QuoteComponent {
   onConfirmApprove() {
     if (this.requestData?.id) {
       this.isApproving = true;
-      this.maintenanceRequestService.approveRequest(this.requestData.id).subscribe({
-        next: () => {
-          this.isApproving = false;
-          const valorFormatado = new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL',
-          }).format(this.requestData?.quoteValue || 0);
-          this.notificationService.showNotification(
-            `Serviço Aprovado no Valor ${valorFormatado}`,
-            NotificationType.success,
-          );
-          this.isApproveModalOpen = false;
-          this.router.navigate(['/client/request']);
-        },
-        error: (err) => {
-          this.isApproving = false;
-          this.notificationService.showNotification(
-            'Erro ao aprovar orçamento',
-            NotificationType.error,
-          );
-        },
-      });
+      this.maintenanceRequestService
+        .approveRequest(this.requestData.id)
+        .subscribe({
+          next: () => {
+            this.isApproving = false;
+            const valorFormatado = new Intl.NumberFormat('pt-BR', {
+              style: 'currency',
+              currency: 'BRL',
+            }).format(this.requestData?.quoteValue || 0);
+            this.notificationService.showNotification(
+              `Serviço Aprovado no Valor ${valorFormatado}`,
+              NotificationType.success,
+            );
+            this.isApproveModalOpen = false;
+            this.router.navigate(['/client/request']);
+          },
+          error: (err) => {
+            this.isApproving = false;
+            this.notificationService.showNotification(
+              'Erro ao aprovar orçamento',
+              NotificationType.error,
+            );
+          },
+        });
     }
   }
 
@@ -152,24 +161,26 @@ export class QuoteComponent {
   onConfirmRescue() {
     if (this.requestData?.id) {
       this.isRescuing = true;
-      this.maintenanceRequestService.rescueRequest(this.requestData.id).subscribe({
-        next: (r) => {
-          this.isRescuing = false;
-          this.notificationService.showNotification(
-            'Solicitação resgatada com sucesso',
-            NotificationType.success,
-          );
-          this.isRejectionModalOpen = false;
-          this.router.navigate(['/client/request']);
-        },
-        error: (err) => {
-          this.isRescuing = false;
-          this.notificationService.showNotification(
-            'Erro ao resgatar orçamento',
-            NotificationType.error,
-          );
-        },
-      });
+      this.maintenanceRequestService
+        .rescueRequest(this.requestData.id)
+        .subscribe({
+          next: (r) => {
+            this.isRescuing = false;
+            this.notificationService.showNotification(
+              'Solicitação resgatada com sucesso',
+              NotificationType.success,
+            );
+            this.isRejectionModalOpen = false;
+            this.router.navigate(['/client/request']);
+          },
+          error: (err) => {
+            this.isRescuing = false;
+            this.notificationService.showNotification(
+              'Erro ao resgatar orçamento',
+              NotificationType.error,
+            );
+          },
+        });
     }
   }
 }

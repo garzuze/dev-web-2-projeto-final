@@ -9,5 +9,8 @@ import { AuthService } from './auth.service';
  */
 export const employeeGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
-  return auth.currentUser?.profile === 'EMPLOYEE' || inject(Router).createUrlTree(['/login']);
+  return (
+    auth.currentUser?.profile === 'EMPLOYEE' ||
+    inject(Router).createUrlTree(['/login'])
+  );
 };

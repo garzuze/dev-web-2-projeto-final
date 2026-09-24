@@ -18,7 +18,9 @@ import { ClientHeaderComponent } from '../../../components/client-header/client-
 export class NewRequestComponent implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly categoryService = inject(CategoryService);
-  private readonly maintenanceRequestService = inject(MaintenanceRequestService);
+  private readonly maintenanceRequestService = inject(
+    MaintenanceRequestService,
+  );
   private readonly auth = inject(AuthService);
   private readonly notifications = inject(NotificationService);
   private readonly router = inject(Router);
@@ -42,7 +44,10 @@ export class NewRequestComponent implements OnInit {
       Validators.minLength(this.equipmentDescriptionMinLength),
       Validators.maxLength(this.equipmentDescriptionMaxLength),
     ]),
-    categoryId: this.formBuilder.control<number | null>(null, Validators.required),
+    categoryId: this.formBuilder.control<number | null>(
+      null,
+      Validators.required,
+    ),
     defectDescription: this.formBuilder.nonNullable.control('', [
       Validators.required,
       Validators.minLength(this.defectDescriptionMinLength),
@@ -85,7 +90,8 @@ export class NewRequestComponent implements OnInit {
       return;
     }
 
-    const { equipmentDescription, categoryId, defectDescription } = this.form.getRawValue();
+    const { equipmentDescription, categoryId, defectDescription } =
+      this.form.getRawValue();
     const category = this.categories().find((c) => c.id === categoryId);
     if (!category) {
       return;

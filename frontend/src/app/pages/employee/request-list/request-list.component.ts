@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MaintenanceRequest, RequestStatus } from '../../../models/maintenanceRequest.model';
+import {
+  MaintenanceRequest,
+  RequestStatus,
+} from '../../../models/maintenanceRequest.model';
 import { MaintenanceRequestService } from '../../../services/maintenance-request.service';
 import { getStatusClass } from '../../../utils/status-helpers.util';
 import { RouterLink } from '@angular/router';
