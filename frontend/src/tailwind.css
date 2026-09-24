@@ -1,8 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import 'tailwindcss';
 
 @theme {
   --color-primary-700: #b7d1da;
   --color-primary-800: #5d98ac;
+  --font-inter: "Inter", sans-serif;
 
   --animate-slide-up: slideUp 0.3s ease-out;
 
@@ -16,6 +18,15 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+}
+
+
+@layer base {
+  html,
+  body,
+  body .p-component {
+    font-family: var(--font-inter);
   }
 }
 
