@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { AuthService, LoginResponse } from '../../core/auth.service';
 
@@ -10,6 +10,7 @@ import { AuthService, LoginResponse } from '../../core/auth.service';
 })
 export class ClientHeaderComponent {
   private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
 
   // Controla o estado do menu lateral
   isSidebarOpen: boolean = false;
@@ -33,5 +34,10 @@ export class ClientHeaderComponent {
   // Garante que feche ao clicar em um link (útil em mobile)
   closeSidebar(): void {
     this.isSidebarOpen = false;
+  }
+
+  onLogout() {
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 }

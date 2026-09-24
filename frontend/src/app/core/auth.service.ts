@@ -43,11 +43,13 @@ export interface SignUpResponse {
   email: string;
 }
 
+const LOGGED_USER_KEY = 'manutencao.loggedUser';
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
 
-  private loggedUser: LoginResponse | null = null;
+  private loggedUser: LoginResponse | null = this.readStoredUser();
 
   login(request: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${API_URL}/auth/login`, request);
@@ -56,6 +58,28 @@ export class AuthService {
   /** Guarda quem entrou para as telas seguintes saberem o perfil. */
   setLoggedUser(user: LoginResponse | null) {
     this.loggedUser = user;
+    if (user) {
+      localStorage.setItem(LOGGED_USER_KEY, JSON.stringify(user));
+    } else {
+      localStorage.removeItem(LOGGED_USER_KEY);
+    }
+  }
+
+  logout() {
+    this.setLoggedUser(null);
+  }
+
+  private readStoredUser(): LoginResponse | null {
+    const stored = localStorage.getItem(LOGGED_USER_KEY);
+    if (!stored) {
+      return null;
+    }
+    try {
+      return JSON.parse(stored) as LoginResponse;
+    } catch {
+      localStorage.removeItem(LOGGED_USER_KEY);
+      return null;
+    }
   }
 
   get currentUser(): LoginResponse | null {
