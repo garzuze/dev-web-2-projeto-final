@@ -11,10 +11,12 @@ import { NotificationService } from '../../../services/notification.service';
 import { NotificationType } from '../../../models/notification.model';
 import { ApproveModalComponent } from './approve-modal/approve-modal.component';
 import { RequestDetailsCardComponent } from '../../../components/request-details-card/request-details-card.component';
+import { ClientHeaderComponent } from '../../../components/client-header/client-header.component';
 import { RescueModalComponent } from './rescue-modal/rescue-modal.component';
 
 @Component({
   imports: [
+    ClientHeaderComponent,
     RequestDetailsCardComponent,
     RejectionModalComponent,
     ApproveModalComponent,

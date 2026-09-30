@@ -4,6 +4,7 @@
 @theme {
   --color-primary-700: #b7d1da;
   --color-primary-800: #5d98ac;
+  --color-primary-900: #336170;
   --font-inter: "Inter", sans-serif;
 
   --animate-slide-up: slideUp 0.3s ease-out;
