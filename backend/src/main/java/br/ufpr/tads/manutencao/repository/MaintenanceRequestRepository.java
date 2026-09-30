@@ -17,8 +17,8 @@ public interface MaintenanceRequestRepository extends JpaRepository<MaintenanceR
             SUM(quote_value) AS total
         FROM maintenance_request
         WHERE status IN ('PAGA', 'FINALIZADA')
-          AND (:startDate IS NULL OR payment_date_time >= :startDate)
-          AND (:endDate IS NULL OR payment_date_time < :endDate + INTERVAL '1 day')
+          AND (CAST(:startDate AS DATE) IS NULL OR payment_date_time >= CAST(:startDate AS DATE))
+          AND (CAST(:endDate AS DATE) IS NULL OR payment_date_time < CAST(:endDate AS DATE) + INTERVAL '1 day')
         GROUP BY CAST(payment_date_time AS DATE)
         ORDER BY day
     """, nativeQuery = true)
