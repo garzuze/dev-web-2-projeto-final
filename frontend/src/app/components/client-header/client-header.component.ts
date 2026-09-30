@@ -1,16 +1,34 @@
-import { Component, inject } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
+import { filter, map } from 'rxjs';
 
 import { AuthService, LoginResponse } from '../../core/auth.service';
 
 @Component({
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink],
   selector: 'app-client-header',
   templateUrl: './client-header.component.html',
 })
 export class ClientHeaderComponent {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+
+  private readonly url = toSignal(
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      map((event) => event.urlAfterRedirects),
+    ),
+    { initialValue: this.router.url },
+  );
+
+  private readonly path = computed(() => this.url().split(/[?#]/)[0]);
+
+  readonly isNewRequestActive = computed(() => this.path() === '/client/request/new');
+
+  readonly isMyRequestsActive = computed(
+    () => !this.isNewRequestActive() && /^\/client\/(request|quote|payment)(\/|$)/.test(this.path()),
+  );
 
   get currentUser(): LoginResponse | null {
     return this.auth.currentUser;

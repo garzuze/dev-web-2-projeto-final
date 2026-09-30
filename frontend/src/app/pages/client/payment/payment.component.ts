@@ -8,6 +8,7 @@ import {
 } from '../../../models/maintenanceRequest.model';
 import { NotificationType } from '../../../models/notification.model';
 import { RequestDetailsCardComponent } from '../../../components/request-details-card/request-details-card.component';
+import { ClientHeaderComponent } from '../../../components/client-header/client-header.component';
 import { PaymentModalComponent } from './payment-modal/payment-modal.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { paymentData } from '../../../models/payment.model';
@@ -15,6 +16,7 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 
 @Component({
   imports: [
+    ClientHeaderComponent,
     RequestDetailsCardComponent,
     PaymentModalComponent,
     DatePipe,
