@@ -1,5 +1,6 @@
 package br.ufpr.tads.manutencao.seed;
 
+import br.ufpr.tads.manutencao.category.repository.CategoryRepository;
 import br.ufpr.tads.manutencao.model.Address;
 import br.ufpr.tads.manutencao.model.Category;
 import br.ufpr.tads.manutencao.user.model.Customer;

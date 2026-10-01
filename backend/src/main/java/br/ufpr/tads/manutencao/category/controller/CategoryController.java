@@ -1,8 +1,8 @@
-package br.ufpr.tads.manutencao.controller;
+package br.ufpr.tads.manutencao.category.controller;
 
-import br.ufpr.tads.manutencao.dto.CategoryRequest;
-import br.ufpr.tads.manutencao.dto.CategoryResponse;
-import br.ufpr.tads.manutencao.service.CategoryService;
+import br.ufpr.tads.manutencao.category.dto.CategoryRequest;
+import br.ufpr.tads.manutencao.category.dto.CategoryResponse;
+import br.ufpr.tads.manutencao.category.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

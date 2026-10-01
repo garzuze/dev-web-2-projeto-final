@@ -1,9 +1,9 @@
-package br.ufpr.tads.manutencao.service;
+package br.ufpr.tads.manutencao.category.service;
 
-import br.ufpr.tads.manutencao.dto.CategoryRequest;
-import br.ufpr.tads.manutencao.dto.CategoryResponse;
+import br.ufpr.tads.manutencao.category.dto.CategoryRequest;
+import br.ufpr.tads.manutencao.category.dto.CategoryResponse;
 import br.ufpr.tads.manutencao.model.Category;
-import br.ufpr.tads.manutencao.repository.CategoryRepository;
+import br.ufpr.tads.manutencao.category.repository.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
