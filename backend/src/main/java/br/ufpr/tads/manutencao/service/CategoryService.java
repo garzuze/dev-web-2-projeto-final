@@ -1,7 +1,7 @@
 package br.ufpr.tads.manutencao.service;
 
 import br.ufpr.tads.manutencao.dto.CategoryRequest;
-import br.ufpr.tads.manutencao.dto.LoginResponse;
+import br.ufpr.tads.manutencao.dto.CategoryResponse;
 import br.ufpr.tads.manutencao.model.Category;
 import br.ufpr.tads.manutencao.repository.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -20,25 +20,25 @@ public class CategoryService {
   }
 
   @Transactional(readOnly = true)
-  public List<LoginResponse.CategoryResponse> list() {
+  public List<CategoryResponse> list() {
     return categoryRepository.findByActiveTrueOrderByNameAsc()
             .stream()
-            .map(LoginResponse.CategoryResponse::of)
+            .map(CategoryResponse::of)
             .toList();
   }
 
   @Transactional
-  public LoginResponse.CategoryResponse create(CategoryRequest request) {
+  public CategoryResponse create(CategoryRequest request) {
     Category category = new Category();
     category.setName(requireAvailableName(request.name(), null));
-    return LoginResponse.CategoryResponse.of(categoryRepository.save(category));
+    return CategoryResponse.of(categoryRepository.save(category));
   }
 
   @Transactional
-  public LoginResponse.CategoryResponse update(Long id, CategoryRequest request) {
+  public CategoryResponse update(Long id, CategoryRequest request) {
     Category category = activeById(id);
     category.setName(requireAvailableName(request.name(), id));
-    return LoginResponse.CategoryResponse.of(category);
+    return CategoryResponse.of(category);
   }
 
   @Transactional

@@ -1,7 +1,7 @@
 package br.ufpr.tads.manutencao.controller;
 
 import br.ufpr.tads.manutencao.dto.CategoryRequest;
-import br.ufpr.tads.manutencao.dto.LoginResponse;
+import br.ufpr.tads.manutencao.dto.CategoryResponse;
 import br.ufpr.tads.manutencao.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -20,18 +20,18 @@ public class CategoryController {
   }
 
   @GetMapping
-  public List<LoginResponse.CategoryResponse> list() {
+  public List<CategoryResponse> list() {
     return categoryService.list();
   }
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public LoginResponse.CategoryResponse create(@Valid @RequestBody CategoryRequest request) {
+  public CategoryResponse create(@Valid @RequestBody CategoryRequest request) {
     return categoryService.create(request);
   }
 
   @PutMapping("/{id}")
-  public LoginResponse.CategoryResponse update(@PathVariable Long id, @Valid @RequestBody CategoryRequest request) {
+  public CategoryResponse update(@PathVariable Long id, @Valid @RequestBody CategoryRequest request) {
     return categoryService.update(id, request);
   }
 
