@@ -1,4 +1,4 @@
-package br.ufpr.tads.manutencao.model;
+package br.ufpr.tads.manutencao.request.model;
 
 public enum RequestStatus {
 

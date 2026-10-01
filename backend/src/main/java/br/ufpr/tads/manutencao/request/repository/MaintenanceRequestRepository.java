@@ -1,7 +1,7 @@
-package br.ufpr.tads.manutencao.repository;
+package br.ufpr.tads.manutencao.request.repository;
 
 import br.ufpr.tads.manutencao.report.dto.DailyRevenue;
-import br.ufpr.tads.manutencao.model.MaintenanceRequest;
+import br.ufpr.tads.manutencao.request.model.MaintenanceRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

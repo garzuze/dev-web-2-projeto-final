@@ -1,4 +1,4 @@
-package br.ufpr.tads.manutencao.repository;
+package br.ufpr.tads.manutencao.request.repository;
 
 import br.ufpr.tads.manutencao.model.Address;
 import org.springframework.data.jpa.repository.JpaRepository;

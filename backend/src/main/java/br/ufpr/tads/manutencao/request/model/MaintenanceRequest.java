@@ -1,5 +1,6 @@
-package br.ufpr.tads.manutencao.model;
+package br.ufpr.tads.manutencao.request.model;
 
+import br.ufpr.tads.manutencao.model.Category;
 import br.ufpr.tads.manutencao.user.model.Customer;
 import br.ufpr.tads.manutencao.user.model.Employee;
 import jakarta.persistence.*;
