@@ -1,11 +1,11 @@
 package br.ufpr.tads.manutencao.auth.service;
 
-import br.ufpr.tads.manutencao.dto.AddressRequest;
+import br.ufpr.tads.manutencao.user.dto.AddressRequest;
 import br.ufpr.tads.manutencao.auth.dto.SignUpRequest;
 import br.ufpr.tads.manutencao.auth.dto.SignUpResponse;
 import br.ufpr.tads.manutencao.auth.exception.CpfAlreadyUsedException;
 import br.ufpr.tads.manutencao.auth.exception.EmailAlreadyUsedException;
-import br.ufpr.tads.manutencao.model.Address;
+import br.ufpr.tads.manutencao.user.model.Address;
 import br.ufpr.tads.manutencao.user.model.Customer;
 import br.ufpr.tads.manutencao.request.repository.AddressRepository;
 import br.ufpr.tads.manutencao.user.repository.CustomerRepository;

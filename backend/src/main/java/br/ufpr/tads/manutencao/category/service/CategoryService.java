@@ -2,7 +2,7 @@ package br.ufpr.tads.manutencao.category.service;
 
 import br.ufpr.tads.manutencao.category.dto.CategoryRequest;
 import br.ufpr.tads.manutencao.category.dto.CategoryResponse;
-import br.ufpr.tads.manutencao.model.Category;
+import br.ufpr.tads.manutencao.category.model.Category;
 import br.ufpr.tads.manutencao.category.repository.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;

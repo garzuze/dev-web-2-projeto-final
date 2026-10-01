@@ -1,6 +1,6 @@
 package br.ufpr.tads.manutencao.category.dto;
 
-import br.ufpr.tads.manutencao.model.Category;
+import br.ufpr.tads.manutencao.category.model.Category;
 
 public record CategoryResponse(
         Long id, String name

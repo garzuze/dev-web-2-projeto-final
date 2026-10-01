@@ -1,6 +1,6 @@
 package br.ufpr.tads.manutencao.category.repository;
 
-import br.ufpr.tads.manutencao.model.Category;
+import br.ufpr.tads.manutencao.category.model.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package br.ufpr.tads.manutencao.service;
+package br.ufpr.tads.manutencao.utils;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;

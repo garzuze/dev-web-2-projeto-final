@@ -1,4 +1,4 @@
-package br.ufpr.tads.manutencao.dto;
+package br.ufpr.tads.manutencao.user.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
