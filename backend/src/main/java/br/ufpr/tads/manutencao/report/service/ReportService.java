@@ -1,7 +1,7 @@
-package br.ufpr.tads.manutencao.service;
+package br.ufpr.tads.manutencao.report.service;
 
-import br.ufpr.tads.manutencao.dto.DailyRevenue;
-import br.ufpr.tads.manutencao.dto.RevenueReport;
+import br.ufpr.tads.manutencao.report.dto.DailyRevenue;
+import br.ufpr.tads.manutencao.report.dto.RevenueReport;
 import br.ufpr.tads.manutencao.repository.MaintenanceRequestRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

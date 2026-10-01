@@ -1,4 +1,4 @@
-package br.ufpr.tads.manutencao.dto;
+package br.ufpr.tads.manutencao.report.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
