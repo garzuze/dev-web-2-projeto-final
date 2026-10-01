@@ -2,6 +2,7 @@ package br.ufpr.tads.manutencao.category.service;
 
 import br.ufpr.tads.manutencao.category.dto.CategoryRequest;
 import br.ufpr.tads.manutencao.category.dto.CategoryResponse;
+import br.ufpr.tads.manutencao.category.exception.CategoryAlreadyDefinedException;
 import br.ufpr.tads.manutencao.category.model.Category;
 import br.ufpr.tads.manutencao.category.repository.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -58,10 +59,7 @@ public class CategoryService {
     categoryRepository.findByNameIgnoreCaseAndActiveTrue(normalized)
             .filter(existing -> !existing.getId().equals(currentId))
             .ifPresent(existing -> {
-              throw new IllegalStateException(
-                      "Já existe uma categoria ativa com o nome \"" + existing.getName()
-                              + "\". Escolha outro nome ou edite a categoria existente."
-              );
+              throw new CategoryAlreadyDefinedException(existing);
             });
 
     return normalized;
