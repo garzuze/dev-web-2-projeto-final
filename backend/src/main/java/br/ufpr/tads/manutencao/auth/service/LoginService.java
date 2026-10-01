@@ -4,10 +4,10 @@ import br.ufpr.tads.manutencao.auth.dto.LoginRequest;
 import br.ufpr.tads.manutencao.auth.dto.LoginResponse;
 import br.ufpr.tads.manutencao.auth.dto.UserProfile;
 import br.ufpr.tads.manutencao.auth.exception.InvalidCredentialsException;
-import br.ufpr.tads.manutencao.model.Customer;
-import br.ufpr.tads.manutencao.model.Employee;
-import br.ufpr.tads.manutencao.model.User;
-import br.ufpr.tads.manutencao.repository.UserRepository;
+import br.ufpr.tads.manutencao.user.model.Customer;
+import br.ufpr.tads.manutencao.user.model.Employee;
+import br.ufpr.tads.manutencao.user.model.User;
+import br.ufpr.tads.manutencao.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

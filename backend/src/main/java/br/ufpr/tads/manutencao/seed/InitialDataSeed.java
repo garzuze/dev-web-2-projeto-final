@@ -2,10 +2,13 @@ package br.ufpr.tads.manutencao.seed;
 
 import br.ufpr.tads.manutencao.model.Address;
 import br.ufpr.tads.manutencao.model.Category;
-import br.ufpr.tads.manutencao.model.Customer;
-import br.ufpr.tads.manutencao.model.Employee;
+import br.ufpr.tads.manutencao.user.model.Customer;
+import br.ufpr.tads.manutencao.user.model.Employee;
 import br.ufpr.tads.manutencao.repository.*;
 import br.ufpr.tads.manutencao.auth.service.PasswordService;
+import br.ufpr.tads.manutencao.user.repository.CustomerRepository;
+import br.ufpr.tads.manutencao.user.repository.EmployeeRepository;
+import br.ufpr.tads.manutencao.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;

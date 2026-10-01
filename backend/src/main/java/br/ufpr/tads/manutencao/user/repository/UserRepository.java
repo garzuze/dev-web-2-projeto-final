@@ -1,6 +1,6 @@
-package br.ufpr.tads.manutencao.repository;
+package br.ufpr.tads.manutencao.user.repository;
 
-import br.ufpr.tads.manutencao.model.User;
+import br.ufpr.tads.manutencao.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

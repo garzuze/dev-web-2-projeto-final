@@ -1,6 +1,6 @@
-package br.ufpr.tads.manutencao.dto;
+package br.ufpr.tads.manutencao.user.dto;
 
-import br.ufpr.tads.manutencao.model.Employee;
+import br.ufpr.tads.manutencao.user.model.Employee;
 
 import java.time.LocalDate;
 

@@ -6,10 +6,10 @@ import br.ufpr.tads.manutencao.auth.dto.SignUpResponse;
 import br.ufpr.tads.manutencao.auth.exception.CpfAlreadyUsedException;
 import br.ufpr.tads.manutencao.auth.exception.EmailAlreadyUsedException;
 import br.ufpr.tads.manutencao.model.Address;
-import br.ufpr.tads.manutencao.model.Customer;
+import br.ufpr.tads.manutencao.user.model.Customer;
 import br.ufpr.tads.manutencao.repository.AddressRepository;
-import br.ufpr.tads.manutencao.repository.CustomerRepository;
-import br.ufpr.tads.manutencao.repository.UserRepository;
+import br.ufpr.tads.manutencao.user.repository.CustomerRepository;
+import br.ufpr.tads.manutencao.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

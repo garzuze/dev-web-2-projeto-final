@@ -1,11 +1,11 @@
-package br.ufpr.tads.manutencao.service;
+package br.ufpr.tads.manutencao.user.service;
 
 import br.ufpr.tads.manutencao.auth.service.PasswordNotifier;
 import br.ufpr.tads.manutencao.auth.service.PasswordService;
-import br.ufpr.tads.manutencao.dto.EmployeeRequest;
-import br.ufpr.tads.manutencao.dto.EmployeeResponse;
-import br.ufpr.tads.manutencao.repository.EmployeeRepository;
-import br.ufpr.tads.manutencao.repository.UserRepository;
+import br.ufpr.tads.manutencao.user.dto.EmployeeRequest;
+import br.ufpr.tads.manutencao.user.dto.EmployeeResponse;
+import br.ufpr.tads.manutencao.user.repository.EmployeeRepository;
+import br.ufpr.tads.manutencao.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

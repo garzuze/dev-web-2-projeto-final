@@ -1,8 +1,8 @@
-package br.ufpr.tads.manutencao.controller;
+package br.ufpr.tads.manutencao.user.controller;
 
-import br.ufpr.tads.manutencao.dto.EmployeeRequest;
-import br.ufpr.tads.manutencao.dto.EmployeeResponse;
-import br.ufpr.tads.manutencao.service.EmployeeService;
+import br.ufpr.tads.manutencao.user.dto.EmployeeRequest;
+import br.ufpr.tads.manutencao.user.dto.EmployeeResponse;
+import br.ufpr.tads.manutencao.user.service.EmployeeService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

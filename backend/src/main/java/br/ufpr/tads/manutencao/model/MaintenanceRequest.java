@@ -1,5 +1,7 @@
 package br.ufpr.tads.manutencao.model;
 
+import br.ufpr.tads.manutencao.user.model.Customer;
+import br.ufpr.tads.manutencao.user.model.Employee;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
