@@ -44,7 +44,7 @@ public class MaintenanceRequest {
     private RequestStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "employee_id", nullable = true)
+    @JoinColumn(name = "current_employee_id", nullable = true)
     private Employee employee;
 
     @Column(name = "equipment_description", nullable = false, length = 200)
@@ -65,15 +65,17 @@ public class MaintenanceRequest {
     @Column(name = "maintenance_description", columnDefinition = "TEXT")
     private String maintenanceDescription;
 
-    @Column(name = "client_instructions", columnDefinition = "TEXT")
+    @Column(name = "customer_instructions", columnDefinition = "TEXT")
     private String clientInstructions;
 
     @Column(name = "payment_date_time")
     private LocalDateTime paymentDateTime;
 
-    @Column(name = "completion_date_time")
-    private LocalDateTime completionDateTime;
-
-    @OneToMany(mappedBy = "request", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RequestHistory> history = new ArrayList<>();
+//    TODO: Verificar depois com Vitor se vamos usar mesmo essa coluna, que se for
+//    o caso vamos ter que criar uma migration de alter table
+//    @Column(name = "completion_date_time")
+//    private LocalDateTime completionDateTime;
+//    TODO: Verificar com Vitor também
+//    @OneToMany(mappedBy = "request", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<RequestHistory> history = new ArrayList<>();
 }
