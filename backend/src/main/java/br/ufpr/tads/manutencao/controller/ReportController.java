@@ -14,23 +14,23 @@ import java.time.LocalDate;
 @RequestMapping("/api/reports")
 public class ReportController {
 
-    private final ReportService reportService;
+  private final ReportService reportService;
 
-    public ReportController(ReportService reportService) {
-        this.reportService = reportService;
-    }
+  public ReportController(ReportService reportService) {
+    this.reportService = reportService;
+  }
 
-    @GetMapping("/revenue")
-    public RevenueReport revenue (
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate start,
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate end
+  @GetMapping("/revenue")
+  public RevenueReport revenue(
+          @RequestParam(required = false)
+          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+          LocalDate start,
+          @RequestParam(required = false)
+          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+          LocalDate end
 
-    ) {
-        // exemplo de chamada: "/revenue?start=2026-09-29&end=2026-10-01"
-        return reportService.revenueByDay(start, end);
-    }
+  ) {
+    // exemplo de chamada: "/revenue?start=2026-09-29&end=2026-10-01"
+    return reportService.revenueByDay(start, end);
+  }
 }

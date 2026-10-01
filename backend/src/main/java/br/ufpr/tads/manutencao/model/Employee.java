@@ -1,14 +1,10 @@
 package br.ufpr.tads.manutencao.model;
 
-import java.time.LocalDate;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "employees")
@@ -18,7 +14,7 @@ import lombok.Setter;
 @Setter
 public class Employee extends User {
 
-    @Column(nullable = false)
-    private LocalDate birthDate;
+  @Column(nullable = false)
+  private LocalDate birthDate;
 
 }

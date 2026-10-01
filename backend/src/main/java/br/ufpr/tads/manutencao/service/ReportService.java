@@ -14,31 +14,31 @@ import java.util.Objects;
 @Service
 public class ReportService {
 
-    private final MaintenanceRequestRepository requestRepository;
+  private final MaintenanceRequestRepository requestRepository;
 
 
-    public ReportService(MaintenanceRequestRepository requestRepository) {
-        this.requestRepository = requestRepository;
-    }
+  public ReportService(MaintenanceRequestRepository requestRepository) {
+    this.requestRepository = requestRepository;
+  }
 
-    @Transactional(readOnly = true)
-    public RevenueReport revenueByDay(LocalDate start, LocalDate end) {
+  @Transactional(readOnly = true)
+  public RevenueReport revenueByDay(LocalDate start, LocalDate end) {
 
-        List<DailyRevenue> revenues = requestRepository.findDailyRevenue(start, end);
+    List<DailyRevenue> revenues = requestRepository.findDailyRevenue(start, end);
 
-        LocalDate resolvedStart = start != null ? start : firstDayOf(revenues);
-        LocalDate resolvedEnd = end != null ? end : LocalDate.now();
+    LocalDate resolvedStart = start != null ? start : firstDayOf(revenues);
+    LocalDate resolvedEnd = end != null ? end : LocalDate.now();
 
-        BigDecimal total = revenues.stream()
-                .map(DailyRevenue::getTotal)
-                .filter(Objects::nonNull)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    BigDecimal total = revenues.stream()
+            .map(DailyRevenue::getTotal)
+            .filter(Objects::nonNull)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        return new RevenueReport(resolvedStart, resolvedEnd, revenues, total);
-    }
+    return new RevenueReport(resolvedStart, resolvedEnd, revenues, total);
+  }
 
-    private LocalDate firstDayOf(List<DailyRevenue> revenues) {
-        return revenues.isEmpty() ? null : revenues.getFirst().getDay();
-    }
+  private LocalDate firstDayOf(List<DailyRevenue> revenues) {
+    return revenues.isEmpty() ? null : revenues.getFirst().getDay();
+  }
 
 }

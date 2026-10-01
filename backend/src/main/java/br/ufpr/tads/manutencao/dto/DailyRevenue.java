@@ -4,9 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public interface DailyRevenue {
+  LocalDate getDay();
 
-    LocalDate getDay();
-
-    BigDecimal getTotal();
-
+  BigDecimal getTotal();
 }

@@ -6,23 +6,23 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 
-@Service 
+@Service
 public class EmailService {
-    private final JavaMailSender enviadorEmail;
+  private final JavaMailSender enviadorEmail;
 
-    @Value("${app.mail.from}")  
-    private String remetente;
+  @Value("${app.mail.from}")
+  private String remetente;
 
-    public EmailService(JavaMailSender enviadorEmail){
-        this.enviadorEmail = enviadorEmail ;
-    }
+  public EmailService(JavaMailSender enviadorEmail) {
+    this.enviadorEmail = enviadorEmail;
+  }
 
-    public void enviaEmail(String para, String assunto, String corpo){
-        SimpleMailMessage email = new SimpleMailMessage();
-        email.setFrom(remetente); 
-        email.setTo(para);
-        email.setSubject(assunto);
-        email.setText(corpo);
-        enviadorEmail.send(email);
-    }
+  public void enviaEmail(String para, String assunto, String corpo) {
+    SimpleMailMessage email = new SimpleMailMessage();
+    email.setFrom(remetente);
+    email.setTo(para);
+    email.setSubject(assunto);
+    email.setText(corpo);
+    enviadorEmail.send(email);
+  }
 }

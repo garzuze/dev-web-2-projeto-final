@@ -11,20 +11,20 @@ import java.util.List;
 
 public interface MaintenanceRequestRepository extends JpaRepository<MaintenanceRequest, Long> {
 
-    @Query(value = """
-    SELECT
-            CAST(payment_date_time AS DATE) AS day,
-            SUM(quote_value) AS total
-        FROM maintenance_request
-        WHERE status IN ('PAGA', 'FINALIZADA')
-          AND (CAST(:startDate AS DATE) IS NULL OR payment_date_time >= CAST(:startDate AS DATE))
-          AND (CAST(:endDate AS DATE) IS NULL OR payment_date_time < CAST(:endDate AS DATE) + INTERVAL '1 day')
-        GROUP BY CAST(payment_date_time AS DATE)
-        ORDER BY day
-    """, nativeQuery = true)
-    List<DailyRevenue> findDailyRevenue(
-            @Param("startDate") LocalDate startDate,
-            @Param("endDate") LocalDate endDate
-    );
+  @Query(value = """
+          SELECT
+                  CAST(payment_date_time AS DATE) AS day,
+                  SUM(quote_value) AS total
+              FROM maintenance_request
+              WHERE status IN ('PAGA', 'FINALIZADA')
+                AND (CAST(:startDate AS DATE) IS NULL OR payment_date_time >= CAST(:startDate AS DATE))
+                AND (CAST(:endDate AS DATE) IS NULL OR payment_date_time < CAST(:endDate AS DATE) + INTERVAL '1 day')
+              GROUP BY CAST(payment_date_time AS DATE)
+              ORDER BY day
+          """, nativeQuery = true)
+  List<DailyRevenue> findDailyRevenue(
+          @Param("startDate") LocalDate startDate,
+          @Param("endDate") LocalDate endDate
+  );
 
 }

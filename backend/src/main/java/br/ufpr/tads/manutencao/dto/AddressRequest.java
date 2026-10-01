@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public record AddressRequest(
-
         @NotBlank(message = "O CEP é obrigatório")
         @Pattern(regexp = "\\d{8}", message = "O CEP deve conter 8 dígitos, apenas números")
         String zipCode,
@@ -31,6 +30,6 @@ public record AddressRequest(
 
         @NotBlank(message = "O estado é obrigatório")
         @Pattern(regexp = "[A-Z]{2}", message = "O estado deve ser a sigla de duas letras maiúsculas")
-        String state) {
-
+        String state
+) {
 }

@@ -6,9 +6,9 @@ public record LoginResponse(Long id, String name, String email, UserProfile prof
 
   public static record CategoryResponse(Long id, String name) {
 
-      public static CategoryResponse of(Category category) {
-          return new CategoryResponse(category.getId(), category.getName());
-      }
+    public static CategoryResponse of(Category category) {
+      return new CategoryResponse(category.getId(), category.getName());
+    }
 
   }
 }
