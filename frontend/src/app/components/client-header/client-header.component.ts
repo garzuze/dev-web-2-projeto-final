@@ -9,6 +9,7 @@ import { AuthService, LoginResponse } from '../../core/auth.service';
   imports: [RouterLink],
   selector: 'app-client-header',
   templateUrl: './client-header.component.html',
+  host: { class: 'sticky top-0 z-50 block' },
 })
 export class ClientHeaderComponent {
   private readonly auth = inject(AuthService);
