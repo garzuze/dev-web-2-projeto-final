@@ -3,10 +3,10 @@ import { CanActivateFn, Router } from '@angular/router';
 
 import { AuthService } from './auth.service';
 
-export const employeeGuard: CanActivateFn = () => {
+export const customerGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
   return (
-    auth.currentUser?.profile === 'EMPLOYEE' ||
+    auth.currentUser?.profile === 'CUSTOMER' ||
     inject(Router).createUrlTree(['/login'])
   );
 };
