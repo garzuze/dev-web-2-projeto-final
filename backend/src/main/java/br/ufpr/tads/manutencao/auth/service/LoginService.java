@@ -1,9 +1,9 @@
-package br.ufpr.tads.manutencao.service;
+package br.ufpr.tads.manutencao.auth.service;
 
-import br.ufpr.tads.manutencao.dto.LoginRequest;
-import br.ufpr.tads.manutencao.dto.LoginResponse;
-import br.ufpr.tads.manutencao.dto.UserProfile;
-import br.ufpr.tads.manutencao.exception.InvalidCredentialsException;
+import br.ufpr.tads.manutencao.auth.dto.LoginRequest;
+import br.ufpr.tads.manutencao.auth.dto.LoginResponse;
+import br.ufpr.tads.manutencao.auth.dto.UserProfile;
+import br.ufpr.tads.manutencao.auth.exception.InvalidCredentialsException;
 import br.ufpr.tads.manutencao.model.Customer;
 import br.ufpr.tads.manutencao.model.Employee;
 import br.ufpr.tads.manutencao.model.User;

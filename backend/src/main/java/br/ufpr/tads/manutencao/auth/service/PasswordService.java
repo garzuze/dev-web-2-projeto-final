@@ -1,4 +1,4 @@
-package br.ufpr.tads.manutencao.service;
+package br.ufpr.tads.manutencao.auth.service;
 
 import org.springframework.stereotype.Service;
 

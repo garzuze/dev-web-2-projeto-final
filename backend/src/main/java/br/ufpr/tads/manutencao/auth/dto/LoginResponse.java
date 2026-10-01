@@ -1,4 +1,4 @@
-package br.ufpr.tads.manutencao.dto;
+package br.ufpr.tads.manutencao.auth.dto;
 
 public record LoginResponse(
         Long id,

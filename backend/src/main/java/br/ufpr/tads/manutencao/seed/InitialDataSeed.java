@@ -5,7 +5,7 @@ import br.ufpr.tads.manutencao.model.Category;
 import br.ufpr.tads.manutencao.model.Customer;
 import br.ufpr.tads.manutencao.model.Employee;
 import br.ufpr.tads.manutencao.repository.*;
-import br.ufpr.tads.manutencao.service.PasswordService;
+import br.ufpr.tads.manutencao.auth.service.PasswordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;

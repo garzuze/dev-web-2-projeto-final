@@ -1,11 +1,11 @@
-package br.ufpr.tads.manutencao.controller;
+package br.ufpr.tads.manutencao.auth.controller;
 
-import br.ufpr.tads.manutencao.dto.LoginRequest;
-import br.ufpr.tads.manutencao.dto.LoginResponse;
-import br.ufpr.tads.manutencao.dto.SignUpRequest;
-import br.ufpr.tads.manutencao.dto.SignUpResponse;
-import br.ufpr.tads.manutencao.service.LoginService;
-import br.ufpr.tads.manutencao.service.SignUpService;
+import br.ufpr.tads.manutencao.auth.dto.LoginRequest;
+import br.ufpr.tads.manutencao.auth.dto.LoginResponse;
+import br.ufpr.tads.manutencao.auth.dto.SignUpRequest;
+import br.ufpr.tads.manutencao.auth.dto.SignUpResponse;
+import br.ufpr.tads.manutencao.auth.service.LoginService;
+import br.ufpr.tads.manutencao.auth.service.SignUpService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

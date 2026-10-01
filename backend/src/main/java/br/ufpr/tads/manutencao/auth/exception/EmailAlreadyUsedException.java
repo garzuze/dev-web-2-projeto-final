@@ -1,4 +1,4 @@
-package br.ufpr.tads.manutencao.exception;
+package br.ufpr.tads.manutencao.auth.exception;
 
 public class EmailAlreadyUsedException extends RuntimeException {
 

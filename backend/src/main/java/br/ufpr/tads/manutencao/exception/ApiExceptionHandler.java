@@ -1,5 +1,8 @@
 package br.ufpr.tads.manutencao.exception;
 
+import br.ufpr.tads.manutencao.auth.exception.CpfAlreadyUsedException;
+import br.ufpr.tads.manutencao.auth.exception.EmailAlreadyUsedException;
+import br.ufpr.tads.manutencao.auth.exception.InvalidCredentialsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;

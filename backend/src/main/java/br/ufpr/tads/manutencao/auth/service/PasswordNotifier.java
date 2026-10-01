@@ -1,5 +1,6 @@
-package br.ufpr.tads.manutencao.service;
+package br.ufpr.tads.manutencao.auth.service;
 
+import br.ufpr.tads.manutencao.service.EmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

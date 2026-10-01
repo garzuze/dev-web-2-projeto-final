@@ -1,5 +1,6 @@
-package br.ufpr.tads.manutencao.dto;
+package br.ufpr.tads.manutencao.auth.dto;
 
+import br.ufpr.tads.manutencao.dto.AddressRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CPF;

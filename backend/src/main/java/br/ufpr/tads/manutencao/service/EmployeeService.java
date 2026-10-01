@@ -1,5 +1,7 @@
 package br.ufpr.tads.manutencao.service;
 
+import br.ufpr.tads.manutencao.auth.service.PasswordNotifier;
+import br.ufpr.tads.manutencao.auth.service.PasswordService;
 import br.ufpr.tads.manutencao.dto.EmployeeRequest;
 import br.ufpr.tads.manutencao.dto.EmployeeResponse;
 import br.ufpr.tads.manutencao.repository.EmployeeRepository;
