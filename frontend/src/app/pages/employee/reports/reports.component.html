@@ -1,0 +1,83 @@
+<app-employee-header></app-employee-header>
+
+<section class="mx-auto max-w-4xl p-6">
+    <h1 class="mb-6 text-3xl font-extrabold text-gray-900">Relatório de receitas</h1>
+
+    <div class="mb-3 flex flex-wrap items-end gap-4">
+        <div class="flex flex-col gap-2">
+            <label for="start" class="font-medium text-gray-700">Data inicial</label>
+            <input
+                    id="start"
+                    type="date"
+                    [(ngModel)]="start"
+                    class="rounded-lg border border-gray-300 p-3 text-gray-900 outline-none transition focus:border-primary-800 focus:ring-2 focus:ring-primary-800/20"
+            />
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <label for="end" class="font-medium text-gray-700">Data final</label>
+            <input
+                    id="end"
+                    type="date"
+                    [(ngModel)]="end"
+                    class="rounded-lg border border-gray-300 p-3 text-gray-900 outline-none transition focus:border-primary-800 focus:ring-2 focus:ring-primary-800/20"
+            />
+        </div>
+
+        <button
+                class="cursor-pointer rounded-lg bg-primary-800 px-5 py-3 font-medium text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary-800/20 disabled:cursor-not-allowed disabled:opacity-60"
+                type="button"
+                [disabled]="loading()"
+                (click)="onGenerate()"
+        >
+            {{ loading() ? 'Gerando...' : 'Gerar relatório' }}
+        </button>
+    </div>
+
+    <p class="mb-6 text-sm text-gray-500">
+        Os dois campos são opcionais: sem data inicial o relatório começa no primeiro
+        pagamento registrado, e sem data final vai até hoje.
+    </p>
+
+    @if (errorMessage()) {
+    <p class="rounded-lg border border-red-300 bg-red-50 p-4 text-red-700">
+        {{ errorMessage() }}
+    </p>
+    }
+
+    @if (revenueReport(); as data) {
+    @if (data.days.length === 0) {
+    <p class="rounded-lg border border-dashed border-gray-300 p-8 text-center text-gray-500">
+        Nenhuma receita no período.
+    </p>
+    } @else {
+    <p class="mb-3 text-gray-600">
+        Período: {{ data.start | date: 'dd/MM/yyyy' }} a {{ data.end | date: 'dd/MM/yyyy' }}
+    </p>
+
+    <table class="w-full overflow-hidden rounded-xl border border-gray-200 text-left">
+        <caption class="sr-only">Receita por dia</caption>
+        <thead class="bg-gray-100 text-sm uppercase text-gray-600">
+        <tr>
+            <th scope="col" class="px-4 py-3">Dia</th>
+            <th scope="col" class="px-4 py-3 text-right">Receita</th>
+        </tr>
+        </thead>
+        <tbody>
+        @for (row of data.days; track row.day) {
+        <tr class="border-t border-gray-200">
+            <td class="px-4 py-3 text-gray-900">{{ row.day | date: 'dd/MM/yyyy' }}</td>
+            <td class="px-4 py-3 text-right text-gray-900">{{ row.total | currency: 'BRL' }}</td>
+        </tr>
+        }
+        </tbody>
+        <tfoot class="border-t-2 border-gray-300 bg-gray-50 font-bold text-gray-900">
+        <tr>
+            <td class="px-4 py-3">Total geral</td>
+            <td class="px-4 py-3 text-right">{{ data.total | currency: 'BRL' }}</td>
+        </tr>
+        </tfoot>
+    </table>
+    }
+    }
+</section>
