@@ -1,3 +1,6 @@
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { API_URL } from './api';
 
 export interface DailyRevenue {
@@ -13,11 +16,13 @@ export interface RevenueReport {
 }
 
 @Injectable({ providedIn: 'root' })
-export class CategoryService {
+export class ReportService {
   private readonly http = inject(HttpClient);
   private readonly url = `${API_URL}/reports`;
 
-  revenue(start: string, end:string): Observable<>{
-
+  revenue(start: string, end:string): Observable<DailyRevenue[]>{
+    return this.http.get<DailyRevenue[]>(`${this.url}/revenue`, {
+      params: { start, end }
+    });
   }
 }
