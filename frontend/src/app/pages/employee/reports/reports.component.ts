@@ -28,6 +28,7 @@ export class ReportsComponent {
 
         this.reportService.revenueByDay(this.start || null, this.end || null).subscribe({
             next: (report) => {
+                //VITOR: Deve guardar report em vez de null
                 this.revenueReport.set(null);
                 this.loading.set(false);
             },
