@@ -20,6 +20,7 @@ export class ReportService {
   private readonly http = inject(HttpClient);
   private readonly url = `${API_URL}/reports`;
 
+  //VITOR: O retorno não é array, ele está dentro de Revenue Report
   revenueByDay(start: string | null, end:string | null): Observable<RevenueReport[]>{
     let params = new HttpParams();
     if (start) params = params.set('start', start);
