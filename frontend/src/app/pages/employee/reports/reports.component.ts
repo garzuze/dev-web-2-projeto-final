@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';1
+import { Component, inject, signal } from '@angular/core';
 import { ReportService, RevenueReport } from '../../../core/report.service';
 import { EmployeeHeaderComponent } from '../../../components/employee-header/employee-header.component';
 import { FormsModule } from '@angular/forms';
@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
 export class ReportsComponent {
     private readonly reportService = inject(ReportService)
 
-    readonly report = signal<RevenueReport | null>(null);
+    readonly revenueReport = signal<RevenueReport | null>(null);
     readonly loading = signal(false);
     readonly errorMessage = signal('');
 
@@ -28,11 +28,11 @@ export class ReportsComponent {
 
         this.reportService.revenueByDay(this.start || null, this.end || null).subscribe({
             next: (report) => {
-                this.report.set(report);
+                this.revenueReport.set(null);
                 this.loading.set(false);
             },
             error: () => {
-                this.report.set(null);
+                this.revenueReport.set(null);
                 this.errorMessage.set('Não foi possível gerar o relatório.');
                 this.loading.set(false);
             },

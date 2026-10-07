@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_URL } from './api';
 
@@ -9,9 +9,9 @@ export interface DailyRevenue {
 }
 
 export interface RevenueReport {
-  start: string;
-  end: string;
-  days: string[];
+  start: string | null;
+  end: string | null;
+  days: DailyRevenue[];
   total: number;
 }
 
@@ -20,9 +20,11 @@ export class ReportService {
   private readonly http = inject(HttpClient);
   private readonly url = `${API_URL}/reports`;
 
-  revenue(start: string, end:string): Observable<DailyRevenue[]>{
-    return this.http.get<DailyRevenue[]>(`${this.url}/revenue`, {
-      params: { start, end }
-    });
+  revenueByDay(start: string | null, end:string | null): Observable<RevenueReport[]>{
+    let params = new HttpParams();
+    if (start) params = params.set('start', start);
+    if (end) params = params.set('end', end);
+
+    return this.http.get<RevenueReport[]>(`${this.url}/revenue`, { params });
   }
 }
