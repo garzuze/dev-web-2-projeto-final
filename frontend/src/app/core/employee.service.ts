@@ -1,26 +1,29 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { delay, Observable, of } from 'rxjs';
 import { Employee } from '../models/employee.model';
 import { EMPLOYEE_MOCK } from '../mocks/employee.mock';
+import { HttpClient } from '@angular/common/http';
+import { API_URL } from './api';
+import { Category } from './category.service';
 
 @Injectable({ providedIn: 'root' })
 export class EmployeeService {
   private employees: Employee[] = [...EMPLOYEE_MOCK];
-  private nextId = Math.max(...this.employees.map((e) => e.id)) + 1;
+  private readonly http = inject(HttpClient);
+  private readonly url = `${API_URL}/employees`;
 
   list(): Observable<Employee[]> {
-    return of([...this.employees]).pipe(delay(300));
+    return this.http.get<Employee[]>(this.url);
   }
 
   create(name: string, email: string, birthDate: string): Observable<Employee> {
-    const newEmployee: Employee = {
-      id: this.nextId++,
+    const newEmployee: Omit<Employee, 'id'> = {
       name,
       email,
       birthDate,
     };
-    this.employees.push(newEmployee);
-    return of(newEmployee).pipe(delay(300));
+
+    return this.http.post<Employee>(this.url, newEmployee);
   }
 
   update(
@@ -28,31 +31,22 @@ export class EmployeeService {
     name: string,
     email: string,
     birthDate: string,
-  ): Observable<Employee> {
+  ): Observable<Employee | null> {
     const employee = this.employees.find((e) => e.id === id);
+    // TODO: jogar exceção aqui ao invés de null
     if (!employee) {
-      return of().pipe(delay(300), (obs) => {
-        return obs;
-      });
+      return of(null);
     }
 
     const updated = { ...employee, name, email, birthDate };
-    const index = this.employees.indexOf(employee);
-    this.employees[index] = updated;
-    return of(updated).pipe(delay(300));
+    return this.http.put<Employee>(`${this.url}/${id}`, updated);
   }
 
   deactivate(id: number): Observable<void> {
-    const index = this.employees.findIndex((e) => e.id === id);
-    if (index > -1) {
-      this.employees.splice(index, 1);
-    }
-    return of(void 0).pipe(delay(300));
+    return this.http.delete<void>(`${this.url}/${id}`);
   }
 
-  getCurrentUser(): Observable<Employee | undefined> {
-    // depois que fizermos, esse método vai se comunicar com o serviço de autenticação
-    // (e provavelmente vai estar em outra classe, nao essa
-    return of(this.employees[0]).pipe(delay(300));
+  findById(id: number): Observable<Employee | null> {
+    return this.http.get<Employee>(`${this.url}/${id}`);
   }
 }
