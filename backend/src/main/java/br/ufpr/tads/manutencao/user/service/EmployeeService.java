@@ -94,6 +94,7 @@ public class EmployeeService {
     if (id.equals(currentUserId)) {
       throw new IllegalStateException("Um funcionário não pode deletar a si mesmo");
     }
+    //TODO: Yohan o ideal não seria melhor dar um retorno mais genérico, do que falar que tem apenas um usuário já que seria uma regra interna
     if (employeeRepository.countByActiveTrue()<= 1) {
       throw new IllegalStateException("Não é possivel remover o unico funcionário ativo do sistema");
     }
