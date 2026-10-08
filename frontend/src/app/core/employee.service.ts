@@ -32,13 +32,7 @@ export class EmployeeService {
     email: string,
     birthDate: string,
   ): Observable<Employee | null> {
-    const employee = this.employees.find((e) => e.id === id);
-    // TODO: jogar exceção aqui ao invés de null
-    if (!employee) {
-      return of(null);
-    }
-
-    const updated = { ...employee, name, email, birthDate };
+    const updated = { name, email, birthDate };
     return this.http.put<Employee>(`${this.url}/${id}`, updated);
   }
 
@@ -46,7 +40,7 @@ export class EmployeeService {
     return this.http.delete<void>(`${this.url}/${id}`);
   }
 
-  findById(id: number): Observable<Employee | null> {
+  findById(id: number): Observable<Employee | undefined> {
     return this.http.get<Employee>(`${this.url}/${id}`);
   }
 }
