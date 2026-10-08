@@ -3,7 +3,7 @@
     <div class="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between gap-4">
       <a routerLink="/employee/home" class="flex items-center">
         <span class="self-center whitespace-nowrap text-xl font-semibold"
-          >ManutençãoZica.com</span
+        >ManutençãoZica.com</span
         >
       </a>
 
@@ -40,17 +40,19 @@
       </div>
 
       <div class="order-2 flex items-center gap-3 lg:order-3">
-        <div class="flex items-center gap-2">
-          <span
-            class="flex h-9 w-9 items-center justify-center rounded-full bg-primary-800 text-sm font-semibold text-white"
-          >
-            MS
-          </span>
-          <div class="hidden flex-col leading-tight sm:flex">
-            <span class="text-sm font-medium text-gray-900">Maria Silva</span>
-            <span class="text-xs text-gray-500">Funcionário</span>
+        @if (currentUser) {
+          <div class="flex items-center gap-2.5 rounded-full py-1 pl-1 pr-1 sm:pr-3">
+        <span
+          class="flex h-9 w-9 items-center justify-center rounded-full bg-primary-700 text-sm font-semibold text-primary-900 ring-2 ring-white">
+          {{ initials }}
+        </span>
+            <div class="hidden flex-col leading-tight sm:flex">
+              <span class="text-sm font-semibold text-gray-900">{{ currentUser.name }}</span>
+              <span class="text-xs text-gray-500">Funcionário</span>
+            </div>
           </div>
-        </div>
+          <span class="hidden h-8 w-px bg-gray-200 sm:block" aria-hidden="true"></span>
+        }
         <button
           type="button"
           (click)="onLogout()"
