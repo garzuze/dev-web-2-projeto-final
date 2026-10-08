@@ -32,6 +32,9 @@ export class EmployeeService {
     email: string,
     birthDate: string,
   ): Observable<Employee> {
+    const existing = this.findById(id).subscribe(data => {
+      return data;
+    });
     const updated = { name, email, birthDate };
     return this.http.put<Employee>(`${this.url}/${id}`, updated);
   }
