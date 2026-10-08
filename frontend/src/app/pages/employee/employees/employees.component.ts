@@ -8,6 +8,7 @@ import { NotificationType } from '../../../models/notification.model';
 import { EmployeeModalComponent } from './employee-modal';
 import { EmployeeHeaderComponent } from '../../../components/employee-header/employee-header.component';
 import { DatePipe } from '@angular/common';
+import { AuthService } from '../../../core/auth.service';
 
 @Component({
   imports: [
@@ -22,10 +23,11 @@ import { DatePipe } from '@angular/common';
 export class EmployeesComponent implements OnInit {
   private readonly employeeService = inject(EmployeeService);
   private readonly notifications = inject(NotificationService);
+  private readonly auth = inject(AuthService);
 
   readonly employees = signal<Employee[]>([]);
   readonly loading = signal(true);
-  readonly currentUserId = signal<number | null>(null);
+  readonly currentUserId = this.auth.currentUser?.id ?? 0;
 
   isFormOpen = false;
   editing: Employee | null = null;
@@ -34,19 +36,7 @@ export class EmployeesComponent implements OnInit {
   isRemoving = false;
 
   ngOnInit() {
-    this.loadCurrentUser();
     this.reload();
-  }
-
-  private loadCurrentUser() {
-    // depois vamos trocar isso por um auth service ou coisa do tipo
-    this.employeeService.getCurrentUser().subscribe({
-      next: (user) => {
-        if (user) {
-          this.currentUserId.set(user.id);
-        }
-      },
-    });
   }
 
   reload() {
@@ -93,7 +83,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   onRemove(employee: Employee) {
-    if (employee.id === this.currentUserId()) {
+    if (employee.id === this.currentUserId) {
       this.notifications.showNotification(
         'Você não pode remover a si.',
         NotificationType.error,
