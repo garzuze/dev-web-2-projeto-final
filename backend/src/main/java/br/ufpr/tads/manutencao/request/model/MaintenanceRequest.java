@@ -9,6 +9,8 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "maintenance_request")
@@ -55,16 +57,18 @@ public class MaintenanceRequest {
   private String maintenanceDescription;
 
   @Column(name = "customer_instructions", columnDefinition = "TEXT")
-  private String clientInstructions;
+  private String customerInstructions;
 
   @Column(name = "payment_date_time")
   private LocalDateTime paymentDateTime;
 
-//    TODO: Verificar depois com Vitor se vamos usar mesmo essa coluna, que se for
-//    o caso vamos ter que criar uma migration de alter table
-//    @Column(name = "completion_date_time")
-//    private LocalDateTime completionDateTime;
-//    TODO: Verificar com Vitor também
-//    @OneToMany(mappedBy = "request", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<RequestHistory> history = new ArrayList<>();
+
+  @OneToMany(mappedBy = "request", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<RequestHistory> history = new ArrayList<>();
+
+  public void addHistory(RequestHistory h) {
+    h.setRequest(this);
+    history.add(h);
+  }
+
 }

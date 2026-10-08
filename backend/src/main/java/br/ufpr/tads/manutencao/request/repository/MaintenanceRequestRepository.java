@@ -8,8 +8,14 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface MaintenanceRequestRepository extends JpaRepository<MaintenanceRequest, Long> {
+
+    Optional<MaintenanceRequest> findByIdAndCustomerId(Long id, Long customerId);
+
+    List<MaintenanceRequest> findByCustomerIdOrderByOpeningDateTimeAsc(Long customerId);
+
 
   @Query(value = """
           SELECT

@@ -3,6 +3,8 @@ package br.ufpr.tads.manutencao.exception;
 import br.ufpr.tads.manutencao.auth.exception.CpfAlreadyUsedException;
 import br.ufpr.tads.manutencao.auth.exception.EmailAlreadyUsedException;
 import br.ufpr.tads.manutencao.auth.exception.InvalidCredentialsException;
+import br.ufpr.tads.manutencao.request.exception.InvalidRequestStatusException;
+import br.ufpr.tads.manutencao.request.exception.RequestNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -47,6 +49,17 @@ public class ApiExceptionHandler {
     }
     problem.setProperty("fields", fields);
     return problem;
+  }
+
+
+  @ExceptionHandler(RequestNotFoundException.class)
+  public ProblemDetail handleRequestNotFound(RequestNotFoundException exception) {
+    return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, exception.getMessage());
+  }
+
+  @ExceptionHandler(InvalidRequestStatusException.class)
+  public ProblemDetail handleInvalidStatus(InvalidRequestStatusException exception) {
+    return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, exception.getMessage());
   }
 
 }
