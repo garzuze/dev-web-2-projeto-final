@@ -31,7 +31,7 @@ export class EmployeeService {
     name: string,
     email: string,
     birthDate: string,
-  ): Observable<Employee | null> {
+  ): Observable<Employee> {
     const updated = { name, email, birthDate };
     return this.http.put<Employee>(`${this.url}/${id}`, updated);
   }
