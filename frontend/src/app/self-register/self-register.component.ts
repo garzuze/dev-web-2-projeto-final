@@ -26,7 +26,7 @@ export class SelfRegister {
   }
 
   readonly form = this.formBuilder.nonNullable.group({
-    name: ['', Validators.required, Validators.minLength(3), Validators.maxLength(120)],
+    name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(120)]],
     cpf: ['', Validators.required],
     phone: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
@@ -43,8 +43,9 @@ export class SelfRegister {
     const cep = this.form.get('cep')?.value?.replace(/\D/g, '') || '';
 
     if (cep.length === 8) {
-      this.servicoCep.buscarCep(cep).subscribe((response) => {
-        if (response.erro) { // response.erro? Isso existe mesmo? Por quê não tipar esse response?
+      this.servicoCep.buscarCep(cep).subscribe({
+        next: (response) =>{
+          if (response.erro) { 
           alert('CEP não encontrado!');
           return;
         }
@@ -55,6 +56,11 @@ export class SelfRegister {
           cidade: response.localidade,
           estado: response.uf,
         });
+        },
+        error: (err) => {
+          console.error('Erro na consulta do CEP:', err);
+        }
+        
       });
     }
   }
