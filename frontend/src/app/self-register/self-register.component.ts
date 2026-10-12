@@ -6,9 +6,11 @@ import { AuthService, SignUpRequest } from '../core/auth.service';
 import { Header } from '../components/header/header';
 import { NotificationService } from '../services/notification.service';
 import { NotificationType } from '../models/notification.model';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 @Component({
-  imports: [RouterLink, ReactiveFormsModule, Header],
+  imports: [RouterLink, ReactiveFormsModule, Header, NgxMaskDirective],
+  providers: [provideNgxMask({})],
   selector: 'app-self-register',
   styleUrl: './self-register.component.scss',
   templateUrl: './self-register.component.html',
@@ -29,7 +31,10 @@ export class SelfRegister {
   }
 
   readonly form = this.formBuilder.nonNullable.group({
-    name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(120)]],
+    name: [
+      '',
+      [Validators.required, Validators.minLength(3), Validators.maxLength(120)],
+    ],
     cpf: ['', Validators.required],
     phone: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
@@ -47,34 +52,33 @@ export class SelfRegister {
 
     if (cep.length === 8) {
       this.servicoCep.buscarCep(cep).subscribe({
-        next: (response) =>{
-          if (response.erro) { 
-          this.notificationService.showNotification(
-            'CEP não encontrado!',
-            NotificationType.alert
-          )
-          return;
-        }
+        next: (response) => {
+          if (response.erro) {
+            this.notificationService.showNotification(
+              'CEP não encontrado!',
+              NotificationType.alert,
+            );
+            return;
+          }
 
-        this.form.patchValue({
-          street: response.logradouro,
-          bairro: response.bairro,
-          cidade: response.localidade,
-          estado: response.uf,
-        });
-        this.notificationService.showNotification(
-          'Endereço preenchido automaticamente',
-          NotificationType.success
-        )
+          this.form.patchValue({
+            street: response.logradouro,
+            bairro: response.bairro,
+            cidade: response.localidade,
+            estado: response.uf,
+          });
+          this.notificationService.showNotification(
+            'Endereço preenchido automaticamente',
+            NotificationType.success,
+          );
         },
         error: (err) => {
           console.error('Erro na consulta do CEP:', err);
           this.notificationService.showNotification(
-            'Não foi possivel consultar o CEP no momento.',
-            NotificationType.error
-          )
-        }
-        
+            'Não foi possível consultar o CEP no momento.',
+            NotificationType.error,
+          );
+        },
       });
     }
   }
@@ -83,9 +87,9 @@ export class SelfRegister {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       this.notificationService.showNotification(
-        'Por favor, preencha todos os campos obrigatorios',
-        NotificationType.alert
-      )
+        'Por favor, preencha todos os campos obrigatórios.',
+        NotificationType.alert,
+      );
       return;
     }
 
@@ -110,16 +114,16 @@ export class SelfRegister {
       next: (resposta) => {
         this.notificationService.showNotification(
           'Cadastro realizado com sucesso! Sua senha de acesso foi enviada para o e-mail de cadastro.',
-          NotificationType.success
-        )
+          NotificationType.success,
+        );
         this.router.navigate(['/login']);
       },
       error: (erro) => {
         console.error('Erro ao cadastrar:', erro);
         this.notificationService.showNotification(
           'Erro ao realizar cadastro. Verifique se o CPF ou e-mail já estão cadastrados.',
-          NotificationType.error
-        )
+          NotificationType.error,
+        );
       },
     });
   }
