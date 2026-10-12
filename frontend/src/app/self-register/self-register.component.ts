@@ -4,6 +4,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ViaCepService } from './via-cep.service';
 import { AuthService, SignUpRequest } from '../core/auth.service';
 import { Header } from '../components/header/header';
+import { NotificationService } from '../services/notification.service';
+import { NotificationType } from '../models/notification.model';
 
 @Component({
   imports: [RouterLink, ReactiveFormsModule, Header],
@@ -16,6 +18,7 @@ export class SelfRegister {
   private servicoCep = inject(ViaCepService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private notificationService = inject(NotificationService);
 
   get f() {
     return this.form.controls;
@@ -26,7 +29,7 @@ export class SelfRegister {
   }
 
   readonly form = this.formBuilder.nonNullable.group({
-    name: ['', Validators.required, Validators.minLength(3), Validators.maxLength(120)],
+    name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(120)]],
     cpf: ['', Validators.required],
     phone: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
@@ -43,9 +46,13 @@ export class SelfRegister {
     const cep = this.form.get('cep')?.value?.replace(/\D/g, '') || '';
 
     if (cep.length === 8) {
-      this.servicoCep.buscarCep(cep).subscribe((response) => {
-        if (response.erro) { // response.erro? Isso existe mesmo? Por quê não tipar esse response?
-          alert('CEP não encontrado!');
+      this.servicoCep.buscarCep(cep).subscribe({
+        next: (response) =>{
+          if (response.erro) { 
+          this.notificationService.showNotification(
+            'CEP não encontrado!',
+            NotificationType.alert
+          )
           return;
         }
 
@@ -55,6 +62,19 @@ export class SelfRegister {
           cidade: response.localidade,
           estado: response.uf,
         });
+        this.notificationService.showNotification(
+          'Endereço preenchido automaticamente',
+          NotificationType.success
+        )
+        },
+        error: (err) => {
+          console.error('Erro na consulta do CEP:', err);
+          this.notificationService.showNotification(
+            'Não foi possivel consultar o CEP no momento.',
+            NotificationType.error
+          )
+        }
+        
       });
     }
   }
@@ -62,6 +82,10 @@ export class SelfRegister {
   save() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.notificationService.showNotification(
+        'Por favor, preencha todos os campos obrigatorios',
+        NotificationType.alert
+      )
       return;
     }
 
@@ -84,16 +108,18 @@ export class SelfRegister {
 
     this.authService.signUp(payload).subscribe({
       next: (resposta) => {
-        alert(
-          'Cadastro realizado com sucesso! Sua senha de acesso foi enviada para o seu e-mail.',
-        );
+        this.notificationService.showNotification(
+          'Cadastro realizado com sucesso! Sua senha de acesso foi enviada para o e-mail de cadastro.',
+          NotificationType.success
+        )
         this.router.navigate(['/login']);
       },
       error: (erro) => {
         console.error('Erro ao cadastrar:', erro);
-        alert(
+        this.notificationService.showNotification(
           'Erro ao realizar cadastro. Verifique se o CPF ou e-mail já estão cadastrados.',
-        );
+          NotificationType.error
+        )
       },
     });
   }
