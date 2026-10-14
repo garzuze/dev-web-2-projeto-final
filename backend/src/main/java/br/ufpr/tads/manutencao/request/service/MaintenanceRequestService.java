@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class MaintenanceRequestService {
@@ -34,6 +35,19 @@ public class MaintenanceRequestService {
     private br.ufpr.tads.manutencao.user.model.Customer getCustomer(Long customerId) {
         return customerRepository.findById(customerId)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+    }
+
+    @Transactional
+    public MaintenanceRequestResponse findById(Long id, Long customerId){
+        MaintenanceRequest req = findAndValidateOwnership(id, customerId);
+        return new MaintenanceRequestResponse(req);
+    }
+
+    @Transactional
+    public List<MaintenanceRequestResponse> listByConsumer(Long customerId){
+        List<MaintenanceRequestResponse> req = requestRepository.findByCustomerIdOrderByOpeningDateTimeAsc(customerId)
+                .stream().map(e -> new MaintenanceRequestResponse(e)).toList();
+        return req;
     }
 
     private void registerHistory(MaintenanceRequest req, RequestStatus previousStatus, RequestStatus newStatus, Long customerId, String message){

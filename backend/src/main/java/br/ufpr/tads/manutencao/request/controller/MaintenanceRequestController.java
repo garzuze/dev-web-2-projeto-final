@@ -6,6 +6,8 @@ import br.ufpr.tads.manutencao.request.service.MaintenanceRequestService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/requests")
 public class MaintenanceRequestController {
@@ -13,6 +15,17 @@ public class MaintenanceRequestController {
 
     public MaintenanceRequestController(MaintenanceRequestService maintenanceRequestService) {
         this.maintenanceRequestService = maintenanceRequestService;
+    }
+
+    @GetMapping("/{id}")
+    public MaintenanceRequestResponse findById(@PathVariable Long id,
+                                               @RequestHeader("X-Current-User-Id") Long customerId){
+        return maintenanceRequestService.findById(id, customerId);
+    }
+
+    @GetMapping()
+    public List<MaintenanceRequestResponse> listByConsumer(@RequestHeader("X-Current-Uses-Id") Long customerId){
+        return maintenanceRequestService.listByConsumer(customerId);
     }
 
     @PutMapping("/{id}/approve")
