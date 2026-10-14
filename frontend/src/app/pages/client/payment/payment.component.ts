@@ -13,6 +13,7 @@ import { PaymentModalComponent } from './payment-modal/payment-modal.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { paymentData } from '../../../models/payment.model';
 import { CurrencyPipe, DatePipe } from '@angular/common';
+import { problemMessage } from '../../../core/api';
 
 @Component({
   imports: [
@@ -41,15 +42,15 @@ export class PaymentComponent {
   ngOnInit(): void {
     this.activatedRoutes.paramMap.subscribe((params) => {
       const id = Number(params.get('id'));
-      this.maintenanceRequestService
-        .getMaintenanceRequestById(id)
-        .subscribe((response) => {
+      this.maintenanceRequestService.getMaintenanceRequestById(id).subscribe({
+        next: (response) => {
           if (!response) {
             this.notificationService.showNotification(
               'Solicitação não encontrada',
               NotificationType.error,
             );
             this.router.navigate(['/client/request']);
+            return;
           }
           if (response?.statusName !== this.requestStatus.Arranged) {
             if (
@@ -70,7 +71,15 @@ export class PaymentComponent {
             return;
           }
           this.requestData = response;
-        });
+        },
+        error: (err) => {
+          this.notificationService.showNotification(
+            problemMessage(err, 'Não foi possível pagar.'),
+            NotificationType.error,
+          );
+          this.router.navigate(['/client/request']);
+        },
+      });
     });
   }
 
