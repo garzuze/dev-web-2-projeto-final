@@ -13,6 +13,8 @@ import { ApproveModalComponent } from './approve-modal/approve-modal.component';
 import { RequestDetailsCardComponent } from '../../../components/request-details-card/request-details-card.component';
 import { ClientHeaderComponent } from '../../../components/client-header/client-header.component';
 import { RescueModalComponent } from './rescue-modal/rescue-modal.component';
+import { problemMessage } from '../../../core/api';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   imports: [
@@ -44,9 +46,8 @@ export class QuoteComponent {
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((params) => {
       const id = Number(params.get('id'));
-      this.maintenanceRequestService
-        .getMaintenanceRequestById(id)
-        .subscribe((request) => {
+      this.maintenanceRequestService.getMaintenanceRequestById(id).subscribe({
+        next: (request) => {
           if (!request) {
             this.notificationService.showNotification(
               'Solicitação não encontrada',
@@ -75,7 +76,15 @@ export class QuoteComponent {
             return;
           }
           this.requestData = request;
-        });
+        },
+        error: (err: HttpErrorResponse) => {
+          this.notificationService.showNotification(
+            problemMessage(err, 'Solicitação não encontrada.'),
+            NotificationType.error,
+          );
+          this.router.navigate(['/client/request']);
+        },
+      });
     });
   }
 
@@ -88,7 +97,6 @@ export class QuoteComponent {
   }
 
   onConfirmReject($event: string) {
-    console.log($event);
     if (this.requestData?.id) {
       this.isRejecting = true;
       this.maintenanceRequestService
@@ -97,7 +105,7 @@ export class QuoteComponent {
           next: (res) => {
             this.isRejecting = false;
             this.notificationService.showNotification(
-              'Orçamento rejeitado com sucesso!',
+              'Serviço Rejeitado',
               NotificationType.success,
             );
             this.isRejectionModalOpen = false;
@@ -106,7 +114,7 @@ export class QuoteComponent {
           error: (err) => {
             this.isRejecting = false;
             this.notificationService.showNotification(
-              'Erro ao rejeitar orçamento',
+              problemMessage(err, 'Erro ao rejeitar orçamento'),
               NotificationType.error,
             );
           },
@@ -128,12 +136,12 @@ export class QuoteComponent {
       this.maintenanceRequestService
         .approveRequest(this.requestData.id)
         .subscribe({
-          next: () => {
+          next: (res) => {
             this.isApproving = false;
             const valorFormatado = new Intl.NumberFormat('pt-BR', {
               style: 'currency',
               currency: 'BRL',
-            }).format(this.requestData?.quoteValue || 0);
+            }).format(res.quoteValue || 0);
             this.notificationService.showNotification(
               `Serviço Aprovado no Valor ${valorFormatado}`,
               NotificationType.success,
@@ -144,7 +152,7 @@ export class QuoteComponent {
           error: (err) => {
             this.isApproving = false;
             this.notificationService.showNotification(
-              'Erro ao aprovar orçamento',
+              problemMessage(err, 'Erro ao aprovar orçamento'),
               NotificationType.error,
             );
           },
@@ -172,13 +180,13 @@ export class QuoteComponent {
               'Solicitação resgatada com sucesso',
               NotificationType.success,
             );
-            this.isRejectionModalOpen = false;
+            this.isRescueModalOpen = false;
             this.router.navigate(['/client/request']);
           },
           error: (err) => {
             this.isRescuing = false;
             this.notificationService.showNotification(
-              'Erro ao resgatar orçamento',
+              problemMessage(err, 'Erro ao resgatar orçamento'),
               NotificationType.error,
             );
           },
