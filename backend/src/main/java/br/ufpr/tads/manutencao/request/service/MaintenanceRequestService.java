@@ -44,7 +44,7 @@ public class MaintenanceRequestService {
     }
 
     @Transactional
-    public List<MaintenanceRequestResponse> listByConsumer(Long customerId){
+    public List<MaintenanceRequestResponse> listByCustomer(Long customerId){
         List<MaintenanceRequestResponse> req = requestRepository.findByCustomerIdOrderByOpeningDateTimeAsc(customerId)
                 .stream().map(e -> new MaintenanceRequestResponse(e)).toList();
         return req;

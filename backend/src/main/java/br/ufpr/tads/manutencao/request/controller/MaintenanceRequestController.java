@@ -24,8 +24,8 @@ public class MaintenanceRequestController {
     }
 
     @GetMapping()
-    public List<MaintenanceRequestResponse> listByConsumer(@RequestHeader("X-Current-Uses-Id") Long customerId){
-        return maintenanceRequestService.listByConsumer(customerId);
+    public List<MaintenanceRequestResponse> listByCustomer(@RequestHeader("X-Current-User-Id") Long customerId){
+        return maintenanceRequestService.listByCustomer(customerId);
     }
 
     @PutMapping("/{id}/approve")
