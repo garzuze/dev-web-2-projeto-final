@@ -62,7 +62,7 @@ public class MaintenanceRequest {
   @Column(name = "payment_date_time")
   private LocalDateTime paymentDateTime;
 
-
+  @OrderBy("dateTime ASC")
   @OneToMany(mappedBy = "request", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<RequestHistory> history = new ArrayList<>();
 

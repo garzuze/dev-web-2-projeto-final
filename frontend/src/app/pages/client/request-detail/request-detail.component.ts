@@ -11,6 +11,7 @@ import {
 } from '../../../models/maintenanceRequest.model';
 import { RequestDetailsCardComponent } from '../../../components/request-details-card/request-details-card.component';
 import { ClientHeaderComponent } from '../../../components/client-header/client-header.component';
+import { problemMessage } from '../../../core/api';
 
 @Component({
   imports: [RequestDetailsCardComponent, RouterLink, ClientHeaderComponent],
@@ -32,9 +33,8 @@ export class RequestDetailComponent {
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((params) => {
       const id = Number(params.get('id'));
-      this.maintenanceRequestService
-        .getMaintenanceRequestById(id)
-        .subscribe((request) => {
+      this.maintenanceRequestService.getMaintenanceRequestById(id).subscribe({
+        next: (request) => {
           if (!request) {
             this.notificationService.showNotification(
               'Solicitação não encontrada',
@@ -56,9 +56,16 @@ export class RequestDetailComponent {
             this.router.navigate(['/client/request']);
             return;
           }
-
           this.requestData = request;
-        });
+        },
+        error: (err) => {
+          this.notificationService.showNotification(
+            problemMessage(err, 'Solicitação não encontrada.'),
+            NotificationType.error,
+          );
+          this.router.navigate(['/client/request']);
+        },
+      });
     });
   }
 }
