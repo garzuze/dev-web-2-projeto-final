@@ -96,6 +96,7 @@ export class PaymentComponent {
       this.isPaymenting = true;
       this.maintenanceRequestService.payRequest(this.requestData.id).subscribe({
         next: (res) => {
+          this.requestData = res
           this.isPaymenting = false;
           this.isPaymentModalOpen = false;
 
@@ -107,10 +108,10 @@ export class PaymentComponent {
             NotificationType.success,
           );
         },
-        error: () => {
+        error: (err) => {
           this.isPaymenting = false;
           this.notificationService.showNotification(
-            'Erro ao pagar serviço.',
+            problemMessage(err, 'Erro ao pagar serviço.'),
             NotificationType.error,
           );
         },

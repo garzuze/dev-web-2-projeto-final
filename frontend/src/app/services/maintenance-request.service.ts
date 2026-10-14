@@ -113,7 +113,7 @@ export class MaintenanceRequestService {
   ): Observable<MaintenanceRequest> {
     return this.http.put<MaintenanceRequest>(
       `${this.url}/${id}/reject`,
-      rejectionReason,
+      { rejectionReason },
     );
   }
 
