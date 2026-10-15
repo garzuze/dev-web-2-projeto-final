@@ -3,11 +3,9 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Category, CategoryService } from '../../../core/category.service';
-import { AuthService } from '../../../core/auth.service';
 import { MaintenanceRequestService } from '../../../services/maintenance-request.service';
 import { NotificationService } from '../../../services/notification.service';
 import { NotificationType } from '../../../models/notification.model';
-import { CATEGORY_MOCK } from '../../../mocks/category.mock';
 import { ClientHeaderComponent } from '../../../components/client-header/client-header.component';
 
 @Component({
@@ -21,7 +19,6 @@ export class NewRequestComponent implements OnInit {
   private readonly maintenanceRequestService = inject(
     MaintenanceRequestService,
   );
-  private readonly auth = inject(AuthService);
   private readonly notifications = inject(NotificationService);
   private readonly router = inject(Router);
 
@@ -70,7 +67,7 @@ export class NewRequestComponent implements OnInit {
   ngOnInit() {
     this.categoryService.list().subscribe({
       next: (categories) => {
-        this.categories.set(categories.length > 0 ? categories : CATEGORY_MOCK);
+        this.categories.set(categories);
         this.loadingCategories.set(false);
       },
       error: () => {
@@ -92,19 +89,15 @@ export class NewRequestComponent implements OnInit {
 
     const { equipmentDescription, categoryId, defectDescription } =
       this.form.getRawValue();
-    const category = this.categories().find((c) => c.id === categoryId);
-    if (!category) {
+    if (categoryId === null) {
       return;
     }
 
-    const client = this.auth.currentUser;
     this.submitting.set(true);
     this.maintenanceRequestService
       .createRequest({
-        clientId: client?.id ?? 0,
-        clientName: client?.name ?? 'Cliente',
-        categoryName: category.name,
         equipmentDescription: equipmentDescription.trim(),
+        categoryId,
         defectDescription: defectDescription.trim(),
       })
       .subscribe({

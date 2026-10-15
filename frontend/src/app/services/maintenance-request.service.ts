@@ -50,53 +50,17 @@ export class MaintenanceRequestService {
     });
   }
 
-  // Lista as solicitações de um cliente ordenadas de forma crescente por data/hora
-  getMaintenanceRequestsByClientId(
-    clientId: number,
-  ): Observable<MaintenanceRequest[]> {
-    const clientRequests = MAINTENANCE_REQUEST_MOCK.filter(
-      (r) => r.clientId === clientId,
-    );
-    // Dados fictícios do mock para teste caso o cliente não tenha nenhuma solicitação criada
-    const requests = (
-      clientRequests.length > 0 ? clientRequests : [...MAINTENANCE_REQUEST_MOCK]
-    ).sort(
-      (a, b) =>
-        new Date(a.openingDateTime).getTime() -
-        new Date(b.openingDateTime).getTime(),
-    );
-    return of(requests);
+  // Lista as solicitações do cliente logado, já ordenadas pelo backend
+  getClientRequests(): Observable<MaintenanceRequest[]> {
+    return this.http.get<MaintenanceRequest[]>(this.url);
   }
 
   createRequest(request: {
-    clientId: number;
-    clientName: string;
-    categoryName: string;
     equipmentDescription: string;
+    categoryId: number;
     defectDescription: string;
   }): Observable<MaintenanceRequest> {
-    const id = Date.now();
-    const newRequest: MaintenanceRequest = {
-      id,
-      openingDateTime: new Date().toISOString(),
-      statusName: RequestStatus.Open,
-      clientId: request.clientId,
-      clientName: request.clientName,
-      categoryName: request.categoryName,
-      equipmentDescription: request.equipmentDescription,
-      defectDescription: request.defectDescription,
-      history: [
-        {
-          id,
-          requestId: id,
-          dateTime: new Date().toISOString(),
-          newStatus: RequestStatus.Open,
-          notes: 'Solicitação aberta pelo cliente.',
-        },
-      ],
-    };
-    MAINTENANCE_REQUEST_MOCK.push(newRequest);
-    return of(newRequest);
+    return this.http.post<MaintenanceRequest>(this.url, request);
   }
 
   // Aprova o orçamento de manutenção

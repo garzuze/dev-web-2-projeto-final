@@ -1,9 +1,11 @@
 package br.ufpr.tads.manutencao.request.controller;
 
+import br.ufpr.tads.manutencao.request.dto.CreateRequest;
 import br.ufpr.tads.manutencao.request.dto.MaintenanceRequestResponse;
 import br.ufpr.tads.manutencao.request.dto.RejectRequest;
 import br.ufpr.tads.manutencao.request.service.MaintenanceRequestService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +28,12 @@ public class MaintenanceRequestController {
     @GetMapping()
     public List<MaintenanceRequestResponse> listByCustomer(@RequestHeader("X-Current-User-Id") Long customerId){
         return maintenanceRequestService.listByCustomer(customerId);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public MaintenanceRequestResponse create(@RequestHeader("X-Current-User-Id") Long customerId, @Valid @RequestBody CreateRequest request){
+        return maintenanceRequestService.createRequest(customerId, request);
     }
 
     @PutMapping("/{id}/approve")
