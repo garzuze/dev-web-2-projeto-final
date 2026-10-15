@@ -1,5 +1,8 @@
 package br.ufpr.tads.manutencao.request.service;
 
+import br.ufpr.tads.manutencao.category.model.Category;
+import br.ufpr.tads.manutencao.category.repository.CategoryRepository;
+import br.ufpr.tads.manutencao.request.dto.CreateRequest;
 import br.ufpr.tads.manutencao.request.dto.MaintenanceRequestResponse;
 import br.ufpr.tads.manutencao.request.exception.InvalidRequestStatusException;
 import br.ufpr.tads.manutencao.request.exception.RequestNotFoundException;
@@ -9,6 +12,7 @@ import br.ufpr.tads.manutencao.request.model.RequestStatus;
 import br.ufpr.tads.manutencao.request.repository.MaintenanceRequestRepository;
 import br.ufpr.tads.manutencao.request.repository.RequestHistoryRepository;
 import br.ufpr.tads.manutencao.user.repository.CustomerRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +24,13 @@ public class MaintenanceRequestService {
     private final MaintenanceRequestRepository requestRepository;
     private final RequestHistoryRepository requestHistoryRepository;
     private final CustomerRepository customerRepository;
+    private final CategoryRepository categoryRepository;
 
-    public MaintenanceRequestService(MaintenanceRequestRepository requestRepository, RequestHistoryRepository requestHistoryRepository, CustomerRepository customerRepository) {
+    public MaintenanceRequestService(MaintenanceRequestRepository requestRepository, RequestHistoryRepository requestHistoryRepository, CustomerRepository customerRepository, CategoryRepository categoryRepository) {
         this.requestRepository = requestRepository;
         this.requestHistoryRepository = requestHistoryRepository;
         this.customerRepository = customerRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     private MaintenanceRequest findAndValidateOwnership(Long requestId, Long customerId) {
@@ -48,6 +54,25 @@ public class MaintenanceRequestService {
         List<MaintenanceRequestResponse> req = requestRepository.findByCustomerIdOrderByOpeningDateTimeAsc(customerId)
                 .stream().map(e -> new MaintenanceRequestResponse(e)).toList();
         return req;
+    }
+
+    @Transactional
+    public MaintenanceRequestResponse createRequest(Long customerId, CreateRequest request){
+        Category category = categoryRepository.findById(request.categoryId())
+                .filter(Category::isActive)
+                .orElseThrow(() -> new EntityNotFoundException("Categoria " + request.categoryId() + " não encontrada"));
+
+        MaintenanceRequest req = new MaintenanceRequest();
+        req.setCustomer(getCustomer(customerId));
+        req.setCategory(category);
+        req.setEquipmentDescription(request.equipmentDescription().trim());
+        req.setDefectDescription(request.defectDescription().trim());
+        req.setStatus(RequestStatus.ABERTA);
+        req.setOpeningDateTime(LocalDateTime.now());
+
+        registerHistory(req, null, RequestStatus.ABERTA, customerId, "Solicitação aberta pelo cliente.");
+        requestRepository.save(req);
+        return new MaintenanceRequestResponse(req);
     }
 
     private void registerHistory(MaintenanceRequest req, RequestStatus previousStatus, RequestStatus newStatus, Long customerId, String message){
