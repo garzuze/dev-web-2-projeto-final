@@ -14,12 +14,15 @@ export class Numeric implements ControlValueAccessor{
   setDisabledState?(isDisabled: boolean): void {
     throw new Error('Method not implemented.');
   }
-  @HostListener('keyup', ['$event'])
-  onKeyUp($event: any) {
-    let value = $event.target.value;
-    value = value.replace('/[\D]g', '');
 
-    this.onChange(value);
+  @HostListener('keydown', ['$event'])
+  onKeyUp(event: KeyboardEvent): void {
+    const isNumber = /^[0-9]$/.test(event.key);
+
+    if (!isNumber) {
+      event.preventDefault();
+    }
+
   }
 
   onChange = (fn: any) => {};

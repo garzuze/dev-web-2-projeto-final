@@ -29,6 +29,25 @@
   body .p-component {
     font-family: var(--font-inter);
   }
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 5px;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  :root {
+    --border: 20 5.9% 90%;
+  }
 }
 
 @utility container {

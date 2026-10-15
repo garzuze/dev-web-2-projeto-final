@@ -18,7 +18,7 @@ public class PasswordNotifier {
 
   public void send(String email, String password) {
     try {
-      log.info("Generated password for {}: {}", email, password);
+      log.info("Senha gerada para o email {}: {}", email, password);
       String assunto = "Senha de Acesso - Manutenção Zica 😎";
       String corpo = """
               Olá!
@@ -34,7 +34,6 @@ public class PasswordNotifier {
       log.info("E-mail com senha enviado para: {}", email);
     } catch (Exception e) {
       log.error("Falha no envio de email para {}: {}", email, e.getMessage());
-      log.info("Generated password for {}: {}", email, password);
     }
 
   }
