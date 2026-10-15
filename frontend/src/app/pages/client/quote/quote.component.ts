@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MaintenanceRequestService } from '../../../services/maintenance-request.service';
 import {
   MaintenanceRequest,
@@ -25,6 +25,7 @@ import { HttpErrorResponse } from '@angular/common/http';
     RescueModalComponent,
   ],
   selector: 'app-quote',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './quote.component.scss',
   templateUrl: './quote.component.html',
 })

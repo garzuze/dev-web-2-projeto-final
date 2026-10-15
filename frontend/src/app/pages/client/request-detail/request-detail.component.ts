@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../core/auth.service';
@@ -16,6 +16,7 @@ import { problemMessage } from '../../../core/api';
 @Component({
   imports: [RequestDetailsCardComponent, RouterLink, ClientHeaderComponent],
   selector: 'app-request-detail',
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './request-detail.component.html',
 })
 export class RequestDetailComponent {
