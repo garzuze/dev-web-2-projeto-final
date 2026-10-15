@@ -1,4 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -19,6 +24,7 @@ import { EmployeeHeaderComponent } from '../../../components/employee-header/emp
 
 @Component({
   selector: 'app-quote-form',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
   imports: [
     CommonModule,

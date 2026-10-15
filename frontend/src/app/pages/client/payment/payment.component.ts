@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MaintenanceRequestService } from '../../../services/maintenance-request.service';
 import { NotificationService } from '../../../services/notification.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -24,6 +24,7 @@ import { problemMessage } from '../../../core/api';
     CurrencyPipe,
   ],
   selector: 'app-payment',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './payment.component.scss',
   templateUrl: './payment.component.html',
 })
