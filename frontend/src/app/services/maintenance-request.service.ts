@@ -14,16 +14,14 @@ import { API_URL } from '../core/api';
 export class MaintenanceRequestService {
   private readonly http = inject(HttpClient);
   private readonly url = `${API_URL}/requests`;
+  private readonly employeeUrl = `${API_URL}/employee/requests`;
 
   getAllRequests(): Observable<MaintenanceRequest[] | undefined> {
     return of(MAINTENANCE_REQUEST_MOCK);
   }
 
-  getOpenRequests(): Observable<MaintenanceRequest[] | undefined> {
-    const filteredRequests = MAINTENANCE_REQUEST_MOCK.filter(
-      (request) => request.statusName === RequestStatus.Open,
-    );
-    return of(filteredRequests);
+  getOpenRequests(): Observable<MaintenanceRequest[]> {
+    return this.http.get<MaintenanceRequest[]>(`${this.employeeUrl}/open`);
   }
 
   // Busca a informação de um requisição de manutenção específica
