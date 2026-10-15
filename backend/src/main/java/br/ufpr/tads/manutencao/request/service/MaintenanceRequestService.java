@@ -118,4 +118,17 @@ public class MaintenanceRequestService {
         return new MaintenanceRequestResponse(req);
 
     }
+
+    @Transactional
+    public List<MaintenanceRequestResponse> listOpen(){
+        return requestRepository.findByStatusOrderByOpeningDateTimeAsc(RequestStatus.ABERTA)
+                .stream().map(MaintenanceRequestResponse::new).toList();
+    }
+
+    @Transactional
+    public MaintenanceRequestResponse findByIdForEmployee(Long id){
+        MaintenanceRequest req = requestRepository.findById(id)
+                .orElseThrow(() -> new RequestNotFoundException("Solicitação não encontrada."));
+        return new MaintenanceRequestResponse(req);
+    }
 }

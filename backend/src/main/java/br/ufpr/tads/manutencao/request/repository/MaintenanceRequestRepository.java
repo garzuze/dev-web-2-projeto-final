@@ -2,6 +2,8 @@ package br.ufpr.tads.manutencao.request.repository;
 
 import br.ufpr.tads.manutencao.report.dto.DailyRevenue;
 import br.ufpr.tads.manutencao.request.model.MaintenanceRequest;
+import br.ufpr.tads.manutencao.request.model.RequestStatus;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,6 +17,9 @@ public interface MaintenanceRequestRepository extends JpaRepository<MaintenanceR
     Optional<MaintenanceRequest> findByIdAndCustomerId(Long id, Long customerId);
 
     List<MaintenanceRequest> findByCustomerIdOrderByOpeningDateTimeAsc(Long customerId);
+
+    @EntityGraph(attributePaths = {"customer", "category", "history"})
+    List<MaintenanceRequest> findByStatusOrderByOpeningDateTimeAsc(RequestStatus status);
 
 
   @Query(value = """
