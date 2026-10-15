@@ -1,8 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { MaintenanceRequestService } from '../../../services/maintenance-request.service';
-import { MaintenanceRequest } from '../../../models/maintenanceRequest.model';
 import { EmployeeHeaderComponent } from '../../../components/employee-header/employee-header.component';
 
 @Component({
@@ -12,21 +12,22 @@ import { EmployeeHeaderComponent } from '../../../components/employee-header/emp
   templateUrl: './home-employee.component.html',
   styleUrl: './home-employee.component.scss',
 })
-export class HomeEmployeeComponent implements OnInit {
+export class HomeEmployeeComponent {
   private maintenanceRequestService = inject(MaintenanceRequestService);
   private router = inject(Router);
 
-  public openRequests: MaintenanceRequest[] = [];
+  readonly openRequestsResource = rxResource({
+    stream: () => this.maintenanceRequestService.getOpenRequests(),
+    defaultValue: [],
+  });
 
-  ngOnInit(): void {
-    this.maintenanceRequestService.getOpenRequests().subscribe({
-      next: (requests) => {
-        if (requests) {
-          this.openRequests = requests;
-        }
-      },
-    });
-  }
+  readonly openRequests = this.openRequestsResource.value;
+  readonly isLoading = this.openRequestsResource.isLoading;
+  readonly hasError = computed(() => !!this.openRequestsResource.error());
+  readonly isEmpty = computed(
+    () =>
+      !this.isLoading() && !this.hasError() && this.openRequests().length === 0,
+  );
 
   goToQuote(id: number): void {
     this.router.navigate(['/employee/quote', id]);
