@@ -7,6 +7,7 @@ import { Header } from '../components/header/header';
 import { NotificationService } from '../services/notification.service';
 import { NotificationType } from '../models/notification.model';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { cpfValidator } from '../shared/validators/cpfValidator.validator';
 
 @Component({
   imports: [RouterLink, ReactiveFormsModule, Header, NgxMaskDirective],
@@ -30,12 +31,18 @@ export class SelfRegister {
     return this.f.name;
   }
 
+  get cpf(){
+    return this.f.cpf;
+  }
+
   readonly form = this.formBuilder.nonNullable.group({
     name: [
       '',
       [Validators.required, Validators.minLength(3), Validators.maxLength(120)],
     ],
-    cpf: ['', Validators.required],
+    cpf: ['', 
+      [Validators.required, cpfValidator]
+    ],
     phone: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     cep: ['', Validators.required],
@@ -127,4 +134,22 @@ export class SelfRegister {
       },
     });
   }
+
+  validaCpf(){
+    if (!this.f.cpf.value) {
+      return;
+    }
+
+  if (this.f.cpf.hasError('cpfInvalido')) {
+    this.notificationService.showNotification(
+      'CPF invalido.',
+      NotificationType.error,
+    )
+  }else{
+     this.notificationService.showNotification(
+      'CPF valido.',
+      NotificationType.success,
+    )
+  }
+}
 }
