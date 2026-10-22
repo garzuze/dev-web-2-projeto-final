@@ -1,6 +1,6 @@
 <app-modal-container>
   <h2 class="mb-6 text-2xl font-extrabold text-gray-900 md:text-3xl">
-    Deseja realmente confirmar o orçamento?
+    Deseja realmente aprovar o serviço?
   </h2>
   <div class="flex justify-end gap-3">
     <button
@@ -16,7 +16,7 @@
       (click)="confirm.emit()"
     >
       @if (!isApproving) {
-        Aprovar Orçamento
+        Aprovar Serviço
       } @else {
         Aprovando...
       }
