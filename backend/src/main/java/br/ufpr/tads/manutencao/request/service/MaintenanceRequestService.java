@@ -11,6 +11,7 @@ import br.ufpr.tads.manutencao.request.model.RequestHistory;
 import br.ufpr.tads.manutencao.request.model.RequestStatus;
 import br.ufpr.tads.manutencao.request.repository.MaintenanceRequestRepository;
 import br.ufpr.tads.manutencao.request.repository.RequestHistoryRepository;
+import br.ufpr.tads.manutencao.user.model.Customer;
 import br.ufpr.tads.manutencao.user.repository.CustomerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -38,7 +39,7 @@ public class MaintenanceRequestService {
                 .orElseThrow(() -> new RequestNotFoundException("Solicitação não encontrada ou acesso negado."));
     }
 
-    private br.ufpr.tads.manutencao.user.model.Customer getCustomer(Long customerId) {
+    private Customer getCustomer(Long customerId) {
         return customerRepository.findById(customerId)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
     }
