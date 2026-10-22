@@ -32,6 +32,16 @@
         >
             {{ loading() ? 'Gerando...' : 'Gerar relatório' }}
         </button>
+
+        <button
+                class="cursor-pointer rounded-lg bg-primary-800 px-5 py-3 font-medium text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary-800/20 disabled:cursor-not-allowed disabled:opacity-60"
+                type="button"
+                (click)="onExportPdf()"
+                *ngIf="revenueReport()?.days?.length"
+        >
+            Baixar PDF
+        </button>
+
     </div>
 
     <p class="mb-6 text-sm text-gray-500">
