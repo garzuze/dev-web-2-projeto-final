@@ -47,7 +47,7 @@ public class CategoryService {
     activeById(id).setActive(false);
   }
 
-  private Category activeById(Long id) {
+  public Category activeById(Long id) {
     return categoryRepository.findById(id)
             .filter(Category::isActive)
             .orElseThrow(() -> new EntityNotFoundException("Categoria " + id + " não encontrada"));
