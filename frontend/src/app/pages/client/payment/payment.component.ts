@@ -9,16 +9,10 @@ import {
 import { NotificationType } from '../../../models/notification.model';
 import { RequestDetailsCardComponent } from '../../../components/request-details-card/request-details-card.component';
 import { ClientHeaderComponent } from '../../../components/client-header/client-header.component';
-import { CurrencyPipe, DatePipe } from '@angular/common';
 import { problemMessage } from '../../../core/api';
 
 @Component({
-  imports: [
-    ClientHeaderComponent,
-    RequestDetailsCardComponent,
-    DatePipe,
-    CurrencyPipe,
-  ],
+  imports: [ClientHeaderComponent, RequestDetailsCardComponent],
   selector: 'app-payment',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './payment.component.scss',
