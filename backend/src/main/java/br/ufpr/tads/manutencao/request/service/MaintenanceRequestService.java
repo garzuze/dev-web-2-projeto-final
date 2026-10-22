@@ -124,6 +124,7 @@ public class MaintenanceRequestService {
             throw new InvalidRequestStatusException("Apenas serviços rejeitados podem ser resgatados.");
         }
         req.setStatus(RequestStatus.APROVADA);
+        req.setRejectionReason(null);
         registerHistory(req, RequestStatus.REJEITADA, RequestStatus.APROVADA, customerId, "Serviço resgatado e aprovado pelo cliente.");
         requestRepository.save(req);
         return new MaintenanceRequestResponse(req);
