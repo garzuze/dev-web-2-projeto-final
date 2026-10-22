@@ -1,19 +1,11 @@
 package br.ufpr.tads.manutencao.request.service;
 
-import br.ufpr.tads.manutencao.category.model.Category;
-import br.ufpr.tads.manutencao.category.repository.CategoryRepository;
-import br.ufpr.tads.manutencao.request.dto.CreateRequest;
 import br.ufpr.tads.manutencao.request.dto.MaintenanceRequestResponse;
 import br.ufpr.tads.manutencao.request.exception.InvalidRequestStatusException;
 import br.ufpr.tads.manutencao.request.exception.RequestNotFoundException;
 import br.ufpr.tads.manutencao.request.model.MaintenanceRequest;
-import br.ufpr.tads.manutencao.request.model.RequestHistory;
 import br.ufpr.tads.manutencao.request.model.RequestStatus;
 import br.ufpr.tads.manutencao.request.repository.MaintenanceRequestRepository;
-import br.ufpr.tads.manutencao.request.repository.RequestHistoryRepository;
-import br.ufpr.tads.manutencao.user.model.Customer;
-import br.ufpr.tads.manutencao.user.repository.CustomerRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -22,140 +14,99 @@ import java.util.List;
 
 @Service
 public class MaintenanceRequestService {
-    private final MaintenanceRequestRepository requestRepository;
-    private final RequestHistoryRepository requestHistoryRepository;
-    private final CustomerRepository customerRepository;
-    private final CategoryRepository categoryRepository;
+  private final MaintenanceRequestRepository requestRepository;
+  private final RequestHistoryService historyService;
 
-    public MaintenanceRequestService(MaintenanceRequestRepository requestRepository, RequestHistoryRepository requestHistoryRepository, CustomerRepository customerRepository, CategoryRepository categoryRepository) {
-        this.requestRepository = requestRepository;
-        this.requestHistoryRepository = requestHistoryRepository;
-        this.customerRepository = customerRepository;
-        this.categoryRepository = categoryRepository;
+  public MaintenanceRequestService(MaintenanceRequestRepository requestRepository, RequestHistoryService historyService) {
+    this.requestRepository = requestRepository;
+    this.historyService = historyService;
+  }
+
+  private MaintenanceRequest findAndValidateOwnership(Long requestId, Long customerId) {
+    return requestRepository.findByIdAndCustomerId(requestId, customerId)
+            .orElseThrow(() -> new RequestNotFoundException("Solicitação não encontrada ou acesso negado."));
+  }
+
+  @Transactional
+  public MaintenanceRequestResponse findById(Long id, Long customerId) {
+    MaintenanceRequest req = findAndValidateOwnership(id, customerId);
+    return new MaintenanceRequestResponse(req);
+  }
+
+  @Transactional
+  public List<MaintenanceRequestResponse> listByCustomer(Long customerId) {
+    return requestRepository.findByCustomerIdOrderByOpeningDateTimeAsc(customerId)
+            .stream().map(MaintenanceRequestResponse::new).toList();
+  }
+
+  @Transactional
+  public MaintenanceRequestResponse approveRequest(Long id, Long customerId) {
+    MaintenanceRequest req = findAndValidateOwnership(id, customerId);
+
+    if (req.getStatus() != RequestStatus.ORCADA) {
+      throw new InvalidRequestStatusException("Apenas serviços no estado ORÇADA podem ser aprovados.");
     }
 
-    private MaintenanceRequest findAndValidateOwnership(Long requestId, Long customerId) {
-        return requestRepository.findByIdAndCustomerId(requestId, customerId)
-                .orElseThrow(() -> new RequestNotFoundException("Solicitação não encontrada ou acesso negado."));
+    req.setStatus(RequestStatus.APROVADA);
+
+    historyService.register(req, RequestStatus.ORCADA, RequestStatus.APROVADA, customerId, "Orçamento aprovado pelo cliente.");
+    requestRepository.save(req);
+    return new MaintenanceRequestResponse(req);
+  }
+
+  @Transactional
+  public MaintenanceRequestResponse rejectRequest(Long id, Long customerId, String reason) {
+    MaintenanceRequest req = findAndValidateOwnership(id, customerId);
+
+    if (req.getStatus() != RequestStatus.ORCADA) {
+      throw new InvalidRequestStatusException("Apenas serviços no estado ORÇADA podem ser rejeitados.");
     }
 
-    private Customer getCustomer(Long customerId) {
-        return customerRepository.findById(customerId)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+    req.setStatus(RequestStatus.REJEITADA);
+    req.setRejectionReason(reason);
+
+    historyService.register(req, RequestStatus.ORCADA, RequestStatus.REJEITADA, customerId, "Serviço Rejeitado. Motivo: " + reason);
+    requestRepository.save(req);
+    return new MaintenanceRequestResponse(req);
+  }
+
+  @Transactional
+  public MaintenanceRequestResponse rescueRequest(Long id, Long customerId) {
+    MaintenanceRequest req = findAndValidateOwnership(id, customerId);
+    if (req.getStatus() != RequestStatus.REJEITADA) {
+      throw new InvalidRequestStatusException("Apenas serviços rejeitados podem ser resgatados.");
     }
+    req.setStatus(RequestStatus.APROVADA);
+    req.setRejectionReason(null);
+    historyService.register(req, RequestStatus.REJEITADA, RequestStatus.APROVADA, customerId, "Serviço resgatado e aprovado pelo cliente.");
+    requestRepository.save(req);
+    return new MaintenanceRequestResponse(req);
+  }
 
-    @Transactional
-    public MaintenanceRequestResponse findById(Long id, Long customerId){
-        MaintenanceRequest req = findAndValidateOwnership(id, customerId);
-        return new MaintenanceRequestResponse(req);
+  @Transactional
+  public MaintenanceRequestResponse payRequest(Long id, Long customerId) {
+    MaintenanceRequest req = findAndValidateOwnership(id, customerId);
+    if (req.getStatus() != RequestStatus.ARRUMADA) {
+      throw new InvalidRequestStatusException("Impossível pagar: o equipamento não está no estado ARRUMADA.");
     }
+    req.setStatus(RequestStatus.PAGA);
+    req.setPaymentDateTime(LocalDateTime.now());
+    historyService.register(req, RequestStatus.ARRUMADA, RequestStatus.PAGA, customerId, "Pagamento efetuado pelo cliente.");
+    requestRepository.save(req);
+    return new MaintenanceRequestResponse(req);
 
-    @Transactional
-    public List<MaintenanceRequestResponse> listByCustomer(Long customerId){
-        List<MaintenanceRequestResponse> req = requestRepository.findByCustomerIdOrderByOpeningDateTimeAsc(customerId)
-                .stream().map(e -> new MaintenanceRequestResponse(e)).toList();
-        return req;
-    }
+  }
 
-    @Transactional
-    public MaintenanceRequestResponse createRequest(Long customerId, CreateRequest request){
-        Category category = categoryRepository.findById(request.categoryId())
-                .filter(Category::isActive)
-                .orElseThrow(() -> new EntityNotFoundException("Categoria " + request.categoryId() + " não encontrada"));
+  @Transactional
+  public List<MaintenanceRequestResponse> listOpen() {
+    return requestRepository.findByStatusOrderByOpeningDateTimeAsc(RequestStatus.ABERTA)
+            .stream().map(MaintenanceRequestResponse::new).toList();
+  }
 
-        MaintenanceRequest req = new MaintenanceRequest();
-        req.setCustomer(getCustomer(customerId));
-        req.setCategory(category);
-        req.setEquipmentDescription(request.equipmentDescription().trim());
-        req.setDefectDescription(request.defectDescription().trim());
-        req.setStatus(RequestStatus.ABERTA);
-        req.setOpeningDateTime(LocalDateTime.now());
-
-        registerHistory(req, null, RequestStatus.ABERTA, customerId, "Solicitação aberta pelo cliente.");
-        requestRepository.save(req);
-        return new MaintenanceRequestResponse(req);
-    }
-
-    private void registerHistory(MaintenanceRequest req, RequestStatus previousStatus, RequestStatus newStatus, Long customerId, String message){
-        RequestHistory history = new RequestHistory();
-        history.setRequest(req);
-        history.setPreviousStatus(previousStatus);
-        history.setNewStatus(newStatus);
-        history.setDateTime(LocalDateTime.now());
-        history.setAuthor(getCustomer(customerId));
-        history.setNotes(message);
-        req.addHistory(history);
-    }
-
-    @Transactional
-    public MaintenanceRequestResponse approveRequest(Long id, Long customerId){
-        MaintenanceRequest req = findAndValidateOwnership(id, customerId);
-
-        if(req.getStatus() != RequestStatus.ORCADA){
-            throw new InvalidRequestStatusException("Apenas serviços no estado ORÇADA podem ser aprovados.");
-        }
-
-        req.setStatus(RequestStatus.APROVADA);
-
-        registerHistory(req, RequestStatus.ORCADA, RequestStatus.APROVADA, customerId, "Orçamento aprovado pelo cliente.");
-        requestRepository.save(req);
-        return new MaintenanceRequestResponse(req);
-    }
-
-    @Transactional
-    public MaintenanceRequestResponse rejectRequest(Long id, Long customerId, String reason){
-        MaintenanceRequest req = findAndValidateOwnership(id, customerId);
-
-        if(req.getStatus() != RequestStatus.ORCADA){
-            throw new InvalidRequestStatusException("Apenas serviços no estado ORÇADA podem ser rejeitados.");
-        }
-
-        req.setStatus(RequestStatus.REJEITADA);
-        req.setRejectionReason(reason);
-
-        registerHistory(req, RequestStatus.ORCADA, RequestStatus.REJEITADA, customerId, "Serviço Rejeitado. Motivo: " + reason);
-        requestRepository.save(req);
-        return new MaintenanceRequestResponse(req);
-    }
-
-    @Transactional
-    public MaintenanceRequestResponse rescueRequest(Long id, Long customerId) {
-        MaintenanceRequest req = findAndValidateOwnership(id, customerId);
-        if (req.getStatus() != RequestStatus.REJEITADA) {
-            throw new InvalidRequestStatusException("Apenas serviços rejeitados podem ser resgatados.");
-        }
-        req.setStatus(RequestStatus.APROVADA);
-        req.setRejectionReason(null);
-        registerHistory(req, RequestStatus.REJEITADA, RequestStatus.APROVADA, customerId, "Serviço resgatado e aprovado pelo cliente.");
-        requestRepository.save(req);
-        return new MaintenanceRequestResponse(req);
-    }
-
-
-    @Transactional
-    public MaintenanceRequestResponse payRequest(Long id, Long customerId){
-        MaintenanceRequest req = findAndValidateOwnership(id, customerId);
-        if (req.getStatus() != RequestStatus.ARRUMADA) {
-            throw new InvalidRequestStatusException("Impossível pagar: o equipamento não está no estado ARRUMADA.");
-        }
-        req.setStatus(RequestStatus.PAGA);
-        req.setPaymentDateTime(LocalDateTime.now());
-        registerHistory(req, RequestStatus.ARRUMADA, RequestStatus.PAGA, customerId, "Pagamento efetuado pelo cliente.");
-        requestRepository.save(req);
-        return new MaintenanceRequestResponse(req);
-
-    }
-
-    @Transactional
-    public List<MaintenanceRequestResponse> listOpen(){
-        return requestRepository.findByStatusOrderByOpeningDateTimeAsc(RequestStatus.ABERTA)
-                .stream().map(MaintenanceRequestResponse::new).toList();
-    }
-
-    @Transactional
-    public MaintenanceRequestResponse findByIdForEmployee(Long id){
-        MaintenanceRequest req = requestRepository.findById(id)
-                .orElseThrow(() -> new RequestNotFoundException("Solicitação não encontrada."));
-        return new MaintenanceRequestResponse(req);
-    }
+  @Transactional
+  public MaintenanceRequestResponse findByIdForEmployee(Long id) {
+    MaintenanceRequest req = requestRepository.findById(id)
+            .orElseThrow(() -> new RequestNotFoundException("Solicitação não encontrada."));
+    return new MaintenanceRequestResponse(req);
+  }
 }
