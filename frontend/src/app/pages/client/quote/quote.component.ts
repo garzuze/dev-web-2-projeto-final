@@ -4,7 +4,7 @@ import {
   MaintenanceRequest,
   RequestStatus,
 } from '../../../models/maintenanceRequest.model';
-import { CurrencyPipe, DatePipe, LowerCasePipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RejectionModalComponent } from './rejection-modal/rejection-modal.component';
 import { NotificationService } from '../../../services/notification.service';
@@ -15,6 +15,7 @@ import { ClientHeaderComponent } from '../../../components/client-header/client-
 import { RescueModalComponent } from './rescue-modal/rescue-modal.component';
 import { problemMessage } from '../../../core/api';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ModalContainerComponent } from '../../../components/modal-container/modal-container.component';
 
 @Component({
   imports: [
@@ -23,6 +24,8 @@ import { HttpErrorResponse } from '@angular/common/http';
     RejectionModalComponent,
     ApproveModalComponent,
     RescueModalComponent,
+    CurrencyPipe,
+    ModalContainerComponent,
   ],
   selector: 'app-quote',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -43,6 +46,7 @@ export class QuoteComponent {
   public isApproving: boolean = false;
   public isRejecting: boolean = false;
   public isRescuing: boolean = false;
+  public approvedValue: number | null = null;
 
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((params) => {
@@ -139,16 +143,8 @@ export class QuoteComponent {
         .subscribe({
           next: (res) => {
             this.isApproving = false;
-            const valorFormatado = new Intl.NumberFormat('pt-BR', {
-              style: 'currency',
-              currency: 'BRL',
-            }).format(res.quoteValue || 0);
-            this.notificationService.showNotification(
-              `Serviço Aprovado no Valor ${valorFormatado}`,
-              NotificationType.success,
-            );
             this.isApproveModalOpen = false;
-            this.router.navigate(['/client/request']);
+            this.approvedValue = res.quoteValue ?? 0;
           },
           error: (err) => {
             this.isApproving = false;
@@ -159,6 +155,11 @@ export class QuoteComponent {
           },
         });
     }
+  }
+
+  onApprovedOk() {
+    this.approvedValue = null;
+    this.router.navigate(['/client/request']);
   }
 
   onRescue() {

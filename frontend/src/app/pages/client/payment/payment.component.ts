@@ -9,20 +9,10 @@ import {
 import { NotificationType } from '../../../models/notification.model';
 import { RequestDetailsCardComponent } from '../../../components/request-details-card/request-details-card.component';
 import { ClientHeaderComponent } from '../../../components/client-header/client-header.component';
-import { PaymentModalComponent } from './payment-modal/payment-modal.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { paymentData } from '../../../models/payment.model';
-import { CurrencyPipe, DatePipe } from '@angular/common';
 import { problemMessage } from '../../../core/api';
 
 @Component({
-  imports: [
-    ClientHeaderComponent,
-    RequestDetailsCardComponent,
-    PaymentModalComponent,
-    DatePipe,
-    CurrencyPipe,
-  ],
+  imports: [ClientHeaderComponent, RequestDetailsCardComponent],
   selector: 'app-payment',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './payment.component.scss',
@@ -36,10 +26,7 @@ export class PaymentComponent {
   public requestData?: MaintenanceRequest;
   public requestStatus = RequestStatus;
 
-  public isPaymentModalOpen: boolean = false;
   public isPaymenting: boolean = false;
-  public isPaymentSuccessful: boolean = false;
-  public selectedPaymentMethod: string = '';
   ngOnInit(): void {
     this.activatedRoutes.paramMap.subscribe((params) => {
       const id = Number(params.get('id'));
@@ -85,42 +72,27 @@ export class PaymentComponent {
   }
 
   onPayment() {
-    this.isPaymentModalOpen = true;
-  }
-
-  onCancelPayment() {
-    this.isPaymentModalOpen = false;
-  }
-
-  onConfirmPayment(paymentData: paymentData) {
-    if (this.requestData?.id) {
-      this.isPaymenting = true;
-      this.maintenanceRequestService.payRequest(this.requestData.id).subscribe({
-        next: (res) => {
-          this.requestData = res
-          this.isPaymenting = false;
-          this.isPaymentModalOpen = false;
-
-          this.selectedPaymentMethod = paymentData.paymentMethod;
-          this.isPaymentSuccessful = true;
-
-          this.notificationService.showNotification(
-            'Serviço pago com sucesso!',
-            NotificationType.success,
-          );
-        },
-        error: (err) => {
-          this.isPaymenting = false;
-          this.notificationService.showNotification(
-            problemMessage(err, 'Erro ao pagar serviço.'),
-            NotificationType.error,
-          );
-        },
-      });
+    if (!this.requestData?.id || this.isPaymenting) {
+      return;
     }
-  }
-
-  finishPaymentFlow() {
-    this.router.navigate(['/client/request']);
+    this.isPaymenting = true;
+    this.maintenanceRequestService.payRequest(this.requestData.id).subscribe({
+      next: (res) => {
+        this.requestData = res;
+        this.isPaymenting = false;
+        this.notificationService.showNotification(
+          'Serviço pago com sucesso!',
+          NotificationType.success,
+        );
+        this.router.navigate(['/client/request']);
+      },
+      error: (err) => {
+        this.isPaymenting = false;
+        this.notificationService.showNotification(
+          problemMessage(err, 'Erro ao pagar serviço.'),
+          NotificationType.error,
+        );
+      },
+    });
   }
 }
