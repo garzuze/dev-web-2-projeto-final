@@ -44,7 +44,7 @@ public class CreateMaintenanceRequestService {
     historyService.register(req,
             null,
             RequestStatus.ABERTA,
-            customerId,
+            req.getCustomer(),
             "Solicitação aberta pelo cliente.");
     requestRepository.save(req);
     return new MaintenanceRequestResponse(req);

@@ -6,9 +6,13 @@ import br.ufpr.tads.manutencao.request.exception.RequestNotFoundException;
 import br.ufpr.tads.manutencao.request.model.MaintenanceRequest;
 import br.ufpr.tads.manutencao.request.model.RequestStatus;
 import br.ufpr.tads.manutencao.request.repository.MaintenanceRequestRepository;
+import br.ufpr.tads.manutencao.user.model.Employee;
+import br.ufpr.tads.manutencao.user.repository.EmployeeRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,10 +20,13 @@ import java.util.List;
 public class MaintenanceRequestService {
   private final MaintenanceRequestRepository requestRepository;
   private final RequestHistoryService historyService;
+  private final EmployeeRepository employeeRepository;
 
-  public MaintenanceRequestService(MaintenanceRequestRepository requestRepository, RequestHistoryService historyService) {
+  public MaintenanceRequestService(MaintenanceRequestRepository requestRepository, RequestHistoryService historyService,
+                                   EmployeeRepository employeeRepository) {
     this.requestRepository = requestRepository;
     this.historyService = historyService;
+    this.employeeRepository = employeeRepository;
   }
 
   private MaintenanceRequest findAndValidateOwnership(Long requestId, Long customerId) {
@@ -49,7 +56,7 @@ public class MaintenanceRequestService {
 
     req.setStatus(RequestStatus.APROVADA);
 
-    historyService.register(req, RequestStatus.ORCADA, RequestStatus.APROVADA, customerId, "Orçamento aprovado pelo cliente.");
+    historyService.register(req, RequestStatus.ORCADA, RequestStatus.APROVADA, req.getCustomer(), "Orçamento aprovado pelo cliente.");
     requestRepository.save(req);
     return new MaintenanceRequestResponse(req);
   }
@@ -65,7 +72,7 @@ public class MaintenanceRequestService {
     req.setStatus(RequestStatus.REJEITADA);
     req.setRejectionReason(reason);
 
-    historyService.register(req, RequestStatus.ORCADA, RequestStatus.REJEITADA, customerId, "Serviço Rejeitado. Motivo: " + reason);
+    historyService.register(req, RequestStatus.ORCADA, RequestStatus.REJEITADA, req.getCustomer(), "Serviço Rejeitado. Motivo: " + reason);
     requestRepository.save(req);
     return new MaintenanceRequestResponse(req);
   }
@@ -78,7 +85,7 @@ public class MaintenanceRequestService {
     }
     req.setStatus(RequestStatus.APROVADA);
     req.setRejectionReason(null);
-    historyService.register(req, RequestStatus.REJEITADA, RequestStatus.APROVADA, customerId, "Serviço resgatado e aprovado pelo cliente.");
+    historyService.register(req, RequestStatus.REJEITADA, RequestStatus.APROVADA, req.getCustomer(), "Serviço resgatado e aprovado pelo cliente.");
     requestRepository.save(req);
     return new MaintenanceRequestResponse(req);
   }
@@ -91,7 +98,7 @@ public class MaintenanceRequestService {
     }
     req.setStatus(RequestStatus.PAGA);
     req.setPaymentDateTime(LocalDateTime.now());
-    historyService.register(req, RequestStatus.ARRUMADA, RequestStatus.PAGA, customerId, "Pagamento efetuado pelo cliente.");
+    historyService.register(req, RequestStatus.ARRUMADA, RequestStatus.PAGA, req.getCustomer(), "Pagamento efetuado pelo cliente.");
     requestRepository.save(req);
     return new MaintenanceRequestResponse(req);
 
@@ -103,10 +110,31 @@ public class MaintenanceRequestService {
             .stream().map(MaintenanceRequestResponse::new).toList();
   }
 
+  private MaintenanceRequest findForEmployee(Long id) {
+    return requestRepository.findById(id)
+            .orElseThrow(() -> new RequestNotFoundException("Solicitação não encontrada."));
+  }
+
   @Transactional
   public MaintenanceRequestResponse findByIdForEmployee(Long id) {
-    MaintenanceRequest req = requestRepository.findById(id)
-            .orElseThrow(() -> new RequestNotFoundException("Solicitação não encontrada."));
+    return new MaintenanceRequestResponse(findForEmployee(id));
+  }
+
+  @Transactional
+  public MaintenanceRequestResponse quoteRequest(Long id, Long employeeId, BigDecimal quoteValue) {
+    MaintenanceRequest req = findForEmployee(id);
+    if (req.getStatus() != RequestStatus.ABERTA) {
+      throw new InvalidRequestStatusException("Apenas serviços no estado ABERTA podem ser orçados.");
+    }
+    Employee employee = employeeRepository.findById(employeeId)
+            .filter(Employee::isActive)
+            .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado"));
+
+    req.setStatus(RequestStatus.ORCADA);
+    req.setQuoteValue(quoteValue);
+    req.setEmployee(employee);
+    historyService.register(req, RequestStatus.ABERTA, RequestStatus.ORCADA, employee, "Orçamento realizado pelo funcionário.");
+    requestRepository.save(req);
     return new MaintenanceRequestResponse(req);
   }
 }
