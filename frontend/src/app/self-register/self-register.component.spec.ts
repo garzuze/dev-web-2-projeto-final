@@ -96,6 +96,27 @@ describe('SelfRegister', () => {
     http.expectNone(`${API_URL}/auth/sign-up`);
   });
 
+  it('should mask the CEP while typing', () => {
+    type('cep', '80060000');
+    http
+      .expectOne('https://viacep.com.br/ws/80060000/json/')
+      .flush({ erro: true });
+
+    expect((page().querySelector('#cep') as HTMLInputElement).value).toBe(
+      '80060-000',
+    );
+  });
+
+  it('should mask both landline and mobile phone numbers', () => {
+    const phone = page().querySelector('#telefone') as HTMLInputElement;
+
+    type('telefone', '4133334444');
+    expect(phone.value).toBe('(41) 3333-4444');
+
+    type('telefone', '41988881111');
+    expect(phone.value).toBe('(41) 98888-1111');
+  });
+
   it('should send only the digits of CPF, phone and CEP and go to the login', async () => {
     component.form.setValue({
       name: 'Maria Silva',

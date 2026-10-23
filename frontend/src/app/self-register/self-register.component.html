@@ -52,7 +52,7 @@
                    id="telefone"
                    name="telefone"
                    placeholder="(41) 99999-9999"
-                   mask="(00) 00000-0000"
+                   mask="(00) 0000-0000||(00) 00000-0000"
                    formControlName="phone"
                    class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:bg-
                 white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
@@ -73,6 +73,7 @@
           <div>
             <label class="block mb-1 text-sm font-medium text-gray-700" for="cep">CEP *</label>
             <input type="text" id="cep" name="cep" placeholder="80040-140" formControlName="cep" (blur)="buscaCep()"
+                   mask="00000-000" inputmode="numeric"
                    class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:bg-white
                 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
           </div>
