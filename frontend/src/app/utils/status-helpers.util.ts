@@ -1,5 +1,21 @@
 import { RequestStatus } from '../models/maintenanceRequest.model';
 
+const STATUS_LABELS: Record<RequestStatus, string> = {
+  [RequestStatus.Open]: 'Aberta',
+  [RequestStatus.Quoted]: 'Orçada',
+  [RequestStatus.Rejected]: 'Rejeitada',
+  [RequestStatus.Approved]: 'Aprovada',
+  [RequestStatus.Redirected]: 'Redirecionada',
+  [RequestStatus.Arranged]: 'Arrumada',
+  [RequestStatus.Paid]: 'Paga',
+  [RequestStatus.Completed]: 'Finalizada',
+};
+
+/** Nome de exibição do estado (com acento), no lugar do código da API. */
+export function getStatusLabel(status?: string): string {
+  return STATUS_LABELS[status as RequestStatus] ?? status ?? '';
+}
+
 export function getStatusClass(status?: string): string {
   switch (status) {
     case RequestStatus.Open:

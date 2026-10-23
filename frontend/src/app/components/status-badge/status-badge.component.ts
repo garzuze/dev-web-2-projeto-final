@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { LowerCasePipe } from '@angular/common';
 
 import { RequestStatus } from '../../models/maintenanceRequest.model';
+import { getStatusLabel } from '../../utils/status-helpers.util';
 
 const STATUS_CLASSES: Record<RequestStatus, string> = {
   [RequestStatus.Open]: 'bg-gray-100 text-gray-800',
@@ -15,12 +15,15 @@ const STATUS_CLASSES: Record<RequestStatus, string> = {
 };
 
 @Component({
-  imports: [LowerCasePipe],
   selector: 'app-status-badge',
   templateUrl: './status-badge.component.html',
 })
 export class StatusBadgeComponent {
   @Input({ required: true }) status!: RequestStatus;
+
+  get label(): string {
+    return getStatusLabel(this.status);
+  }
 
   get statusClass(): string {
     return STATUS_CLASSES[this.status] ?? 'bg-gray-100 text-gray-800';

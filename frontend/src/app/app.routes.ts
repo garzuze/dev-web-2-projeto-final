@@ -13,7 +13,6 @@ import { EmployeesComponent } from './pages/employee/employees';
 import { HomeEmployeeComponent } from './pages/employee/home';
 import { QuoteFormComponent } from './pages/employee/quote-form/quote-form.component';
 import { RequestListComponent } from './pages/employee/request-list/request-list.component';
-import { ReportsComponent } from './pages/employee/reports';
 import { customerGuard } from './core/customer.guard';
 import { employeeGuard } from './core/employee.guard';
 
@@ -73,7 +72,9 @@ export const routes: Routes = [
   },
   {
     path: 'employee/reports',
-    component: ReportsComponent,
+    // o jsPDF é pesado: só é baixado quando a tela de relatórios é aberta
+    loadComponent: () =>
+      import('./pages/employee/reports').then((m) => m.ReportsComponent),
     canActivate: [employeeGuard],
   },
   { path: 'employee', redirectTo: 'employee/home', pathMatch: 'full' },
