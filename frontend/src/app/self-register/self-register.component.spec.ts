@@ -99,7 +99,7 @@ describe('SelfRegister', () => {
   it('should send only the digits of CPF, phone and CEP and go to the login', async () => {
     component.form.setValue({
       name: 'Maria Silva',
-      cpf: '111.222.333-44',
+      cpf: '529.982.247-25',
       phone: '(41) 98888-1111',
       email: 'maria@exemplo.com',
       cep: '80060-000',
@@ -116,7 +116,7 @@ describe('SelfRegister', () => {
     const request = http.expectOne(`${API_URL}/auth/sign-up`);
     expect(request.request.body).toEqual({
       name: 'Maria Silva',
-      cpf: '11122233344',
+      cpf: '52998224725',
       email: 'maria@exemplo.com',
       phone: '41988881111',
       address: {
