@@ -19,7 +19,7 @@
           getStatusClass(requestData?.statusName)
         "
       >
-        {{ requestData?.statusName | lowercase }}
+        {{ getStatusLabel(requestData?.statusName) }}
       </span>
     </div>
   </div>

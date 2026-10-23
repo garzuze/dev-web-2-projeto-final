@@ -3,12 +3,15 @@ import {
   MaintenanceRequest,
   RequestStatus,
 } from '../../models/maintenanceRequest.model';
-import { CurrencyPipe, DatePipe, LowerCasePipe } from '@angular/common';
-import { getStatusClass } from '../../utils/status-helpers.util';
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import {
+  getStatusClass,
+  getStatusLabel,
+} from '../../utils/status-helpers.util';
 import { TimelineComponent } from '../timeline/timeline.component';
 
 @Component({
-  imports: [DatePipe, LowerCasePipe, CurrencyPipe, TimelineComponent],
+  imports: [DatePipe, CurrencyPipe, TimelineComponent],
   selector: 'app-request-details-card',
   styleUrl: './request-details-card.component.scss',
   templateUrl: './request-details-card.component.html',
@@ -16,6 +19,7 @@ import { TimelineComponent } from '../timeline/timeline.component';
 export class RequestDetailsCardComponent {
   public requestStatus = RequestStatus;
   public getStatusClass = getStatusClass;
+  public getStatusLabel = getStatusLabel;
   showHistory: boolean = false;
 
   toggleHistory(): void {

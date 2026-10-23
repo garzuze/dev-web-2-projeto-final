@@ -6,7 +6,10 @@ import {
   RequestStatus,
 } from '../../../models/maintenanceRequest.model';
 import { MaintenanceRequestService } from '../../../services/maintenance-request.service';
-import { getStatusClass } from '../../../utils/status-helpers.util';
+import {
+  getStatusClass,
+  getStatusLabel,
+} from '../../../utils/status-helpers.util';
 import { RouterLink } from '@angular/router';
 import { EmployeeHeaderComponent } from '../../../components/employee-header/employee-header.component';
 
@@ -25,6 +28,7 @@ export class RequestListComponent implements OnInit {
   filteredRequests: MaintenanceRequest[] = [];
   requestStatus = RequestStatus;
   getStatusClass = getStatusClass;
+  getStatusLabel = getStatusLabel;
 
   ngOnInit(): void {
     this.maintenanceRequestService.getAllRequests().subscribe({
