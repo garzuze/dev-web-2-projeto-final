@@ -11,7 +11,9 @@
         <h3 class="text-base font-bold text-gray-900 mb-3">Dados Pessoais</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label class="block mb-1 text-sm font-medium text-gray-700" for="name">Nome Completo *</label>
+            <label class="block mb-1 text-sm font-medium text-gray-700" for="name">
+              Nome Completo <span class="text-red-500">*</span>
+            </label>
             <input type="text" id="name" name="name" placeholder="Lucas Aws da Silva" formControlName="name"
                    class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:bg-white
                 focus:ring-2 focus:ring-blue-500 focus:outline-none transition" minlength="3" maxlength="120">
@@ -29,7 +31,9 @@
           </div>
 
           <div>
-            <label class="block mb-1 text-sm font-medium text-gray-700" for="cpf">CPF *</label>
+            <label class="block mb-1 text-sm font-medium text-gray-700" for="cpf">
+              CPF <span class="text-red-500">*</span>
+            </label>
             <input class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:bg-white
                 focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
                    formControlName="cpf"
@@ -40,28 +44,48 @@
                    mask="000.000.000-00"
                    inputmode="numeric"
                    type="text">
-            @if(cpf.touched && cpf.hasError('cpfInvalido')){
+            @if (cpf.touched && cpf.invalid) {
               <p class="mb-2 text-sm text-red-700" role="alert">
-                CPF inválido.
+                @if (cpf.hasError('required')) {
+                  O CPF é obrigatório.
+                } @else if (cpf.hasError('cpfInvalido')) {
+                  CPF inválido.
+                }
               </p>
             }       
           </div>
           <div>
-            <label class="block mb-1 text-sm font-medium text-gray-700" for="telefone">Telefone *</label>
+            <label class="block mb-1 text-sm font-medium text-gray-700" for="telefone">
+              Telefone <span class="text-red-500">*</span>
+            </label>
             <input type="text"
                    id="telefone"
                    name="telefone"
                    placeholder="(41) 99999-9999"
                    mask="(00) 0000-0000||(00) 00000-0000"
                    formControlName="phone"
-                   class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:bg-
-                white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+                   class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+            @if (f.phone.touched && f.phone.invalid) {
+              <p class="mb-2 text-sm text-red-700" role="alert">
+                O telefone é obrigatório.
+              </p>
+            }
           </div>
           <div class="md:col-span-3">
-            <label class="block mb-1 text-sm font-medium text-gray-700" for="email">E-mail *</label>
+            <label class="block mb-1 text-sm font-medium text-gray-700" for="email">
+              E-mail <span class="text-red-500">*</span>
+            </label>
             <input type="email" id="email" name="email" placeholder="unoRebaixado@exemplo.com" formControlName="email"
-                   class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:bg-
-                white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+                   class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+            @if (f.email.touched && f.email.invalid) {
+              <p class="mb-2 text-sm text-red-700" role="alert">
+                @if (f.email.hasError('required')) {
+                  O e-mail é obrigatório.
+                } @else if (f.email.hasError('email')) {
+                  O e-mail deve ser válido.
+                }
+              </p>
+            }
           </div>
         </div>
       </div>
@@ -71,41 +95,83 @@
         <h3 class="text-base font-bold text-gray-900 mb-3">Endereço</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label class="block mb-1 text-sm font-medium text-gray-700" for="cep">CEP *</label>
+            <label class="block mb-1 text-sm font-medium text-gray-700" for="cep">
+              CEP <span class="text-red-500">*</span>
+            </label>
             <input type="text" id="cep" name="cep" placeholder="80040-140" formControlName="cep" (blur)="buscaCep()"
                    mask="00000-000" inputmode="numeric"
                    class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:bg-white
                 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+            @if (f.cep.touched && f.cep.invalid) {
+              <p class="mb-2 text-sm text-red-700" role="alert">
+                O CEP é obrigatório.
+              </p>
+            }
           </div>
           <div>
-            <label class="block mb-1 text-sm font-medium text-gray-700" for="estado">Estado (UF) *</label>
-            <input type="text" id="estado" name="estado" placeholder="Paraná (PR)" formControlName="estado"
+            <label class="block mb-1 text-sm font-medium text-gray-700" for="estado">
+              Estado (UF) <span class="text-red-500">*</span>
+            </label>
+            <input type="text" id="estado" name="estado" placeholder="PR" maxlength="2" formControlName="estado"
                    class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:bg-white
-  focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+  focus:ring-2 focus:ring-blue-500 focus:outline-none transition uppercase">
+            @if (f.estado.touched && f.estado.invalid) {
+              <p class="mb-2 text-sm text-red-700" role="alert">
+                O estado é obrigatório.
+              </p>
+            }
           </div>
           <div>
-            <label class="block mb-1 text-sm font-medium text-gray-700" for="cidade">Cidade *</label>
+            <label class="block mb-1 text-sm font-medium text-gray-700" for="cidade">
+              Cidade <span class="text-red-500">*</span>
+            </label>
             <input type="text" id="cidade" name="cidade" placeholder="Curitiba" formControlName="cidade"
                    class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:bg-white
                 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+            @if (f.cidade.touched && f.cidade.invalid) {
+              <p class="mb-2 text-sm text-red-700" role="alert">
+                A cidade é obrigatória.
+              </p>
+            }
           </div>
           <div>
-            <label class="block mb-1 text-sm font-medium text-gray-700" for="bairro">Bairro *</label>
+            <label class="block mb-1 text-sm font-medium text-gray-700" for="bairro">
+              Bairro <span class="text-red-500">*</span>
+            </label>
             <input type="text" id="bairro" name="bairro" placeholder="Cajurururururu" formControlName="bairro"
                    class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:bg-white
                 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+            @if (f.bairro.touched && f.bairro.invalid) {
+              <p class="mb-2 text-sm text-red-700" role="alert">
+                O bairro é obrigatório.
+              </p>
+            }
           </div>
           <div>
-            <label class="block mb-1 text-sm font-medium text-gray-700" for="rua">Rua / Endereço *</label>
+            <label class="block mb-1 text-sm font-medium text-gray-700" for="rua">
+              Rua / Endereço <span class="text-red-500">*</span>
+            </label>
             <input type="text" id="rua" name="rua" placeholder="Rua dos bruxao loco" formControlName="street"
                    class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:bg-white
                 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+            @if (f.street.touched && f.street.invalid) {
+              <p class="mb-2 text-sm text-red-700" role="alert">
+                A rua é obrigatória.
+              </p>
+            }
           </div>
           <div>
-            <label class="block mb-1 text-sm font-medium text-gray-700" for="numero">Número *</label>
+            <label class="block mb-1 text-sm font-medium text-gray-700" for="numero">
+              Número <span class="text-red-500">*</span>
+            </label>
             <input type="text" id="numero" name="numero" placeholder="1001" formControlName="numero"
                    class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:bg-white focus:ring-
                 2 focus:ring-blue-500 focus:outline-none transition">
+            @if (f.numero.touched && f.numero.invalid) {
+              <p class="mb-2 text-sm text-red-700" role="alert">
+                O número é obrigatório.
+              </p>
+            }
           </div>
           <div class="md:col-span-3">
             <label class="block mb-1 text-sm font-medium text-gray-700" for="complemento">Complemento (opcional)</label>

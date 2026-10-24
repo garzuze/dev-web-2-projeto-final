@@ -112,7 +112,7 @@ export class SelfRegister {
         number: formData.numero || '',
         district: formData.bairro || '',
         city: formData.cidade || '',
-        state: formData.estado || '',
+        state: (formData.estado || '').trim().toUpperCase(),
         complement: formData.complemento || '',
       },
     };
@@ -125,7 +125,7 @@ export class SelfRegister {
         );
         this.router.navigate(['/login']);
       },
-      error: (erro) => {
+     error: (erro) => {
         console.error('Erro ao cadastrar:', erro);
         this.notificationService.showNotification(
           'Erro ao realizar cadastro. Verifique se o CPF ou e-mail já estão cadastrados.',
@@ -142,12 +142,12 @@ export class SelfRegister {
 
   if (this.f.cpf.hasError('cpfInvalido')) {
     this.notificationService.showNotification(
-      'CPF invalido.',
+      'CPF inválido.',
       NotificationType.error,
     )
   }else{
      this.notificationService.showNotification(
-      'CPF valido.',
+      'CPF válido.',
       NotificationType.success,
     )
   }
