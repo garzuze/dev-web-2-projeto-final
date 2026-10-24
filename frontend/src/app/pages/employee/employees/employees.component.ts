@@ -9,6 +9,8 @@ import { EmployeeModalComponent } from './employee-modal';
 import { EmployeeHeaderComponent } from '../../../components/employee-header/employee-header.component';
 import { DatePipe } from '@angular/common';
 import { AuthService } from '../../../core/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { problemMessage } from '../../../core/api';
 
 @Component({
   imports: [
@@ -113,11 +115,11 @@ export class EmployeesComponent implements OnInit {
         );
         this.reload();
       },
-      error: () => {
+      error: (err: HttpErrorResponse) => {
         this.isRemoving = false;
         this.removing = null;
         this.notifications.showNotification(
-          'Não foi possível remover o funcionário.',
+          problemMessage(err, 'Não foi possível remover o funcionário.'),
           NotificationType.error,
         );
       },
