@@ -12,6 +12,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Employee } from '../../../../models/employee.model';
 import { EmployeeService } from '../../../../core/employee.service';
 import { ModalContainerComponent } from '../../../../components/modal-container/modal-container.component';
+import { HttpErrorResponse } from '@angular/common/http';
+import { problemMessage } from '../../../../core/api';
 
 @Component({
   imports: [ModalContainerComponent, ReactiveFormsModule],
@@ -84,9 +86,9 @@ export class EmployeeModalComponent implements OnInit {
         this.saving.set(false);
         this.saved.emit(employee);
       },
-      error: () => {
+      error: (err: HttpErrorResponse) => {
         this.saving.set(false);
-        this.errorMessage.set('Erro ao cadastrar funcionário!');
+        this.errorMessage.set(problemMessage(err,'Erro ao cadastrar funcionário!'));
       },
     });
   }
