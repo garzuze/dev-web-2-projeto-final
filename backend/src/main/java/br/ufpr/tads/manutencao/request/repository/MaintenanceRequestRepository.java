@@ -1,5 +1,6 @@
 package br.ufpr.tads.manutencao.request.repository;
 
+import br.ufpr.tads.manutencao.report.dto.CategoryRevenue;
 import br.ufpr.tads.manutencao.report.dto.DailyRevenue;
 import br.ufpr.tads.manutencao.request.model.MaintenanceRequest;
 import br.ufpr.tads.manutencao.request.model.RequestStatus;
@@ -37,5 +38,17 @@ public interface MaintenanceRequestRepository extends JpaRepository<MaintenanceR
           @Param("startDate") LocalDate startDate,
           @Param("endDate") LocalDate endDate
   );
+
+    @Query(value = """
+          SELECT
+                  c.name AS name,
+                  SUM(mr.quote_value) AS total
+              FROM maintenance_request mr
+              JOIN category c ON c.id = mr.category_id
+              WHERE mr.status IN ('PAGA', 'FINALIZADA')
+              GROUP BY c.id, c.name
+              ORDER BY total DESC
+          """, nativeQuery = true)
+    List<CategoryRevenue> findRevenueByCategory();
 
 }
