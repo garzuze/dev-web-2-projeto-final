@@ -1,5 +1,7 @@
 package br.ufpr.tads.manutencao.report.service;
 
+import br.ufpr.tads.manutencao.report.dto.CategoryRevenue;
+import br.ufpr.tads.manutencao.report.dto.CategoryRevenueReport;
 import br.ufpr.tads.manutencao.report.dto.DailyRevenue;
 import br.ufpr.tads.manutencao.report.dto.RevenueReport;
 import br.ufpr.tads.manutencao.request.repository.MaintenanceRequestRepository;
@@ -39,6 +41,18 @@ public class ReportService {
 
   private LocalDate firstDayOf(List<DailyRevenue> revenues) {
     return revenues.isEmpty() ? null : revenues.getFirst().getDay();
+  }
+
+  @Transactional(readOnly = true)
+  public CategoryRevenueReport revenueByCategory() {
+    List<CategoryRevenue> categories = requestRepository.findRevenueByCategory();
+
+    BigDecimal total = categories.stream()
+            .map(CategoryRevenue::getTotal)
+            .filter(Objects::nonNull)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+    return new CategoryRevenueReport(categories, total);
   }
 
 }

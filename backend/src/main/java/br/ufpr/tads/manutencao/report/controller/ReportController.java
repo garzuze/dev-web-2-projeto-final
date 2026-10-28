@@ -1,5 +1,6 @@
 package br.ufpr.tads.manutencao.report.controller;
 
+import br.ufpr.tads.manutencao.report.dto.CategoryRevenueReport;
 import br.ufpr.tads.manutencao.report.dto.RevenueReport;
 import br.ufpr.tads.manutencao.report.service.ReportService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -33,4 +34,10 @@ public class ReportController {
     // exemplo de chamada: "/revenue?start=2026-09-29&end=2026-10-01"
     return reportService.revenueByDay(start, end);
   }
+
+    @GetMapping("/revenue-by-category")
+    public CategoryRevenueReport revenueByCategory() {
+        return reportService.revenueByCategory();
+    }
+
 }
