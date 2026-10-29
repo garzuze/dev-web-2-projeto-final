@@ -1,13 +1,13 @@
 package br.ufpr.tads.manutencao.auth.service;
 
-import br.ufpr.tads.manutencao.user.dto.AddressRequest;
 import br.ufpr.tads.manutencao.auth.dto.SignUpRequest;
 import br.ufpr.tads.manutencao.auth.dto.SignUpResponse;
 import br.ufpr.tads.manutencao.auth.exception.CpfAlreadyUsedException;
 import br.ufpr.tads.manutencao.auth.exception.EmailAlreadyUsedException;
-import br.ufpr.tads.manutencao.user.model.Address;
-import br.ufpr.tads.manutencao.user.model.Customer;
 import br.ufpr.tads.manutencao.request.repository.AddressRepository;
+import br.ufpr.tads.manutencao.user.mapper.AddressMapper;
+import br.ufpr.tads.manutencao.user.mapper.CustomerMapper;
+import br.ufpr.tads.manutencao.user.model.Customer;
 import br.ufpr.tads.manutencao.user.repository.CustomerRepository;
 import br.ufpr.tads.manutencao.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -45,33 +45,14 @@ public class SignUpService {
 
     String password = passwordService.generateNumericPassword();
     String salt = passwordService.generateSalt();
+    String hashedPwd = passwordService.hash(password, salt);
 
-    Customer customer = new Customer();
-    customer.setName(request.name().trim());
-    customer.setEmail(email);
-    customer.setCpf(request.cpf());
-    customer.setPhone(request.phone());
-    customer.setSalt(salt);
-    customer.setPasswordHash(passwordService.hash(password, salt));
+    Customer customer = customerRepository.save(CustomerMapper.toEntity(request, salt, hashedPwd));
+    addressRepository.save(AddressMapper.toEntity(request.address(), customer));
 
-    Customer saved = customerRepository.save(customer);
-    addressRepository.save(newAddress(request.address(), saved));
-    passwordNotifier.send(saved.getEmail(), password);
+    passwordNotifier.send(customer.getEmail(), password);
 
-    return new SignUpResponse(saved.getId(), saved.getName(), saved.getEmail());
-  }
-
-  private Address newAddress(AddressRequest request, Customer customer) {
-    Address address = new Address();
-    address.setCustomer(customer);
-    address.setZipCode(request.zipCode());
-    address.setStreet(request.street());
-    address.setNumber(request.number());
-    address.setComplement(request.complement());
-    address.setDistrict(request.district());
-    address.setCity(request.city());
-    address.setState(request.state());
-    return address;
+    return CustomerMapper.toResponse(customer);
   }
 
 }
