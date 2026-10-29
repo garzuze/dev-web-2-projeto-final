@@ -21,6 +21,7 @@ public class Category {
 
   // Soft delete
   @Column(nullable = false)
+  @Builder.Default
   private boolean active = true;
 
 }
