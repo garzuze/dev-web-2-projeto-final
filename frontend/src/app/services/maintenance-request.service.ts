@@ -1,9 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { delay, Observable, of } from 'rxjs';
-import {
-  MaintenanceRequest,
-  RequestStatus,
-} from '../models/maintenanceRequest.model';
+import { Observable, of } from 'rxjs';
+import { MaintenanceRequest } from '../models/maintenanceRequest.model';
 import { MAINTENANCE_REQUEST_MOCK } from '../mocks/maintenance-request.mock';
 import { HttpClient } from '@angular/common/http';
 import { API_URL } from '../core/api';
@@ -29,25 +26,15 @@ export class MaintenanceRequestService {
     return this.http.get<MaintenanceRequest>(`${this.url}/${id}`);
   }
 
-  quoteRequest(id: number, quoteValue: number) {
-    const request = MAINTENANCE_REQUEST_MOCK.find((r) => r.id === id);
-    if (request) {
-      const previousStatus = request.statusName;
-      request.statusName = RequestStatus.Quoted;
-      request.quoteValue = quoteValue;
-      request.history.push({
-        id: Date.now(),
-        requestId: id,
-        dateTime: new Date().toISOString(),
-        previousStatus: previousStatus,
-        newStatus: RequestStatus.Quoted,
-        notes: 'Orçamento criado pelo funcionário.',
-      });
-    }
-    return of({
-      message: 'Orçamento registrado com sucesso',
-      success: true,
-    });
+  getEmployeeRequestById(id: number): Observable<MaintenanceRequest> {
+    return this.http.get<MaintenanceRequest>(`${this.employeeUrl}/${id}`);
+  }
+
+  quoteRequest(id: number, quoteValue: number): Observable<MaintenanceRequest> {
+    return this.http.put<MaintenanceRequest>(
+      `${this.employeeUrl}/${id}/quote`,
+      { quoteValue },
+    );
   }
 
   // Lista as solicitações do cliente logado, já ordenadas pelo backend

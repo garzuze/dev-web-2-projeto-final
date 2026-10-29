@@ -20,6 +20,8 @@ import {
 import { RequestDetailsCardComponent } from '../../../components/request-details-card/request-details-card.component';
 import { NotificationService } from '../../../services/notification.service';
 import { NotificationType } from '../../../models/notification.model';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { problemMessage } from '../../../core/api';
 import { EmployeeHeaderComponent } from '../../../components/employee-header/employee-header.component';
 
 @Component({
@@ -31,7 +33,9 @@ import { EmployeeHeaderComponent } from '../../../components/employee-header/emp
     ReactiveFormsModule,
     RequestDetailsCardComponent,
     EmployeeHeaderComponent,
+    NgxMaskDirective,
   ],
+  providers: [provideNgxMask({})],
   templateUrl: './quote-form.component.html',
   styleUrl: './quote-form.component.scss',
 })
@@ -54,9 +58,8 @@ export class QuoteFormComponent implements OnInit {
     this.route.paramMap.subscribe((params) => {
       const id = Number(params.get('id'));
       if (id) {
-        this.maintenanceRequestService
-          .getMaintenanceRequestById(id)
-          .subscribe((request) => {
+        this.maintenanceRequestService.getEmployeeRequestById(id).subscribe({
+          next: (request) => {
             if (!request || request.statusName !== RequestStatus.Open) {
               this.notificationService.showNotification(
                 'Solicitação inválida ou não está aberta.',
@@ -66,39 +69,43 @@ export class QuoteFormComponent implements OnInit {
               return;
             }
             this.requestData = request;
-          });
+          },
+          error: (err) => {
+            this.notificationService.showNotification(
+              problemMessage(err, 'Solicitação não encontrada.'),
+              NotificationType.error,
+            );
+            this.router.navigate(['/employee/home']);
+          },
+        });
       }
     });
-  }
-
-  formatQuoteValue(): void {
-    const currentValue = this.quoteForm.get('quoteValue')?.value;
-    if (currentValue) {
-      const formattedValue = Number(currentValue).toFixed(2);
-      this.quoteForm.patchValue({ quoteValue: formattedValue });
-    }
   }
 
   onSubmit(): void {
     if (this.quoteForm.valid && this.requestData) {
       this.isSubmitting = true;
-      const value = this.quoteForm.get('quoteValue')?.value;
+      const value = Number(this.quoteForm.get('quoteValue')?.value);
+      const formattedValue = new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      }).format(value);
 
       this.maintenanceRequestService
         .quoteRequest(this.requestData.id, value)
         .subscribe({
-          next: (res) => {
+          next: () => {
             this.isSubmitting = false;
             this.notificationService.showNotification(
-              res.message,
+              `Orçamento registrado no valor de ${formattedValue}`,
               NotificationType.success,
             );
             this.router.navigate(['/employee/home']);
           },
-          error: () => {
+          error: (err) => {
             this.isSubmitting = false;
             this.notificationService.showNotification(
-              'Erro ao salvar orçamento.',
+              problemMessage(err, 'Erro ao salvar orçamento.'),
               NotificationType.error,
             );
           },
