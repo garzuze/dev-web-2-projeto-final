@@ -1,13 +1,15 @@
 package br.ufpr.tads.manutencao.category.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "category")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Category {
 
   @Id
@@ -19,6 +21,7 @@ public class Category {
 
   // Soft delete
   @Column(nullable = false)
+  @Builder.Default
   private boolean active = true;
 
 }

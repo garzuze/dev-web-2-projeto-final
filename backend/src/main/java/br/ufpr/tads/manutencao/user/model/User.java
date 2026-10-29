@@ -1,8 +1,11 @@
 package br.ufpr.tads.manutencao.user.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -11,8 +14,14 @@ import java.time.LocalDateTime;
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "type", length = 15)
+// NOTA: acho que deveríamos rever usar esses decorators do lombok de forma geral em toda a classe,
+// pois isso pode quebrar o encapsulamento, já que estamos deixando coisas como senha e salt com set
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+// https://stackoverflow.com/questions/44948858/lombok-builder-on-a-class-that-extends-another-class
+@SuperBuilder
 public abstract class User {
 
   @Id

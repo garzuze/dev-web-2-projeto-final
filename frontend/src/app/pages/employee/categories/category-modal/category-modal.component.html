@@ -20,7 +20,7 @@
     @if (name.touched && name.invalid) {
       <p class="mb-2 text-sm text-red-700" role="alert">
         @if (name.hasError('required')) {
-          O nome e obrigatorio.
+          O nome é obrigatório.
         } @else if (name.hasError('minlength')) {
           O nome deve ter pelo menos 2 caracteres.
         } @else {
