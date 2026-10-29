@@ -19,13 +19,14 @@
             >
             <input
               id="quoteValue"
-              type="number"
-              step="0.01"
-              min="0"
+              type="text"
+              inputmode="decimal"
+              mask="separator.2"
+              thousandSeparator="."
+              decimalMarker=","
               placeholder="0,00"
               formControlName="quoteValue"
               class="rounded-lg border border-gray-300 p-3 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-              (blur)="formatQuoteValue()"
             />
 
             @if (
