@@ -3,6 +3,7 @@ package br.ufpr.tads.manutencao.category.service;
 import br.ufpr.tads.manutencao.category.dto.CategoryRequest;
 import br.ufpr.tads.manutencao.category.dto.CategoryResponse;
 import br.ufpr.tads.manutencao.category.exception.CategoryAlreadyDefinedException;
+import br.ufpr.tads.manutencao.category.mapper.CategoryMapper;
 import br.ufpr.tads.manutencao.category.model.Category;
 import br.ufpr.tads.manutencao.category.repository.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,22 +25,22 @@ public class CategoryService {
   public List<CategoryResponse> list() {
     return categoryRepository.findByActiveTrueOrderByNameAsc()
             .stream()
-            .map(CategoryResponse::of)
+            .map(CategoryMapper::toResponse)
             .toList();
   }
 
   @Transactional
   public CategoryResponse create(CategoryRequest request) {
-    Category category = new Category();
-    category.setName(requireAvailableName(request.name(), null));
-    return CategoryResponse.of(categoryRepository.save(category));
+    String name = requireAvailableName(request.name(), null);
+    Category category = categoryRepository.save(CategoryMapper.toEntity(name));
+    return CategoryMapper.toResponse(category);
   }
 
   @Transactional
   public CategoryResponse update(Long id, CategoryRequest request) {
     Category category = activeById(id);
     category.setName(requireAvailableName(request.name(), id));
-    return CategoryResponse.of(category);
+    return CategoryMapper.toResponse(category);
   }
 
   @Transactional
