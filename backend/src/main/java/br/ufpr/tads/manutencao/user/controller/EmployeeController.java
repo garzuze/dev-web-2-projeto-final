@@ -1,8 +1,8 @@
 package br.ufpr.tads.manutencao.user.controller;
 
+import br.ufpr.tads.manutencao.user.dto.EmployeeCrudService;
 import br.ufpr.tads.manutencao.user.dto.EmployeeRequest;
 import br.ufpr.tads.manutencao.user.dto.EmployeeResponse;
-import br.ufpr.tads.manutencao.user.service.EmployeeService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +13,9 @@ import java.util.List;
 @RequestMapping("/api/employees")
 public class EmployeeController {
 
-  private final EmployeeService employeeService;
+  private final EmployeeCrudService employeeService;
 
-  public EmployeeController(EmployeeService employeeService) {
+  public EmployeeController(EmployeeCrudService employeeService) {
     this.employeeService = employeeService;
   }
 
