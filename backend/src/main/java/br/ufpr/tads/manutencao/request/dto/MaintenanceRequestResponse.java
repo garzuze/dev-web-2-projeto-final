@@ -1,9 +1,5 @@
 package br.ufpr.tads.manutencao.request.dto;
 
-import br.ufpr.tads.manutencao.request.model.MaintenanceRequest;
-import br.ufpr.tads.manutencao.request.model.RequestHistory;
-import br.ufpr.tads.manutencao.request.model.RequestStatus;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
