@@ -3,7 +3,6 @@ package br.ufpr.tads.manutencao.user.service;
 import br.ufpr.tads.manutencao.auth.exception.EmailAlreadyUsedException;
 import br.ufpr.tads.manutencao.auth.service.PasswordNotifier;
 import br.ufpr.tads.manutencao.auth.service.PasswordService;
-import br.ufpr.tads.manutencao.user.controller.EmployeeController;
 import br.ufpr.tads.manutencao.user.dto.EmployeeRequest;
 import br.ufpr.tads.manutencao.user.dto.EmployeeResponse;
 import br.ufpr.tads.manutencao.user.mapper.EmployeeMapper;
