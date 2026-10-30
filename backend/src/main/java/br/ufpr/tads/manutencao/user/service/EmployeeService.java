@@ -3,6 +3,7 @@ package br.ufpr.tads.manutencao.user.service;
 import br.ufpr.tads.manutencao.auth.exception.EmailAlreadyUsedException;
 import br.ufpr.tads.manutencao.auth.service.PasswordNotifier;
 import br.ufpr.tads.manutencao.auth.service.PasswordService;
+import br.ufpr.tads.manutencao.user.dto.EmployeeCrudService;
 import br.ufpr.tads.manutencao.user.dto.EmployeeRequest;
 import br.ufpr.tads.manutencao.user.dto.EmployeeResponse;
 import br.ufpr.tads.manutencao.user.mapper.EmployeeMapper;
@@ -20,7 +21,7 @@ import java.util.Optional;
 
 
 @Service
-public class EmployeeService {
+public class EmployeeService implements EmployeeCrudService {
 
   private final EmployeeRepository employeeRepository;
   private final UserRepository userRepository;
@@ -94,11 +95,15 @@ public class EmployeeService {
       throw new IllegalStateException("Não foi possível deletar esse usuário.");
     }
 
+    deactivate(id);
+  }
+
+  @Override
+  public void deactivate(Long id) {
     Employee deletedEmployee = employeeRepository.findById(id)
-                               .filter(Employee::isActive)
-                               .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado"));
+            .filter(Employee::isActive)
+            .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado"));
 
     deletedEmployee.setActive(false);
   }
-
 }
