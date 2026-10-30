@@ -3,8 +3,10 @@ package br.ufpr.tads.manutencao.user.service;
 import br.ufpr.tads.manutencao.auth.exception.EmailAlreadyUsedException;
 import br.ufpr.tads.manutencao.auth.service.PasswordNotifier;
 import br.ufpr.tads.manutencao.auth.service.PasswordService;
+import br.ufpr.tads.manutencao.user.controller.EmployeeController;
 import br.ufpr.tads.manutencao.user.dto.EmployeeRequest;
 import br.ufpr.tads.manutencao.user.dto.EmployeeResponse;
+import br.ufpr.tads.manutencao.user.mapper.EmployeeMapper;
 import br.ufpr.tads.manutencao.user.model.Employee;
 import br.ufpr.tads.manutencao.user.model.User;
 import br.ufpr.tads.manutencao.user.repository.EmployeeRepository;
@@ -40,63 +42,57 @@ public class EmployeeService {
   public List<EmployeeResponse> list() {
     return employeeRepository.findByActiveTrueOrderByNameAsc()
            .stream()
-           .map(EmployeeResponse::of)
+           .map(EmployeeMapper::toResponse)
            .toList();
   }
 
   @Transactional 
   public EmployeeResponse create(EmployeeRequest request) {
     String email = request.email().trim().toLowerCase();
+
     if (userRepository.existsByEmail(email)) {
       throw new EmailAlreadyUsedException(email);
     }
+
     String password = passwordService.generateNumericPassword();
     String salt = passwordService.generateSalt();
     String hash = passwordService.hash(password, salt);
 
-    Employee newEmployee = new Employee();
+    Employee employee = employeeRepository.save(EmployeeMapper.toEntity(request, salt, hash));
 
-    newEmployee.setName(request.name().trim());
-    newEmployee.setEmail(email);
-    newEmployee.setBirthDate(request.birthDate());
-    newEmployee.setSalt(salt);
-    newEmployee.setPasswordHash(hash);
+    passwordNotifier.send(employee.getEmail(), password);
 
-    Employee savedEmployee = employeeRepository.save(newEmployee);
-    passwordNotifier.send(savedEmployee.getEmail(), password);
-
-    return EmployeeResponse.of(savedEmployee);
+    return EmployeeMapper.toResponse(employee);
   }
 
   @Transactional 
   public EmployeeResponse update(Long id, EmployeeRequest request) {
-    Employee updatedEmployee = employeeRepository.findById(id)
+
+    Employee employeeToBeUpdated = employeeRepository.findById(id)
                         .filter(Employee::isActive)
                         .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado"));
 
     String email = request.email().trim().toLowerCase();                    
     Optional<User> user = userRepository.findByEmail(email);
+
     if (user.isPresent() && !user.get().getId().equals(id)) {
       throw new EmailAlreadyUsedException(email);
     }
 
-    updatedEmployee.setName(request.name().trim());
-    updatedEmployee.setEmail(email);
-    updatedEmployee.setBirthDate(request.birthDate());
+    EmployeeMapper.updateEntity(employeeToBeUpdated, request);
+    Employee employee = employeeRepository.save(employeeToBeUpdated);
     
-    employeeRepository.save(updatedEmployee);
-    
-    return EmployeeResponse.of(updatedEmployee);
+    return EmployeeMapper.toResponse(employee);
   }
 
   @Transactional 
   public void deactivate(Long id, Long currentUserId) {
     if (id.equals(currentUserId)) {
-      throw new IllegalStateException("Um funcionário não pode deletar a si mesmo");
+      throw new IllegalStateException("Um funcionário não pode deletar a si mesmo.");
     }
-    //TODO: Yohan o ideal não seria melhor dar um retorno mais genérico, do que falar que tem apenas um usuário já que seria uma regra interna
-    if (employeeRepository.countByActiveTrue()<= 1) {
-      throw new IllegalStateException("Não é possivel remover o unico funcionário ativo do sistema");
+
+    if (employeeRepository.countByActiveTrue() <= 1) {
+      throw new IllegalStateException("Não foi possível deletar esse usuário.");
     }
 
     Employee deletedEmployee = employeeRepository.findById(id)
@@ -104,7 +100,6 @@ public class EmployeeService {
                                .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado"));
 
     deletedEmployee.setActive(false);
-                
   }
 
 }
