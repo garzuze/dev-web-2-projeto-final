@@ -3,6 +3,7 @@ package br.ufpr.tads.manutencao.category.controller;
 import br.ufpr.tads.manutencao.category.dto.CategoryRequest;
 import br.ufpr.tads.manutencao.category.dto.CategoryResponse;
 import br.ufpr.tads.manutencao.category.service.CategoryService;
+import br.ufpr.tads.manutencao.utils.CrudService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +14,9 @@ import java.util.List;
 @RequestMapping("/api/categories")
 public class CategoryController {
 
-  private final CategoryService categoryService;
+  private final CrudService<CategoryRequest, CategoryResponse> categoryService;
 
-  public CategoryController(CategoryService categoryService) {
+  public CategoryController(CrudService<CategoryRequest, CategoryResponse> categoryService) {
     this.categoryService = categoryService;
   }
 
