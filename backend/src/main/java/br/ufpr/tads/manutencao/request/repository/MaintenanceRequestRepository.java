@@ -55,7 +55,7 @@ public interface MaintenanceRequestRepository extends JpaRepository<MaintenanceR
   @EntityGraph(attributePaths={"customer", "category", "employee", "history"})
     @Query("""
               SELECT mr FROM MaintenanceRequest mr
-              WHERE (mr.status <> br.ufpr.tads.manutencao.request.model.RequestStatus.REDIRECIONADA OR mr.employee.id = :employeeId)
+              WHERE (mr.status <> RequestStatus.REDIRECIONADA OR mr.employee.id = :employeeId)
                 AND mr.openingDateTime >= :startDate
                 AND mr.openingDateTime <= :endDate
               ORDER BY mr.openingDateTime ASC
