@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -136,5 +137,34 @@ public class MaintenanceRequestService {
     historyService.register(req, RequestStatus.ABERTA, RequestStatus.ORCADA, employee, "Orçamento realizado pelo funcionário.");
     requestRepository.save(req);
     return new MaintenanceRequestResponse(req);
+  }
+
+  @Transactional
+  public List<MaintenanceRequestResponse> listAllForEmployee(
+          Long employeeId,
+          String filterType,
+          LocalDate startDate,
+          LocalDate endDate
+  ) {
+    LocalDateTime startDateTime = LocalDateTime.of(1970, 1, 1, 0, 0);
+    LocalDateTime endDateTime = LocalDateTime.of(2100, 12, 31, 23, 59, 59);
+
+    if ("TODAY".equalsIgnoreCase(filterType)) {
+      LocalDate today = LocalDate.now();
+      startDateTime = today.atStartOfDay();
+      endDateTime = today.atTime(23, 59, 59);
+    } else if ("PERIOD".equalsIgnoreCase(filterType)) {
+      if (startDate != null) {
+        startDateTime = startDate.atStartOfDay();
+      }
+      if (endDate != null) {
+        endDateTime = endDate.atTime(23, 59, 59);
+      }
+    }
+
+    return requestRepository.findForEmployeeWithFilter(employeeId, startDateTime, endDateTime)
+            .stream()
+            .map(MaintenanceRequestResponse::new)
+            .toList();
   }
 }

@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,4 +52,17 @@ public interface MaintenanceRequestRepository extends JpaRepository<MaintenanceR
           """, nativeQuery = true)
     List<CategoryRevenue> findRevenueByCategory();
 
+  @EntityGraph(attributePaths={"customer", "category", "employee", "history"})
+    @Query("""
+              SELECT mr FROM MaintenanceRequest mr
+              WHERE (mr.status <> br.ufpr.tads.manutencao.request.model.RequestStatus.REDIRECIONADA OR mr.employee.id = :employeeId)
+                AND mr.openingDateTime >= :startDate
+                AND mr.openingDateTime <= :endDate
+              ORDER BY mr.openingDateTime ASC
+          """)
+    List<MaintenanceRequest> findForEmployeeWithFilter(
+          @Param("employeeId") Long employeeId,
+          @Param("startDate") LocalDateTime startDate,
+          @Param("endDate") LocalDateTime endDate
+      ); 
 }
