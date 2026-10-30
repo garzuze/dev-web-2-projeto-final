@@ -1,5 +1,6 @@
 package br.ufpr.tads.manutencao.request.service;
 
+import br.ufpr.tads.manutencao.request.MaintenanceRequestMapper;
 import br.ufpr.tads.manutencao.request.dto.MaintenanceRequestResponse;
 import br.ufpr.tads.manutencao.request.exception.InvalidRequestStatusException;
 import br.ufpr.tads.manutencao.request.exception.RequestNotFoundException;
@@ -13,8 +14,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -38,13 +39,13 @@ public class MaintenanceRequestService {
   @Transactional
   public MaintenanceRequestResponse findById(Long id, Long customerId) {
     MaintenanceRequest req = findAndValidateOwnership(id, customerId);
-    return new MaintenanceRequestResponse(req);
+    return MaintenanceRequestMapper.toResponse(req);
   }
 
   @Transactional
   public List<MaintenanceRequestResponse> listByCustomer(Long customerId) {
     return requestRepository.findByCustomerIdOrderByOpeningDateTimeAsc(customerId)
-            .stream().map(MaintenanceRequestResponse::new).toList();
+            .stream().map(MaintenanceRequestMapper::toResponse).toList();
   }
 
   @Transactional
@@ -59,7 +60,7 @@ public class MaintenanceRequestService {
 
     historyService.register(req, RequestStatus.ORCADA, RequestStatus.APROVADA, req.getCustomer(), "Orçamento aprovado pelo cliente.");
     requestRepository.save(req);
-    return new MaintenanceRequestResponse(req);
+    return MaintenanceRequestMapper.toResponse(req);
   }
 
   @Transactional
@@ -75,7 +76,7 @@ public class MaintenanceRequestService {
 
     historyService.register(req, RequestStatus.ORCADA, RequestStatus.REJEITADA, req.getCustomer(), "Serviço Rejeitado. Motivo: " + reason);
     requestRepository.save(req);
-    return new MaintenanceRequestResponse(req);
+    return MaintenanceRequestMapper.toResponse(req);
   }
 
   @Transactional
@@ -88,7 +89,7 @@ public class MaintenanceRequestService {
     req.setRejectionReason(null);
     historyService.register(req, RequestStatus.REJEITADA, RequestStatus.APROVADA, req.getCustomer(), "Serviço resgatado e aprovado pelo cliente.");
     requestRepository.save(req);
-    return new MaintenanceRequestResponse(req);
+    return MaintenanceRequestMapper.toResponse(req);
   }
 
   @Transactional
@@ -101,14 +102,14 @@ public class MaintenanceRequestService {
     req.setPaymentDateTime(LocalDateTime.now());
     historyService.register(req, RequestStatus.ARRUMADA, RequestStatus.PAGA, req.getCustomer(), "Pagamento efetuado pelo cliente.");
     requestRepository.save(req);
-    return new MaintenanceRequestResponse(req);
+    return MaintenanceRequestMapper.toResponse(req);
 
   }
 
   @Transactional
   public List<MaintenanceRequestResponse> listOpen() {
     return requestRepository.findByStatusOrderByOpeningDateTimeAsc(RequestStatus.ABERTA)
-            .stream().map(MaintenanceRequestResponse::new).toList();
+            .stream().map(MaintenanceRequestMapper::toResponse).toList();
   }
 
   private MaintenanceRequest findForEmployee(Long id) {
@@ -118,7 +119,7 @@ public class MaintenanceRequestService {
 
   @Transactional
   public MaintenanceRequestResponse findByIdForEmployee(Long id) {
-    return new MaintenanceRequestResponse(findForEmployee(id));
+    return MaintenanceRequestMapper.toResponse(findForEmployee(id));
   }
 
   @Transactional
@@ -136,7 +137,7 @@ public class MaintenanceRequestService {
     req.setEmployee(employee);
     historyService.register(req, RequestStatus.ABERTA, RequestStatus.ORCADA, employee, "Orçamento realizado pelo funcionário.");
     requestRepository.save(req);
-    return new MaintenanceRequestResponse(req);
+    return MaintenanceRequestMapper.toResponse(req);
   }
 
   @Transactional
@@ -164,7 +165,7 @@ public class MaintenanceRequestService {
 
     return requestRepository.findForEmployeeWithFilter(employeeId, startDateTime, endDateTime)
             .stream()
-            .map(MaintenanceRequestResponse::new)
+            .map(MaintenanceRequestMapper::toResponse)
             .toList();
   }
 }
