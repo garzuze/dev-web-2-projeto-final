@@ -2,7 +2,6 @@ package br.ufpr.tads.manutencao.category.controller;
 
 import br.ufpr.tads.manutencao.category.dto.CategoryRequest;
 import br.ufpr.tads.manutencao.category.dto.CategoryResponse;
-import br.ufpr.tads.manutencao.category.service.CategoryService;
 import br.ufpr.tads.manutencao.utils.CrudService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
