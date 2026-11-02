@@ -1,5 +1,6 @@
 package br.ufpr.tads.manutencao.user.service;
 
+import br.ufpr.tads.manutencao.auth.dto.UserProfile;
 import br.ufpr.tads.manutencao.auth.exception.EmailAlreadyUsedException;
 import br.ufpr.tads.manutencao.auth.service.PasswordNotifier;
 import br.ufpr.tads.manutencao.auth.service.PasswordService;
@@ -63,7 +64,7 @@ public class EmployeeService {
     newEmployee.setPasswordHash(hash);
 
     Employee savedEmployee = employeeRepository.save(newEmployee);
-    passwordNotifier.send(savedEmployee.getEmail(), password);
+    passwordNotifier.send(savedEmployee.getName(), savedEmployee.getEmail(), password, UserProfile.EMPLOYEE);
 
     return EmployeeResponse.of(savedEmployee);
   }
