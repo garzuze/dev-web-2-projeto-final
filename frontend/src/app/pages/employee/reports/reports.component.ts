@@ -86,4 +86,47 @@ export class ReportsComponent {
         doc.save(`receitas-${today}.pdf`);
     }
 
+    onExportCategoryPdf(): void {
+        this.loading.set(true);
+        this.errorMessage.set('');
+
+        this.reportService.revenueByCategory().subscribe({
+            next: (report) => {
+                this.loading.set(false);
+
+                if (report.categories.length === 0) {
+                    this.errorMessage.set('Nenhuma receita registrada.');
+                    return;
+                }
+
+                const doc = new jsPDF();
+
+                doc.setFontSize(18);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Receitas por Categoria', 20, 20);
+
+                const rows = report.categories.map(c => [
+                    c.name,
+                    this.currencyPipe.transform(c.total, 'BRL') ?? '',
+                    report.total > 0 ? `${((c.total / report.total) * 100).toFixed(1)}%` : '0%',
+                ]);
+
+                autoTable(doc, {
+                    startY: 30,
+                    head: [['Categoria', 'Receita', '%']],
+                    body: rows,
+                    foot: [['Total', this.currencyPipe.transform(report.total, 'BRL') ?? '', '100%']],
+                });
+
+                doc.save(`receitas-por-categoria-${new Date().toISOString().slice(0, 10)}.pdf`);
+            },
+            error: () => {
+                this.errorMessage.set('Não foi possível gerar o relatório.');
+                this.loading.set(false);
+            },
+        });
+    }
+
+
+
 }
