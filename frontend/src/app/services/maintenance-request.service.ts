@@ -1,9 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MaintenanceRequest } from '../models/maintenanceRequest.model';
-import { MAINTENANCE_REQUEST_MOCK } from '../mocks/maintenance-request.mock';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { API_URL } from '../core/api';
+
+export type EmployeeRequestFilter = 'ALL' | 'TODAY' | 'PERIOD';
 
 @Injectable({
   providedIn: 'root',
@@ -13,8 +14,15 @@ export class MaintenanceRequestService {
   private readonly url = `${API_URL}/requests`;
   private readonly employeeUrl = `${API_URL}/employee/requests`;
 
-  getAllRequests(): Observable<MaintenanceRequest[] | undefined> {
-    return of(MAINTENANCE_REQUEST_MOCK);
+  getAllRequests(filterType: EmployeeRequestFilter = 'ALL',
+    startDate?: string,
+    endDate?: string): Observable<MaintenanceRequest[]> {
+    let params = new HttpParams().set('filterType', filterType);
+    if (filterType === 'PERIOD') {
+      if (startDate) params = params.set('startDate', startDate);
+      if (endDate) params = params.set('endDate', endDate);
+    }
+    return this.http.get<MaintenanceRequest[]>(this.employeeUrl, { params });
   }
 
   getOpenRequests(): Observable<MaintenanceRequest[]> {
