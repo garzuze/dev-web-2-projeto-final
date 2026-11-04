@@ -1,17 +1,22 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   MaintenanceRequest,
   RequestStatus,
 } from '../../../models/maintenanceRequest.model';
-import { MaintenanceRequestService } from '../../../services/maintenance-request.service';
+import {
+  EmployeeRequestFilter,
+  MaintenanceRequestService,
+} from '../../../services/maintenance-request.service';
 import {
   getStatusClass,
   getStatusLabel,
 } from '../../../utils/status-helpers.util';
 import { RouterLink } from '@angular/router';
 import { EmployeeHeaderComponent } from '../../../components/employee-header/employee-header.component';
+import { HttpErrorResponse } from '@angular/common/http';
+import { problemMessage } from '../../../core/api';
 
 @Component({
   imports: [FormsModule, CommonModule, RouterLink, EmployeeHeaderComponent],
@@ -21,41 +26,64 @@ import { EmployeeHeaderComponent } from '../../../components/employee-header/emp
 })
 export class RequestListComponent implements OnInit {
   private maintenanceRequestService = inject(MaintenanceRequestService);
-  filter: string = 'every';
+  filter: EmployeeRequestFilter = 'ALL';
   filterDataStart: string = '';
   filterDataEnd: string = '';
-  requestsData: MaintenanceRequest[] = [];
-  filteredRequests: MaintenanceRequest[] = [];
-  requestStatus = RequestStatus;
+  readonly filteredRequests = signal<MaintenanceRequest[]>([]);
+  readonly loading = signal(false);
+  readonly errorMessage = signal('');
+  readonly dateError = signal('');
+  readonly requestStatus = RequestStatus;
+
   getStatusClass = getStatusClass;
   getStatusLabel = getStatusLabel;
 
   ngOnInit(): void {
-    this.maintenanceRequestService.getAllRequests().subscribe({
-      next: (requests) => {
-        if (requests) {
-          this.requestsData = requests;
-          this.filteredRequests = this.requestsData;
-        }
-      },
-    });
+    this.loadRequests();
   }
 
-  onFilterChange() {
-    if (this.filter === 'every') {
-      this.filteredRequests = this.requestsData;
-    } else if (this.filter === 'today') {
-      const today = new Date().toDateString();
-      this.filteredRequests = this.requestsData.filter(
-        (r) => new Date(r.openingDateTime).toDateString() === today,
-      );
-    } else if (this.filter === 'period') {
-      this.filteredRequests = this.requestsData.filter((r) => {
-        const reqDate = new Date(r.openingDateTime).getTime();
-        const start = new Date(this.filterDataStart).getTime();
-        const end = new Date(this.filterDataEnd).getTime() + 86400000;
-        return reqDate >= start && reqDate <= end;
+  loadRequests(): void {
+    this.loading.set(true);
+    this.errorMessage.set('');
+
+    this.maintenanceRequestService
+      .getAllRequests(this.filter, this.filterDataStart, this.filterDataEnd)
+      .subscribe({
+        next: (requests) => {
+          this.filteredRequests.set(requests);
+          this.loading.set(false);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.filteredRequests.set([]);
+          this.loading.set(false);
+          this.errorMessage.set(
+            problemMessage(err, 'Não foi possível carregar as solicitações.'),
+          );
+        },
       });
+  }
+
+  onFilterChange(): void {
+    this.dateError.set('');
+    if (this.filter !== 'PERIOD') {
+      this.filterDataStart = '';
+      this.filterDataEnd = '';
     }
+    this.loadRequests();
+  }
+
+  onPeriodDateChange(): void {
+    if (
+      this.filterDataStart &&
+      this.filterDataEnd &&
+      this.filterDataStart > this.filterDataEnd
+    ) {
+      this.dateError.set(
+        'A data de início não pode ser posterior à data de fim.',
+      );
+      return;
+    }
+    this.dateError.set('');
+    this.loadRequests();
   }
 }
