@@ -2,6 +2,7 @@ package br.ufpr.tads.manutencao.auth.service;
 
 import br.ufpr.tads.manutencao.auth.dto.SignUpRequest;
 import br.ufpr.tads.manutencao.auth.dto.SignUpResponse;
+import br.ufpr.tads.manutencao.auth.dto.UserProfile;
 import br.ufpr.tads.manutencao.auth.exception.CpfAlreadyUsedException;
 import br.ufpr.tads.manutencao.auth.exception.EmailAlreadyUsedException;
 import br.ufpr.tads.manutencao.request.repository.AddressRepository;
@@ -50,7 +51,7 @@ public class SignUpService {
     Customer customer = customerRepository.save(CustomerMapper.toEntity(request, salt, hashedPwd));
     addressRepository.save(AddressMapper.toEntity(request.address(), customer));
 
-    passwordNotifier.send(customer.getEmail(), password);
+    passwordNotifier.send(customer.getName(), customer.getEmail(), password, UserProfile.CUSTOMER);
 
     return CustomerMapper.toResponse(customer);
   }
