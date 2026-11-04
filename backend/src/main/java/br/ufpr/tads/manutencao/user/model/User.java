@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 
@@ -37,8 +38,8 @@ public abstract class User {
   @Column(nullable = false, length = 24)
   private String salt;
 
-  @Column(nullable = false)
   @Builder.Default
+  @Column(nullable = false)
   private boolean active = true;
 
   @CreationTimestamp

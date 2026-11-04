@@ -1,5 +1,6 @@
 package br.ufpr.tads.manutencao.user.service;
 
+import br.ufpr.tads.manutencao.auth.dto.UserProfile;
 import br.ufpr.tads.manutencao.auth.exception.EmailAlreadyUsedException;
 import br.ufpr.tads.manutencao.auth.service.PasswordNotifier;
 import br.ufpr.tads.manutencao.auth.service.PasswordService;
@@ -38,15 +39,15 @@ public class EmployeeService implements EmployeeCrudService {
     this.passwordNotifier = passwordNotifier;
   }
 
-  @Transactional(readOnly = true) 
+  @Transactional(readOnly = true)
   public List<EmployeeResponse> list() {
     return employeeRepository.findByActiveTrueOrderByNameAsc()
-           .stream()
-           .map(EmployeeMapper::toResponse)
-           .toList();
+            .stream()
+            .map(EmployeeMapper::toResponse)
+            .toList();
   }
 
-  @Transactional 
+  @Transactional
   public EmployeeResponse create(EmployeeRequest request) {
     String email = request.email().trim().toLowerCase();
 
@@ -60,19 +61,19 @@ public class EmployeeService implements EmployeeCrudService {
 
     Employee employee = employeeRepository.save(EmployeeMapper.toEntity(request, salt, hash));
 
-    passwordNotifier.send(employee.getEmail(), password);
+    passwordNotifier.send(employee.getName(), employee.getEmail(), password, UserProfile.EMPLOYEE);
 
     return EmployeeMapper.toResponse(employee);
   }
 
-  @Transactional 
+  @Transactional
   public EmployeeResponse update(Long id, EmployeeRequest request) {
 
     Employee employeeToBeUpdated = employeeRepository.findById(id)
-                        .filter(Employee::isActive)
-                        .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado"));
+            .filter(Employee::isActive)
+            .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado"));
 
-    String email = request.email().trim().toLowerCase();                    
+    String email = request.email().trim().toLowerCase();
     Optional<User> user = userRepository.findByEmail(email);
 
     if (user.isPresent() && !user.get().getId().equals(id)) {
@@ -81,11 +82,11 @@ public class EmployeeService implements EmployeeCrudService {
 
     EmployeeMapper.updateEntity(employeeToBeUpdated, request);
     Employee employee = employeeRepository.save(employeeToBeUpdated);
-    
+
     return EmployeeMapper.toResponse(employee);
   }
 
-  @Transactional 
+  @Transactional
   public void deactivate(Long id, Long currentUserId) {
     if (id.equals(currentUserId)) {
       throw new IllegalStateException("Um funcionário não pode deletar a si mesmo.");

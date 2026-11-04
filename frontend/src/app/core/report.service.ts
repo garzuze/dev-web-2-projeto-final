@@ -15,6 +15,16 @@ export interface RevenueReport {
   total: number;
 }
 
+export interface CategoryRevenue {
+  name: string;
+  total: number;
+}
+
+export interface CategoryRevenueReport {
+  categories: CategoryRevenue[];
+  total: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ReportService {
   private readonly http = inject(HttpClient);
@@ -27,4 +37,9 @@ export class ReportService {
 
     return this.http.get<RevenueReport>(`${this.url}/revenue`, { params });
   }
+
+  revenueByCategory(): Observable<CategoryRevenueReport> {
+    return this.http.get<CategoryRevenueReport>(`${this.url}/revenue-by-category`);
+  }
+
 }
