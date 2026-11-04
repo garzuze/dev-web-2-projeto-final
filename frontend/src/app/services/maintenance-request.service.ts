@@ -14,9 +14,11 @@ export class MaintenanceRequestService {
   private readonly url = `${API_URL}/requests`;
   private readonly employeeUrl = `${API_URL}/employee/requests`;
 
-  getAllRequests(filterType: EmployeeRequestFilter = 'ALL',
+  getAllRequests(
+    filterType: EmployeeRequestFilter = 'ALL',
     startDate?: string,
-    endDate?: string): Observable<MaintenanceRequest[]> {
+    endDate?: string,
+  ): Observable<MaintenanceRequest[]> {
     let params = new HttpParams().set('filterType', filterType);
     if (filterType === 'PERIOD') {
       if (startDate) params = params.set('startDate', startDate);
@@ -68,10 +70,9 @@ export class MaintenanceRequestService {
     id: number,
     rejectionReason: string,
   ): Observable<MaintenanceRequest> {
-    return this.http.put<MaintenanceRequest>(
-      `${this.url}/${id}/reject`,
-      { rejectionReason },
-    );
+    return this.http.put<MaintenanceRequest>(`${this.url}/${id}/reject`, {
+      rejectionReason,
+    });
   }
 
   // Restaura uma requisição que tinha sido rejeitada anteriormente
