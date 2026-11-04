@@ -91,20 +91,22 @@ public class EmployeeService implements EmployeeCrudService {
     if (id.equals(currentUserId)) {
       throw new IllegalStateException("Um funcionário não pode deletar a si mesmo.");
     }
-
-    if (employeeRepository.countByActiveTrue() <= 1) {
-      throw new IllegalStateException("Não foi possível deletar esse usuário.");
-    }
-
+    
     deactivate(id);
   }
 
+  @Transactional
   @Override
   public void deactivate(Long id) {
+    if (employeeRepository.countByActiveTrue() <= 1) {
+      throw new IllegalStateException("Não foi possível deletar esse usuário.");
+    }
+    
     Employee deletedEmployee = employeeRepository.findById(id)
             .filter(Employee::isActive)
             .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado"));
 
     deletedEmployee.setActive(false);
+    employeeRepository.save(deletedEmployee);
   }
 }
