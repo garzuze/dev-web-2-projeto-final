@@ -1,6 +1,7 @@
 package br.ufpr.tads.manutencao.request.service;
 
 import br.ufpr.tads.manutencao.request.MaintenanceRequestMapper;
+import br.ufpr.tads.manutencao.request.dto.CreateRequestHistory;
 import br.ufpr.tads.manutencao.request.dto.MaintenanceRequestResponse;
 import br.ufpr.tads.manutencao.request.exception.InvalidRequestStatusException;
 import br.ufpr.tads.manutencao.request.exception.RequestNotFoundException;
@@ -58,7 +59,9 @@ public class MaintenanceRequestService {
 
     req.setStatus(RequestStatus.APROVADA);
 
-    historyService.register(req, RequestStatus.ORCADA, RequestStatus.APROVADA, req.getCustomer(), "Orçamento aprovado pelo cliente.");
+    CreateRequestHistory requestHistory = new CreateRequestHistory(req, RequestStatus.ORCADA, RequestStatus.APROVADA, req.getCustomer(), req.getEmployee(), "Orçamento aprovado pelo cliente.");
+    historyService.register(requestHistory);
+
     requestRepository.save(req);
     return MaintenanceRequestMapper.toResponse(req);
   }
@@ -74,7 +77,8 @@ public class MaintenanceRequestService {
     req.setStatus(RequestStatus.REJEITADA);
     req.setRejectionReason(reason);
 
-    historyService.register(req, RequestStatus.ORCADA, RequestStatus.REJEITADA, req.getCustomer(), "Serviço Rejeitado. Motivo: " + reason);
+    CreateRequestHistory requestHistory = new CreateRequestHistory(req, RequestStatus.ORCADA, RequestStatus.REJEITADA, req.getCustomer(), req.getEmployee(), "Serviço Rejeitado. Motivo: " + reason);
+    historyService.register(requestHistory);
     requestRepository.save(req);
     return MaintenanceRequestMapper.toResponse(req);
   }
@@ -87,7 +91,8 @@ public class MaintenanceRequestService {
     }
     req.setStatus(RequestStatus.APROVADA);
     req.setRejectionReason(null);
-    historyService.register(req, RequestStatus.REJEITADA, RequestStatus.APROVADA, req.getCustomer(), "Serviço resgatado e aprovado pelo cliente.");
+    CreateRequestHistory requestHistory = new CreateRequestHistory(req, RequestStatus.REJEITADA, RequestStatus.APROVADA, req.getCustomer(), req.getEmployee(),"Serviço resgatado e aprovado pelo cliente.");
+    historyService.register(requestHistory);
     requestRepository.save(req);
     return MaintenanceRequestMapper.toResponse(req);
   }
@@ -100,7 +105,8 @@ public class MaintenanceRequestService {
     }
     req.setStatus(RequestStatus.PAGA);
     req.setPaymentDateTime(LocalDateTime.now());
-    historyService.register(req, RequestStatus.ARRUMADA, RequestStatus.PAGA, req.getCustomer(), "Pagamento efetuado pelo cliente.");
+    CreateRequestHistory requestHistory = new CreateRequestHistory(req, RequestStatus.ARRUMADA, RequestStatus.PAGA, req.getCustomer(), req.getEmployee(), "Pagamento efetuado pelo cliente.");
+    historyService.register(requestHistory);
     requestRepository.save(req);
     return MaintenanceRequestMapper.toResponse(req);
 
@@ -135,7 +141,8 @@ public class MaintenanceRequestService {
     req.setStatus(RequestStatus.ORCADA);
     req.setQuoteValue(quoteValue);
     req.setEmployee(employee);
-    historyService.register(req, RequestStatus.ABERTA, RequestStatus.ORCADA, employee, "Orçamento realizado pelo funcionário.");
+    CreateRequestHistory requestHistory = new CreateRequestHistory(req, RequestStatus.ABERTA, RequestStatus.ORCADA, req.getCustomer(), employee, "Orçamento realizado pelo funcionário.");
+    historyService.register(requestHistory);
     requestRepository.save(req);
     return MaintenanceRequestMapper.toResponse(req);
   }
