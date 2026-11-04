@@ -59,7 +59,7 @@ public class MaintenanceRequestService {
 
     req.setStatus(RequestStatus.APROVADA);
 
-    CreateRequestHistory requestHistory = new CreateRequestHistory(req, RequestStatus.ORCADA, RequestStatus.APROVADA, req.getCustomer(), req.getEmployee(), "Orçamento aprovado pelo cliente.");
+    CreateRequestHistory requestHistory = new CreateRequestHistory(req, RequestStatus.ORCADA, RequestStatus.APROVADA, req.getCustomer(), null, "Orçamento aprovado pelo cliente.");
     historyService.register(requestHistory);
 
     requestRepository.save(req);
@@ -77,7 +77,7 @@ public class MaintenanceRequestService {
     req.setStatus(RequestStatus.REJEITADA);
     req.setRejectionReason(reason);
 
-    CreateRequestHistory requestHistory = new CreateRequestHistory(req, RequestStatus.ORCADA, RequestStatus.REJEITADA, req.getCustomer(), req.getEmployee(), "Serviço Rejeitado. Motivo: " + reason);
+    CreateRequestHistory requestHistory = new CreateRequestHistory(req, RequestStatus.ORCADA, RequestStatus.REJEITADA, req.getCustomer(), null, "Serviço Rejeitado. Motivo: " + reason);
     historyService.register(requestHistory);
     requestRepository.save(req);
     return MaintenanceRequestMapper.toResponse(req);
@@ -91,7 +91,7 @@ public class MaintenanceRequestService {
     }
     req.setStatus(RequestStatus.APROVADA);
     req.setRejectionReason(null);
-    CreateRequestHistory requestHistory = new CreateRequestHistory(req, RequestStatus.REJEITADA, RequestStatus.APROVADA, req.getCustomer(), req.getEmployee(),"Serviço resgatado e aprovado pelo cliente.");
+    CreateRequestHistory requestHistory = new CreateRequestHistory(req, RequestStatus.REJEITADA, RequestStatus.APROVADA, req.getCustomer(), null,"Serviço resgatado e aprovado pelo cliente.");
     historyService.register(requestHistory);
     requestRepository.save(req);
     return MaintenanceRequestMapper.toResponse(req);
@@ -105,7 +105,7 @@ public class MaintenanceRequestService {
     }
     req.setStatus(RequestStatus.PAGA);
     req.setPaymentDateTime(LocalDateTime.now());
-    CreateRequestHistory requestHistory = new CreateRequestHistory(req, RequestStatus.ARRUMADA, RequestStatus.PAGA, req.getCustomer(), req.getEmployee(), "Pagamento efetuado pelo cliente.");
+    CreateRequestHistory requestHistory = new CreateRequestHistory(req, RequestStatus.ARRUMADA, RequestStatus.PAGA, req.getCustomer(), null, "Pagamento efetuado pelo cliente.");
     historyService.register(requestHistory);
     requestRepository.save(req);
     return MaintenanceRequestMapper.toResponse(req);
@@ -141,7 +141,7 @@ public class MaintenanceRequestService {
     req.setStatus(RequestStatus.ORCADA);
     req.setQuoteValue(quoteValue);
     req.setEmployee(employee);
-    CreateRequestHistory requestHistory = new CreateRequestHistory(req, RequestStatus.ABERTA, RequestStatus.ORCADA, req.getCustomer(), employee, "Orçamento realizado pelo funcionário.");
+    CreateRequestHistory requestHistory = new CreateRequestHistory(req, RequestStatus.ABERTA, RequestStatus.ORCADA, employee, null, "Orçamento realizado pelo funcionário.");
     historyService.register(requestHistory);
     requestRepository.save(req);
     return MaintenanceRequestMapper.toResponse(req);
