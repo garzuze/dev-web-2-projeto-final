@@ -3,6 +3,7 @@ package br.ufpr.tads.manutencao.exception;
 import br.ufpr.tads.manutencao.auth.exception.CpfAlreadyUsedException;
 import br.ufpr.tads.manutencao.auth.exception.EmailAlreadyUsedException;
 import br.ufpr.tads.manutencao.auth.exception.InvalidCredentialsException;
+import br.ufpr.tads.manutencao.category.exception.CategoryAlreadyDefinedException;
 import br.ufpr.tads.manutencao.request.exception.InvalidRequestStatusException;
 import br.ufpr.tads.manutencao.request.exception.RequestNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,7 +20,8 @@ import java.util.Map;
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
-  @ExceptionHandler({EmailAlreadyUsedException.class, CpfAlreadyUsedException.class})
+  @ExceptionHandler({EmailAlreadyUsedException.class, CpfAlreadyUsedException.class,
+          CategoryAlreadyDefinedException.class})
   public ProblemDetail handleAlreadyUsed(RuntimeException exception) {
     return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, exception.getMessage());
   }
