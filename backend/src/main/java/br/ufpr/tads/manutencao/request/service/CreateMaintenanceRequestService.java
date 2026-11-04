@@ -4,6 +4,7 @@ import br.ufpr.tads.manutencao.category.model.Category;
 import br.ufpr.tads.manutencao.category.service.CategoryService;
 import br.ufpr.tads.manutencao.request.MaintenanceRequestMapper;
 import br.ufpr.tads.manutencao.request.dto.CreateRequest;
+import br.ufpr.tads.manutencao.request.dto.CreateRequestHistory;
 import br.ufpr.tads.manutencao.request.dto.MaintenanceRequestResponse;
 import br.ufpr.tads.manutencao.request.model.MaintenanceRequest;
 import br.ufpr.tads.manutencao.request.model.RequestStatus;
@@ -37,13 +38,18 @@ public class CreateMaintenanceRequestService {
 
     MaintenanceRequest maintenanceRequest = MaintenanceRequestMapper.fromCreateRequestToEntity(request, customer, category, RequestStatus.ABERTA);
 
-    historyService.register(maintenanceRequest,
+    CreateRequestHistory requestHistory = new CreateRequestHistory(
+            maintenanceRequest,
             null,
             RequestStatus.ABERTA,
             maintenanceRequest.getCustomer(),
-            "Solicitação aberta pelo cliente.");
+            null,
+            "Solicitação aberta pelo cliente."
+    );
 
+    historyService.register(requestHistory);
     requestRepository.save(maintenanceRequest);
+
     return MaintenanceRequestMapper.toResponse(maintenanceRequest);
   }
 }
