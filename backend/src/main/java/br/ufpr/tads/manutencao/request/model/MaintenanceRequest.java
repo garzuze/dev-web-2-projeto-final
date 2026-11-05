@@ -4,8 +4,7 @@ import br.ufpr.tads.manutencao.category.model.Category;
 import br.ufpr.tads.manutencao.user.model.Customer;
 import br.ufpr.tads.manutencao.user.model.Employee;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -16,6 +15,9 @@ import java.util.List;
 @Table(name = "maintenance_request")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class MaintenanceRequest {
 
   @Id
@@ -68,6 +70,10 @@ public class MaintenanceRequest {
 
   public void addHistory(RequestHistory h) {
     h.setRequest(this);
+    // TODO: investigar depois, acho que nao era para eu precisar fazer isso 😳
+    if (history == null) {
+      history = new ArrayList<>();
+    }
     history.add(h);
   }
 

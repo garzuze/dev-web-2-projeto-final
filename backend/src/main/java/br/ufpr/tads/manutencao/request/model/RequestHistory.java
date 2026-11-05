@@ -13,8 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -22,6 +21,9 @@ import java.time.LocalDateTime;
 @Table(name = "request_history")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class RequestHistory {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

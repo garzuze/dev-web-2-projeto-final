@@ -6,6 +6,7 @@ import br.ufpr.tads.manutencao.category.exception.CategoryAlreadyDefinedExceptio
 import br.ufpr.tads.manutencao.category.mapper.CategoryMapper;
 import br.ufpr.tads.manutencao.category.model.Category;
 import br.ufpr.tads.manutencao.category.repository.CategoryRepository;
+import br.ufpr.tads.manutencao.utils.CrudService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class CategoryService {
+public class CategoryService implements CrudService<CategoryRequest, CategoryResponse> {
 
   private final CategoryRepository categoryRepository;
 

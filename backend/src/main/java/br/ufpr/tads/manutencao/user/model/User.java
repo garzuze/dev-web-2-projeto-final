@@ -1,10 +1,7 @@
 package br.ufpr.tads.manutencao.user.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import lombok.Builder;

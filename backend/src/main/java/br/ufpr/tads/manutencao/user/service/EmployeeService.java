@@ -4,8 +4,10 @@ import br.ufpr.tads.manutencao.auth.dto.UserProfile;
 import br.ufpr.tads.manutencao.auth.exception.EmailAlreadyUsedException;
 import br.ufpr.tads.manutencao.auth.service.PasswordNotifier;
 import br.ufpr.tads.manutencao.auth.service.PasswordService;
+import br.ufpr.tads.manutencao.user.dto.EmployeeCrudService;
 import br.ufpr.tads.manutencao.user.dto.EmployeeRequest;
 import br.ufpr.tads.manutencao.user.dto.EmployeeResponse;
+import br.ufpr.tads.manutencao.user.mapper.EmployeeMapper;
 import br.ufpr.tads.manutencao.user.model.Employee;
 import br.ufpr.tads.manutencao.user.model.User;
 import br.ufpr.tads.manutencao.user.repository.EmployeeRepository;
@@ -20,7 +22,7 @@ import java.util.Optional;
 
 
 @Service
-public class EmployeeService {
+public class EmployeeService implements EmployeeCrudService {
 
   private final EmployeeRepository employeeRepository;
   private final UserRepository userRepository;
@@ -37,75 +39,74 @@ public class EmployeeService {
     this.passwordNotifier = passwordNotifier;
   }
 
-  @Transactional(readOnly = true) 
+  @Transactional(readOnly = true)
   public List<EmployeeResponse> list() {
     return employeeRepository.findByActiveTrueOrderByNameAsc()
-           .stream()
-           .map(EmployeeResponse::of)
-           .toList();
+            .stream()
+            .map(EmployeeMapper::toResponse)
+            .toList();
   }
 
-  @Transactional 
+  @Transactional
   public EmployeeResponse create(EmployeeRequest request) {
     String email = request.email().trim().toLowerCase();
+
     if (userRepository.existsByEmail(email)) {
       throw new EmailAlreadyUsedException(email);
     }
+
     String password = passwordService.generateNumericPassword();
     String salt = passwordService.generateSalt();
     String hash = passwordService.hash(password, salt);
 
-    Employee newEmployee = new Employee();
+    Employee employee = employeeRepository.save(EmployeeMapper.toEntity(request, salt, hash));
 
-    newEmployee.setName(request.name().trim());
-    newEmployee.setEmail(email);
-    newEmployee.setBirthDate(request.birthDate());
-    newEmployee.setSalt(salt);
-    newEmployee.setPasswordHash(hash);
+    passwordNotifier.send(employee.getName(), employee.getEmail(), password, UserProfile.EMPLOYEE);
 
-    Employee savedEmployee = employeeRepository.save(newEmployee);
-    passwordNotifier.send(savedEmployee.getName(), savedEmployee.getEmail(), password, UserProfile.EMPLOYEE);
-
-    return EmployeeResponse.of(savedEmployee);
+    return EmployeeMapper.toResponse(employee);
   }
 
-  @Transactional 
+  @Transactional
   public EmployeeResponse update(Long id, EmployeeRequest request) {
-    Employee updatedEmployee = employeeRepository.findById(id)
-                        .filter(Employee::isActive)
-                        .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado"));
 
-    String email = request.email().trim().toLowerCase();                    
+    Employee employeeToBeUpdated = employeeRepository.findById(id)
+            .filter(Employee::isActive)
+            .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado"));
+
+    String email = request.email().trim().toLowerCase();
     Optional<User> user = userRepository.findByEmail(email);
+
     if (user.isPresent() && !user.get().getId().equals(id)) {
       throw new EmailAlreadyUsedException(email);
     }
 
-    updatedEmployee.setName(request.name().trim());
-    updatedEmployee.setEmail(email);
-    updatedEmployee.setBirthDate(request.birthDate());
-    
-    employeeRepository.save(updatedEmployee);
-    
-    return EmployeeResponse.of(updatedEmployee);
+    EmployeeMapper.updateEntity(employeeToBeUpdated, request);
+    Employee employee = employeeRepository.save(employeeToBeUpdated);
+
+    return EmployeeMapper.toResponse(employee);
   }
 
-  @Transactional 
+  @Transactional
   public void deactivate(Long id, Long currentUserId) {
     if (id.equals(currentUserId)) {
-      throw new IllegalStateException("Um funcionário não pode deletar a si mesmo");
+      throw new IllegalStateException("Um funcionário não pode deletar a si mesmo.");
     }
-    //TODO: Yohan o ideal não seria melhor dar um retorno mais genérico, do que falar que tem apenas um usuário já que seria uma regra interna
-    if (employeeRepository.countByActiveTrue()<= 1) {
-      throw new IllegalStateException("Não é possivel remover o unico funcionário ativo do sistema");
-    }
-
-    Employee deletedEmployee = employeeRepository.findById(id)
-                               .filter(Employee::isActive)
-                               .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado"));
-
-    deletedEmployee.setActive(false);
-                
+    
+    deactivate(id);
   }
 
+  @Transactional
+  @Override
+  public void deactivate(Long id) {
+    if (employeeRepository.countByActiveTrue() <= 1) {
+      throw new IllegalStateException("Não foi possível deletar esse usuário.");
+    }
+    
+    Employee deletedEmployee = employeeRepository.findById(id)
+            .filter(Employee::isActive)
+            .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado"));
+
+    deletedEmployee.setActive(false);
+    employeeRepository.save(deletedEmployee);
+  }
 }
