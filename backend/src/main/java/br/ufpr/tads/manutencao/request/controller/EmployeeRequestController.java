@@ -1,7 +1,9 @@
 package br.ufpr.tads.manutencao.request.controller;
 
 import br.ufpr.tads.manutencao.request.dto.MaintenanceRequestResponse;
+import br.ufpr.tads.manutencao.request.dto.PerformMaintenanceRequest;
 import br.ufpr.tads.manutencao.request.dto.QuoteRequest;
+import br.ufpr.tads.manutencao.request.dto.RedirectRequest;
 import br.ufpr.tads.manutencao.request.service.MaintenanceRequestService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,5 +53,25 @@ public class EmployeeRequestController {
                                             @RequestHeader("X-Current-User-Id") Long employeeId,
                                             @Valid @RequestBody QuoteRequest request) {
         return maintenanceRequestService.quoteRequest(id, employeeId, request.quoteValue());
+    }
+
+    @PutMapping("/{id}/maintenance")
+    public MaintenanceRequestResponse performMaintenance(@PathVariable Long id,
+                                                         @RequestHeader("X-Current-User-Id") Long employeeId,
+                                                         @Valid @RequestBody PerformMaintenanceRequest request) {
+        return maintenanceRequestService.performMaintenance(id, employeeId, request.maintenanceDescription(), request.customerInstructions());
+    }
+
+    @PutMapping("/{id}/redirect")
+    public MaintenanceRequestResponse redirect(@PathVariable Long id,
+                                               @RequestHeader("X-Current-User-Id") Long employeeId,
+                                               @Valid @RequestBody RedirectRequest request) {
+        return maintenanceRequestService.redirectRequest(id, employeeId, request.destinationEmployeeId());
+    }
+
+    @PutMapping("/{id}/finish")
+    public MaintenanceRequestResponse finish(@PathVariable Long id,
+                                             @RequestHeader("X-Current-User-Id") Long employeeId) {
+        return maintenanceRequestService.finishRequest(id, employeeId);
     }
 }

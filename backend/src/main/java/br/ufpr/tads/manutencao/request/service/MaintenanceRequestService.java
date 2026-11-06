@@ -128,20 +128,85 @@ public class MaintenanceRequestService {
     return MaintenanceRequestMapper.toResponse(findForEmployee(id));
   }
 
+  private Employee findActiveEmployee(Long employeeId) {
+    return employeeRepository.findById(employeeId)
+            .filter(Employee::isActive)
+            .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado"));
+  }
+
+  private void validateCanWorkOn(MaintenanceRequest req, Employee employee) {
+    if (req.getStatus() != RequestStatus.APROVADA && req.getStatus() != RequestStatus.REDIRECIONADA) {
+      throw new InvalidRequestStatusException("Apenas serviços no estado APROVADA ou REDIRECIONADA podem receber manutenção.");
+    }
+    if (req.getStatus() == RequestStatus.REDIRECIONADA && !req.getEmployee().getId().equals(employee.getId())) {
+      throw new InvalidRequestStatusException("Este serviço foi redirecionado para outro funcionário.");
+    }
+  }
+
   @Transactional
   public MaintenanceRequestResponse quoteRequest(Long id, Long employeeId, BigDecimal quoteValue) {
     MaintenanceRequest req = findForEmployee(id);
     if (req.getStatus() != RequestStatus.ABERTA) {
       throw new InvalidRequestStatusException("Apenas serviços no estado ABERTA podem ser orçados.");
     }
-    Employee employee = employeeRepository.findById(employeeId)
-            .filter(Employee::isActive)
-            .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado"));
+    Employee employee = findActiveEmployee(employeeId);
 
     req.setStatus(RequestStatus.ORCADA);
     req.setQuoteValue(quoteValue);
     req.setEmployee(employee);
     CreateRequestHistory requestHistory = new CreateRequestHistory(req, RequestStatus.ABERTA, RequestStatus.ORCADA, employee, null, "Orçamento realizado pelo funcionário.");
+    historyService.register(requestHistory);
+    requestRepository.save(req);
+    return MaintenanceRequestMapper.toResponse(req);
+  }
+
+  @Transactional
+  public MaintenanceRequestResponse performMaintenance(Long id, Long employeeId, String maintenanceDescription, String customerInstructions) {
+    MaintenanceRequest req = findForEmployee(id);
+    Employee employee = findActiveEmployee(employeeId);
+    validateCanWorkOn(req, employee);
+
+    RequestStatus previousStatus = req.getStatus();
+    req.setStatus(RequestStatus.ARRUMADA);
+    req.setMaintenanceDescription(maintenanceDescription.trim());
+    req.setCustomerInstructions(customerInstructions.trim());
+    req.setEmployee(employee);
+    CreateRequestHistory requestHistory = new CreateRequestHistory(req, previousStatus, RequestStatus.ARRUMADA, employee, null, "Manutenção realizada pelo funcionário.");
+    historyService.register(requestHistory);
+    requestRepository.save(req);
+    return MaintenanceRequestMapper.toResponse(req);
+  }
+
+  @Transactional
+  public MaintenanceRequestResponse redirectRequest(Long id, Long employeeId, Long destinationEmployeeId) {
+    if (employeeId.equals(destinationEmployeeId)) {
+      throw new InvalidRequestStatusException("Não é possível redirecionar o serviço para si mesmo.");
+    }
+    MaintenanceRequest req = findForEmployee(id);
+    Employee employee = findActiveEmployee(employeeId);
+    validateCanWorkOn(req, employee);
+    Employee destination = findActiveEmployee(destinationEmployeeId);
+
+    RequestStatus previousStatus = req.getStatus();
+    req.setStatus(RequestStatus.REDIRECIONADA);
+    req.setEmployee(destination);
+    CreateRequestHistory requestHistory = new CreateRequestHistory(req, previousStatus, RequestStatus.REDIRECIONADA, employee, destination,
+            "Manutenção redirecionada de " + employee.getName() + " para " + destination.getName() + ".");
+    historyService.register(requestHistory);
+    requestRepository.save(req);
+    return MaintenanceRequestMapper.toResponse(req);
+  }
+
+  @Transactional
+  public MaintenanceRequestResponse finishRequest(Long id, Long employeeId) {
+    MaintenanceRequest req = findForEmployee(id);
+    if (req.getStatus() != RequestStatus.PAGA) {
+      throw new InvalidRequestStatusException("Apenas serviços no estado PAGA podem ser finalizados.");
+    }
+    Employee employee = findActiveEmployee(employeeId);
+
+    req.setStatus(RequestStatus.FINALIZADA);
+    CreateRequestHistory requestHistory = new CreateRequestHistory(req, RequestStatus.PAGA, RequestStatus.FINALIZADA, employee, null, "Solicitação finalizada pelo funcionário.");
     historyService.register(requestHistory);
     requestRepository.save(req);
     return MaintenanceRequestMapper.toResponse(req);
