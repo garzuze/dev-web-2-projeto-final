@@ -18,6 +18,7 @@ export interface MaintenanceRequest {
   // Cliente
   clientId: number;
   clientName: string;
+  clientDetails: ClientDetails | null;
 
   // Equipamento e Defeito
   categoryName: string;
@@ -60,4 +61,23 @@ export interface MaintenanceRequestHistory {
 
   // Informações Adicionais
   notes?: string;
+}
+
+export interface ClientAddress {
+  zipCode: string;
+  street: string;
+  number: string;
+  complement?: string | null;
+  district: string;
+  city: string;
+  state: string;
+}
+
+export interface ClientDetails {
+  id: number;
+  name: string;
+  email: string;
+  cpf: string;
+  phone: string;
+  address?: ClientAddress | null;
 }
