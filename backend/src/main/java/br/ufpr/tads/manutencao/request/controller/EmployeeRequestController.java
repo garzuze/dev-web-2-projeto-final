@@ -44,8 +44,8 @@ public class EmployeeRequestController {
     }
 
     @GetMapping("/{id}")
-    public MaintenanceRequestResponse findById(@PathVariable Long id) {
-        return maintenanceRequestService.findByIdForEmployee(id);
+    public MaintenanceRequestResponse findById(@PathVariable Long id, @RequestHeader ("X-Current-User-Id") Long employeeId) {
+        return maintenanceRequestService.findByIdForEmployee(id, employeeId);
     }
 
     @PutMapping("/{id}/quote")
