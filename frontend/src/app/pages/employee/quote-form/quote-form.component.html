@@ -10,9 +10,16 @@
   </div>
 
   @if (requestData) {
-    <app-request-details-card [requestData]="requestData">
+    <app-request-details-card
+      [requestData]="requestData"
+      [showClientDetails]="true"
+    >
       <div class="rounded-b-xl bg-white p-6">
-        <form [formGroup]="quoteForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6 max-w-md">
+        <form
+          [formGroup]="quoteForm"
+          (ngSubmit)="onSubmit()"
+          class="flex flex-col gap-6 max-w-md"
+        >
           <div class="flex flex-col gap-2">
             <label for="quoteValue" class="text-sm font-medium text-gray-700"
               >Valor Estimado do Serviço (R$)</label
@@ -30,15 +37,28 @@
             />
 
             @if (
-              quoteForm.get('quoteValue')?.touched &&
-              quoteForm.get('quoteValue')?.hasError('required')
+              quoteForm.get("quoteValue")?.touched &&
+              quoteForm.get("quoteValue")?.hasError("required")
             ) {
-              <p class="mt-1 text-sm text-red-500">O valor do orçamento é obrigatório.</p>
+              <p class="mt-1 text-sm text-red-500">
+                O valor do orçamento é obrigatório.
+              </p>
             }
             @if (
-              quoteForm.get('quoteValue')?.touched && quoteForm.get('quoteValue')?.hasError('min')
+              quoteForm.get("quoteValue")?.touched &&
+              quoteForm.get("quoteValue")?.hasError("min")
             ) {
-              <p class="mt-1 text-sm text-red-500">O valor mínimo permitido é R$ 0,01.</p>
+              <p class="mt-1 text-sm text-red-500">
+                O valor mínimo permitido é R$ 0,01.
+              </p>
+            }
+            @if (
+              quoteForm.get("quoteValue")?.touched &&
+              quoteForm.get("quoteValue")?.hasError("max")
+            ) {
+              <p class="mt-1 text-sm text-red-500">
+                O valor máximo permitido é R$ 99.999,99.
+              </p>
             }
           </div>
           <div class="flex justify-end gap-4">

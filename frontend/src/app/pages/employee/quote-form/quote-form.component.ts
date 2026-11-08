@@ -52,7 +52,10 @@ export class QuoteFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.quoteForm = this.fb.group({
-      quoteValue: [null, [Validators.required, Validators.min(0.01)]],
+      quoteValue: [
+        null,
+        [Validators.required, Validators.min(0.01), Validators.max(99999.99)],
+      ],
     });
 
     this.route.paramMap.subscribe((params) => {
