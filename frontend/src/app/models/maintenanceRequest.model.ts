@@ -18,7 +18,7 @@ export interface MaintenanceRequest {
   // Cliente
   clientId: number;
   clientName: string;
-  clientDetails: ClientDetails | null;
+  clientDetails?: ClientDetails | null;
 
   // Equipamento e Defeito
   categoryName: string;
