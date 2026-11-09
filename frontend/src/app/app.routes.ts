@@ -12,6 +12,7 @@ import { CategoriesComponent } from './pages/employee/categories';
 import { EmployeesComponent } from './pages/employee/employees';
 import { HomeEmployeeComponent } from './pages/employee/home';
 import { QuoteFormComponent } from './pages/employee/quote-form/quote-form.component';
+import { MaintenanceFormComponent } from './pages/employee/maintenance-form/maintenance-form.component';
 import { RequestListComponent } from './pages/employee/request-list/request-list.component';
 import { customerGuard } from './core/customer.guard';
 import { employeeGuard } from './core/employee.guard';
@@ -58,6 +59,11 @@ export const routes: Routes = [
   {
     path: 'employee/quote/:id',
     component: QuoteFormComponent,
+    canActivate: [employeeGuard],
+  },
+  {
+    path: 'employee/arranged/:id',
+    component: MaintenanceFormComponent,
     canActivate: [employeeGuard],
   },
   {
