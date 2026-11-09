@@ -46,6 +46,17 @@ export class MaintenanceRequestService {
       { quoteValue },
     );
   }
+  
+  // Redireciona a manutenção da solicitação para outro funcionário.
+  redirectRequest(
+    id: number,
+    destinationEmployeeId: number,
+  ): Observable<MaintenanceRequest> {
+    return this.http.put<MaintenanceRequest>(
+      `${this.employeeUrl}/${id}/redirect`,
+      { destinationEmployeeId },
+    );
+  }
 
   // Lista as solicitações do cliente logado, já ordenadas pelo backend
   getClientRequests(): Observable<MaintenanceRequest[]> {

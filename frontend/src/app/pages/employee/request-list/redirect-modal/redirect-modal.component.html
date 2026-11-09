@@ -1,0 +1,79 @@
+<app-modal-container>
+  <div class="flex flex-col gap-4">
+    <!-- Cabeçalho do modal com informações da solicitação -->
+    <div class="border-b border-gray-100 pb-3">
+      <h2 class="text-xl font-bold text-gray-900 md:text-2xl">
+        Redirecionar Manutenção
+      </h2>
+      @if (request) {
+        <p class="mt-1 text-sm text-gray-600">
+          Solicitação <strong>#{{ request.id }}</strong> — {{ request.equipmentDescription }}
+        </p>
+      }
+      <p class="mt-2 text-xs text-gray-500">
+        Caso não possa corrigir o problema, selecione outro funcionário na lista abaixo para assumir esta solicitação.
+      </p>
+    </div>
+
+    <!-- Caixa de seleção do funcionário de destino -->
+    <div class="flex flex-col gap-2">
+      <label for="destinationEmployee" class="text-sm font-medium text-gray-700">
+        Selecione o funcionário de destino: <span class="text-red-500">*</span>
+      </label>
+
+      @if (employees.length === 0) {
+        <div class="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+          <p class="font-semibold">Nenhum outro funcionário disponível</p>
+          <p class="mt-1">
+            Não há outros funcionários ativos cadastrados no sistema para onde redirecionar.
+          </p>
+        </div>
+      } @else {
+        <select
+          id="destinationEmployee"
+          name="destinationEmployee"
+          [(ngModel)]="selectedEmployeeId"
+          class="w-full rounded-lg border border-gray-300 p-3 text-sm text-gray-900 outline-none transition focus:border-purple-600 focus:ring-2 focus:ring-purple-200"
+        >
+          <option [ngValue]="null" disabled selected>
+            Selecione um funcionário...
+          </option>
+          @for (emp of employees; track emp.id) {
+            <option [ngValue]="emp.id">
+              {{ emp.name }} ({{ emp.email }})
+            </option>
+          }
+        </select>
+        <p class="text-xs text-gray-400">
+          * A solicitação passará para o estado <strong>REDIRECIONADA</strong> e ficará visível para o colega selecionado.
+        </p>
+      }
+    </div>
+
+    <!-- Botões de ação do rodapé -->
+    <div class="mt-3 flex justify-end gap-3 pt-2">
+      <button
+        type="button"
+        class="cursor-pointer rounded-lg border border-gray-300 px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+        [disabled]="isRedirecting"
+        (click)="cancel.emit()"
+      >
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        id="confirm-redirect-button"
+        class="cursor-pointer rounded-lg bg-purple-700 px-5 py-2 text-sm font-medium text-white transition hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-300 disabled:cursor-not-allowed disabled:bg-gray-300"
+        [disabled]="!selectedEmployeeId || isRedirecting || employees.length === 0"
+        (click)="confirm.emit(selectedEmployeeId!)"
+      >
+        @if (isRedirecting) {
+          Redirecionando...
+        } @else {
+          Confirmar Redirecionamento
+        }
+      </button>
+    </div>
+  </div>
+</app-modal-container>

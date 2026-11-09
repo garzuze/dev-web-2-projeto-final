@@ -17,15 +17,31 @@ import { RouterLink } from '@angular/router';
 import { EmployeeHeaderComponent } from '../../../components/employee-header/employee-header.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { problemMessage } from '../../../core/api';
+import { RedirectModalComponent } from './redirect-modal/redirect-modal.component';
+import { EmployeeService } from '../../../core/employee.service';
+import { AuthService } from '../../../core/auth.service';
+import { NotificationService } from '../../../services/notification.service';
+import { Employee } from '../../../models/employee.model';
+import { NotificationType } from '../../../models/notification.model';
 
 @Component({
-  imports: [FormsModule, CommonModule, RouterLink, EmployeeHeaderComponent],
+  imports: [
+    FormsModule,
+    CommonModule,
+    RouterLink,
+    EmployeeHeaderComponent,
+    RedirectModalComponent,
+  ],
   selector: 'app-request-list',
   styleUrl: './request-list.component.scss',
   templateUrl: './request-list.component.html',
 })
 export class RequestListComponent implements OnInit {
   private maintenanceRequestService = inject(MaintenanceRequestService);
+  private employeeService = inject(EmployeeService);
+  private authService = inject(AuthService);
+  private notificationService = inject(NotificationService);
+
   filter: EmployeeRequestFilter = 'ALL';
   filterDataStart: string = '';
   filterDataEnd: string = '';
@@ -34,6 +50,11 @@ export class RequestListComponent implements OnInit {
   readonly errorMessage = signal('');
   readonly dateError = signal('');
   readonly requestStatus = RequestStatus;
+
+  isRedirectModalOpen = false;
+  isRedirecting = false;
+  selectedRequestForRedirect: MaintenanceRequest | null = null;
+  availableEmployees: Employee[] = [];
 
   getStatusClass = getStatusClass;
   getStatusLabel = getStatusLabel;
@@ -85,5 +106,67 @@ export class RequestListComponent implements OnInit {
     }
     this.dateError.set('');
     this.loadRequests();
+  }
+
+  openRedirectModal(request: MaintenanceRequest): void {
+    this.selectedRequestForRedirect = request;
+    const currentUserId = this.authService.currentUser?.id;
+
+    this.employeeService.list().subscribe({
+      next: (employees) => {
+        this.availableEmployees = employees.filter(
+          (emp) => emp.id !== currentUserId,
+        );
+        this.isRedirectModalOpen = true;
+      },
+      error: () => {
+        this.notificationService.showNotification(
+          'Não foi possível carregar a lista de funcionários.',
+          NotificationType.error,
+        );
+      },
+    });
+  }
+
+  cancelRedirect(): void {
+    this.isRedirectModalOpen = false;
+    this.selectedRequestForRedirect = null;
+  }
+
+  confirmRedirect(destinationEmployeeId: number): void {
+    if (!this.selectedRequestForRedirect) return;
+
+    const requestId = this.selectedRequestForRedirect.id;
+    this.isRedirecting = true;
+
+    this.maintenanceRequestService
+      .redirectRequest(requestId, destinationEmployeeId)
+      .subscribe({
+        next: (updated) => {
+          this.isRedirecting = false;
+          this.isRedirectModalOpen = false;
+
+          const destEmployee = this.availableEmployees.find(
+            (e) => e.id === destinationEmployeeId,
+          );
+          const destName = destEmployee ? destEmployee.name : 'outro funcionário';
+
+          this.notificationService.showNotification(
+            `Solicitação #${updated.id} redirecionada com sucesso para ${destName}.`,
+            NotificationType.success,
+          );
+
+          this.selectedRequestForRedirect = null;
+          // Recarrega as solicitações para atualizar a tabela conforme filtros
+          this.loadRequests();
+        },
+        error: (err: HttpErrorResponse) => {
+          this.isRedirecting = false;
+          this.notificationService.showNotification(
+            problemMessage(err, 'Erro ao redirecionar a solicitação.'),
+            NotificationType.error,
+          );
+        },
+      });
   }
 }

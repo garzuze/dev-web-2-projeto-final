@@ -143,22 +143,42 @@
                       </button>
                     }
                     @case (requestStatus.Approved) {
-                      <button
-                        [routerLink]="['/employee/arranged', item.id]"
-                        type="button"
-                        class="cursor-pointer rounded-lg bg-gray-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300"
-                      >
-                        Efetuar Manutenção
-                      </button>
+                      <div class="flex flex-wrap gap-2">
+                        <button
+                          [routerLink]="['/employee/arranged', item.id]"
+                          type="button"
+                          class="cursor-pointer rounded-lg bg-gray-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                        >
+                          Efetuar Manutenção
+                        </button>
+                        <button
+                          type="button"
+                          (click)="openRedirectModal(item)"
+                          class="cursor-pointer rounded-lg bg-purple-700 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-300"
+                          title="Redirecionar para outro funcionário"
+                        >
+                          Redirecionar
+                        </button>
+                      </div>
                     }
                     @case (requestStatus.Redirected) {
-                      <button
-                        [routerLink]="['/employee/arranged', item.id]"
-                        type="button"
-                        class="cursor-pointer rounded-lg bg-gray-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300"
-                      >
-                        Efetuar Manutenção
-                      </button>
+                      <div class="flex flex-wrap gap-2">
+                        <button
+                          [routerLink]="['/employee/arranged', item.id]"
+                          type="button"
+                          class="cursor-pointer rounded-lg bg-gray-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                        >
+                          Efetuar Manutenção
+                        </button>
+                        <button
+                          type="button"
+                          (click)="openRedirectModal(item)"
+                          class="cursor-pointer rounded-lg bg-purple-700 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-300"
+                          title="Redirecionar para outro funcionário"
+                        >
+                          Redirecionar
+                        </button>
+                      </div>
                     }
                     @default {
                       <span class="text-sm text-gray-400"> Sem ação </span>
@@ -183,5 +203,15 @@
         </table>
       </div>
     </div>
+  }
+
+  @if (isRedirectModalOpen && selectedRequestForRedirect) {
+    <app-redirect-modal
+      [request]="selectedRequestForRedirect"
+      [employees]="availableEmployees"
+      [isRedirecting]="isRedirecting"
+      (cancel)="cancelRedirect()"
+      (confirm)="confirmRedirect($event)"
+    />
   }
 </div>
