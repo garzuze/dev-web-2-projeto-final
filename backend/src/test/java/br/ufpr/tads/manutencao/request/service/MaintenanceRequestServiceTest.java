@@ -6,6 +6,7 @@ import br.ufpr.tads.manutencao.request.exception.InvalidRequestStatusException;
 import br.ufpr.tads.manutencao.request.model.MaintenanceRequest;
 import br.ufpr.tads.manutencao.request.model.RequestHistory;
 import br.ufpr.tads.manutencao.request.model.RequestStatus;
+import br.ufpr.tads.manutencao.request.repository.AddressRepository;
 import br.ufpr.tads.manutencao.request.repository.MaintenanceRequestRepository;
 import br.ufpr.tads.manutencao.user.model.Customer;
 import br.ufpr.tads.manutencao.user.model.Employee;
@@ -24,8 +25,9 @@ class MaintenanceRequestServiceTest {
 
   private final MaintenanceRequestRepository requestRepository = mock(MaintenanceRequestRepository.class);
   private final EmployeeRepository employeeRepository = mock(EmployeeRepository.class);
-  private final MaintenanceRequestService service =
-          new MaintenanceRequestService(requestRepository, new RequestHistoryService(), employeeRepository);
+  private final AddressRepository addressRepository = mock(AddressRepository.class);
+  private final MaintenanceRequestService service = new MaintenanceRequestService(requestRepository,
+      new RequestHistoryService(), employeeRepository, addressRepository);
 
   private Employee maria;
   private Employee mario;
@@ -44,16 +46,16 @@ class MaintenanceRequestServiceTest {
 
   private MaintenanceRequest request(RequestStatus status, Employee employee) {
     MaintenanceRequest request = MaintenanceRequest.builder()
-            .id(10L)
-            .customer(Customer.builder().id(5L).name("João").build())
-            .category(Category.builder().id(1L).name("Notebook").build())
-            .status(status)
-            .employee(employee)
-            .equipmentDescription("Notebook Dell")
-            .defectDescription("Não liga")
-            .openingDateTime(LocalDateTime.now())
-            .history(new ArrayList<>())
-            .build();
+        .id(10L)
+        .customer(Customer.builder().id(5L).name("João").build())
+        .category(Category.builder().id(1L).name("Notebook").build())
+        .status(status)
+        .employee(employee)
+        .equipmentDescription("Notebook Dell")
+        .defectDescription("Não liga")
+        .openingDateTime(LocalDateTime.now())
+        .history(new ArrayList<>())
+        .build();
     when(requestRepository.findById(10L)).thenReturn(Optional.of(request));
     return request;
   }
@@ -66,7 +68,8 @@ class MaintenanceRequestServiceTest {
   void performMaintenanceOnApprovedRequestMovesItToFixed() {
     MaintenanceRequest request = request(RequestStatus.APROVADA, maria);
 
-    MaintenanceRequestResponse response = service.performMaintenance(10L, 2L, " Troca da fonte ", "Não deixar na tomada");
+    MaintenanceRequestResponse response = service.performMaintenance(10L, 2L, " Troca da fonte ",
+        "Não deixar na tomada");
 
     assertThat(response.statusName()).isEqualTo("ARRUMADA");
     assertThat(request.getMaintenanceDescription()).isEqualTo("Troca da fonte");
@@ -81,7 +84,7 @@ class MaintenanceRequestServiceTest {
     request(RequestStatus.REDIRECIONADA, mario);
 
     assertThatThrownBy(() -> service.performMaintenance(10L, 1L, "Troca da fonte", "Nada"))
-            .isInstanceOf(InvalidRequestStatusException.class);
+        .isInstanceOf(InvalidRequestStatusException.class);
   }
 
   @Test
@@ -89,7 +92,7 @@ class MaintenanceRequestServiceTest {
     request(RequestStatus.ABERTA, null);
 
     assertThatThrownBy(() -> service.performMaintenance(10L, 1L, "Troca da fonte", "Nada"))
-            .isInstanceOf(InvalidRequestStatusException.class);
+        .isInstanceOf(InvalidRequestStatusException.class);
   }
 
   @Test
@@ -119,7 +122,7 @@ class MaintenanceRequestServiceTest {
     request(RequestStatus.APROVADA, maria);
 
     assertThatThrownBy(() -> service.redirectRequest(10L, 1L, 1L))
-            .isInstanceOf(InvalidRequestStatusException.class);
+        .isInstanceOf(InvalidRequestStatusException.class);
   }
 
   @Test
@@ -133,6 +136,6 @@ class MaintenanceRequestServiceTest {
 
     request(RequestStatus.ARRUMADA, mario);
     assertThatThrownBy(() -> service.finishRequest(10L, 1L))
-            .isInstanceOf(InvalidRequestStatusException.class);
+        .isInstanceOf(InvalidRequestStatusException.class);
   }
 }

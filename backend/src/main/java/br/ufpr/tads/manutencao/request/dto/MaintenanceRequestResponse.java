@@ -20,6 +20,7 @@ public record MaintenanceRequestResponse(
     String maintenanceDescription,
     String clientInstructions,
     LocalDateTime paymentDateTime,
-    List<RequestHistoryResponse> history
+    List<RequestHistoryResponse> history,
+    CustomerDetailsResponse clientDetails
 ) {
 }

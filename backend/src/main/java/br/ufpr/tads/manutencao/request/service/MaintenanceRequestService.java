@@ -7,7 +7,9 @@ import br.ufpr.tads.manutencao.request.exception.InvalidRequestStatusException;
 import br.ufpr.tads.manutencao.request.exception.RequestNotFoundException;
 import br.ufpr.tads.manutencao.request.model.MaintenanceRequest;
 import br.ufpr.tads.manutencao.request.model.RequestStatus;
+import br.ufpr.tads.manutencao.request.repository.AddressRepository;
 import br.ufpr.tads.manutencao.request.repository.MaintenanceRequestRepository;
+import br.ufpr.tads.manutencao.user.model.Address;
 import br.ufpr.tads.manutencao.user.model.Employee;
 import br.ufpr.tads.manutencao.user.repository.EmployeeRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,12 +26,14 @@ public class MaintenanceRequestService {
   private final MaintenanceRequestRepository requestRepository;
   private final RequestHistoryService historyService;
   private final EmployeeRepository employeeRepository;
+  private final AddressRepository addressRepository;
 
   public MaintenanceRequestService(MaintenanceRequestRepository requestRepository, RequestHistoryService historyService,
-                                   EmployeeRepository employeeRepository) {
+                                   EmployeeRepository employeeRepository, AddressRepository addressRepository) {
     this.requestRepository = requestRepository;
     this.historyService = historyService;
     this.employeeRepository = employeeRepository;
+    this.addressRepository = addressRepository;
   }
 
   private MaintenanceRequest findAndValidateOwnership(Long requestId, Long customerId) {
@@ -124,8 +128,11 @@ public class MaintenanceRequestService {
   }
 
   @Transactional
-  public MaintenanceRequestResponse findByIdForEmployee(Long id) {
-    return MaintenanceRequestMapper.toResponse(findForEmployee(id));
+  public MaintenanceRequestResponse findByIdForEmployee(Long id, Long employeeId) {
+    findActiveEmployee(employeeId);
+    MaintenanceRequest req = findForEmployee(id);
+    Address address = req.getCustomer() != null ? addressRepository.findByCustomerId(req.getCustomer().getId()).orElse(null) : null;
+    return MaintenanceRequestMapper.toEmployeeDetailsResponse(req, address);
   }
 
   private Employee findActiveEmployee(Long employeeId) {

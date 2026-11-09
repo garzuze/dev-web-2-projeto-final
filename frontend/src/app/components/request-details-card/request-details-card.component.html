@@ -6,11 +6,13 @@
     <div>
       <p class="text-sm text-gray-500">Data de abertura:</p>
       <p class="mt-1 font-medium text-gray-900">
-        {{ requestData?.openingDateTime | date: 'dd/MM/yyyy HH:mm' }}
+        {{ requestData?.openingDateTime | date: "dd/MM/yyyy HH:mm" }}
       </p>
     </div>
     <div class="flex flex-wrap gap-2">
-      <span class="rounded-full bg-gray-200 px-3 py-1 text-sm font-medium text-primary-800">
+      <span
+        class="rounded-full bg-gray-200 px-3 py-1 text-sm font-medium text-primary-800"
+      >
         {{ requestData?.categoryName }}
       </span>
       <span
@@ -23,6 +25,86 @@
       </span>
     </div>
   </div>
+
+  <!-- Informações Detalhadas do Cliente -->
+  @if (showClientDetails && requestData?.clientDetails; as client) {
+    <div class="bg-gray-50 p-6 border-b-2 border-gray-200 border-dashed">
+      <div
+        class="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-3"
+      >
+        <h3 class="text-base md:text-sm font-bold text-gray-700 uppercase">
+          Dados do cliente
+        </h3>
+        <button
+          class="w-fit text-center px-3 py-1 rounded-2xl text-sm md:text-xs text-white font-semibold bg-gray-400 cursor-pointer"
+          type="button"
+          (click)="toggleSensitiveClientData()"
+        >
+          @if (showSensitiveClientData) {
+            Ocultar dados sensíveis
+          } @else {
+            Mostrar dados completos
+          }
+        </button>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-2">
+        <div>
+          <p class="mb-1 text-sm font-medium text-gray-500">Nome:</p>
+          <p class="text-base text-gray-900">
+            {{ client.name }}
+          </p>
+        </div>
+
+        <div>
+          <p class="mb-1 text-sm font-medium text-gray-500">Email:</p>
+          <p class="text-base text-gray-900">
+            {{ client.email }}
+          </p>
+        </div>
+
+        <div>
+          <p class="mb-1 text-sm font-medium text-gray-500">CPF:</p>
+          <p class="text-base text-gray-900">
+            @if (showSensitiveClientData) {
+              {{ client.cpf | mask: "000.000.000-00" }}
+            } @else {
+              {{ formatCPF(client.cpf) }}
+            }
+          </p>
+        </div>
+
+        <div>
+          <p class="mb-1 text-sm font-medium text-gray-500">Telefone:</p>
+          <p class="text-base text-gray-900">
+            {{ client.phone || "" | mask: "(00) 0000-0000||(00) 00000-0000" }}
+          </p>
+        </div>
+
+        @if (client.address; as addr) {
+          <div class="md:col-span-2">
+            @if (!showSensitiveClientData) {
+              <p class="mb-1 text-sm font-medium text-gray-500">Localização:</p>
+              <p class="text-base text-gray-900">
+                {{ addr.city }} / {{ addr.state }}
+              </p>
+            } @else {
+              <p class="mb-1 text-sm font-medium text-gray-500">Endereço:</p>
+              <p class="text-base text-gray-900">
+                {{ addr.street }}, {{ addr.number }}
+                @if (addr.complement) {
+                  - {{ addr.complement }}
+                }
+                - {{ addr.district }} - {{ addr.zipCode | mask: "00000-000" }} -
+                {{ addr.city }} /
+                {{ addr.state }}
+              </p>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
 
   <!-- Informações Equipamento e defeito -->
   <div class="grid border-b-2 border-gray-200 gap-6 p-6 md:grid-cols-2">
@@ -43,7 +125,9 @@
   <!-- Funcionário atualmente responsável -->
   @if (requestData?.currentEmployeeName) {
     <div class="border-b-2 border-gray-200 p-6">
-      <p class="mb-2 text-sm font-medium text-gray-500">Funcionário responsável:</p>
+      <p class="mb-2 text-sm font-medium text-gray-500">
+        Funcionário responsável:
+      </p>
       <p class="text-base leading-relaxed text-gray-900">
         {{ requestData?.currentEmployeeName }}
       </p>
@@ -70,7 +154,7 @@
           <p class="text-sm text-gray-400">Valor estimado para o serviço</p>
         </div>
         <p class="text-2xl font-extrabold text-primary-800">
-          {{ requestData?.quoteValue | currency: 'BRL' }}
+          {{ requestData?.quoteValue | currency: "BRL" }}
         </p>
       </div>
     </div>
@@ -96,15 +180,19 @@
     <div class="grid gap-4 border-b-2 border-gray-200 p-6 md:grid-cols-2">
       @if (requestData?.maintenanceDateTime) {
         <div>
-          <p class="mb-2 text-sm font-medium text-gray-500">Data/hora da manutenção:</p>
+          <p class="mb-2 text-sm font-medium text-gray-500">
+            Data/hora da manutenção:
+          </p>
           <p class="text-base leading-relaxed text-gray-900">
-            {{ requestData?.maintenanceDateTime | date: 'dd/MM/yyyy HH:mm' }}
+            {{ requestData?.maintenanceDateTime | date: "dd/MM/yyyy HH:mm" }}
           </p>
         </div>
       }
       @if (requestData?.maintenanceEmployeeName) {
         <div>
-          <p class="mb-2 text-sm font-medium text-gray-500">Funcionário da manutenção:</p>
+          <p class="mb-2 text-sm font-medium text-gray-500">
+            Funcionário da manutenção:
+          </p>
           <p class="text-base leading-relaxed text-gray-900">
             {{ requestData?.maintenanceEmployeeName }}
           </p>
@@ -112,7 +200,9 @@
       }
       @if (requestData?.maintenanceDescription) {
         <div class="md:col-span-2">
-          <p class="mb-2 text-sm font-medium text-gray-500">Descrição da manutenção:</p>
+          <p class="mb-2 text-sm font-medium text-gray-500">
+            Descrição da manutenção:
+          </p>
           <p class="text-base leading-relaxed text-gray-900">
             {{ requestData?.maintenanceDescription }}
           </p>
@@ -120,7 +210,9 @@
       }
       @if (requestData?.clientInstructions) {
         <div class="md:col-span-2">
-          <p class="mb-2 text-sm font-medium text-gray-500">Orientações ao cliente:</p>
+          <p class="mb-2 text-sm font-medium text-gray-500">
+            Orientações ao cliente:
+          </p>
           <p class="text-base leading-relaxed text-gray-900">
             {{ requestData?.clientInstructions }}
           </p>
@@ -135,20 +227,26 @@
     requestData?.completionDateTime ||
     requestData?.completionEmployeeName
   ) {
-    <div class="grid gap-4 border-b-2 border-gray-200 bg-gray-50 p-6 md:grid-cols-2">
+    <div
+      class="grid gap-4 border-b-2 border-gray-200 bg-gray-50 p-6 md:grid-cols-2"
+    >
       @if (requestData?.paymentDateTime) {
         <div>
-          <p class="mb-2 text-sm font-medium text-gray-500">Data do pagamento:</p>
+          <p class="mb-2 text-sm font-medium text-gray-500">
+            Data do pagamento:
+          </p>
           <p class="text-base leading-relaxed text-gray-900">
-            {{ requestData?.paymentDateTime | date: 'dd/MM/yyyy HH:mm' }}
+            {{ requestData?.paymentDateTime | date: "dd/MM/yyyy HH:mm" }}
           </p>
         </div>
       }
       @if (requestData?.completionDateTime) {
         <div>
-          <p class="mb-2 text-sm font-medium text-gray-500">Data de finalização:</p>
+          <p class="mb-2 text-sm font-medium text-gray-500">
+            Data de finalização:
+          </p>
           <p class="text-base leading-relaxed text-gray-900">
-            {{ requestData?.completionDateTime | date: 'dd/MM/yyyy HH:mm' }}
+            {{ requestData?.completionDateTime | date: "dd/MM/yyyy HH:mm" }}
           </p>
         </div>
       }
@@ -165,13 +263,18 @@
 
   <!-- Área de Histórico -->
   @if (requestData?.history && requestData!.history.length > 0) {
-    <div class="bg-gray-50 p-6 rounded-b-xl border-b-2 border-gray-200 border-dashed">
-      <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-3">
+    <div
+      class="bg-gray-50 p-6 rounded-b-xl border-b-2 border-gray-200 border-dashed"
+    >
+      <div
+        class="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-3"
+      >
         <h3 class="text-base md:text-sm font-bold text-gray-700 uppercase">
           Histórico da Solicitação
         </h3>
         <button
           class="w-fit text-center px-3 py-1 rounded-2xl text-sm md:text-xs text-white font-semibold bg-gray-400 cursor-pointer"
+          type="button"
           (click)="toggleHistory()"
         >
           @if (showHistory) {
