@@ -1,0 +1,154 @@
+<app-employee-header></app-employee-header>
+
+<div class="container py-8 md:py-12">
+  @if (requestData(); as request) {
+    <div class="mb-8">
+      <h1 class="mb-2 text-3xl font-extrabold text-gray-900 md:text-4xl">
+        Efetuar Manutenção #{{ request.id }}
+      </h1>
+    </div>
+
+    <!-- Dados do cliente -->
+    <div class="mb-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <p class="text-sm font-medium text-gray-500">Cliente:</p>
+      <p class="mt-1 text-base text-gray-900">{{ request.clientName }}</p>
+    </div>
+
+    <app-request-details-card [requestData]="request">
+      <div class="rounded-b-xl bg-white p-6">
+        <form
+          [formGroup]="form"
+          (ngSubmit)="submit()"
+          class="flex max-w-2xl flex-col gap-6"
+        >
+          <div class="flex flex-col gap-2">
+            <label
+              for="maintenanceDescription"
+              class="text-sm font-medium text-gray-700"
+            >
+              Descrição da manutenção
+            </label>
+            <textarea
+              id="maintenanceDescription"
+              formControlName="maintenanceDescription"
+              rows="4"
+              [maxlength]="textMaxLength"
+              placeholder="Descreva o serviço realizado no equipamento"
+              class="w-full rounded-lg border border-gray-300 p-3 text-gray-900 outline-none transition focus:border-primary-800 focus:ring-2 focus:ring-primary-800/20"
+            ></textarea>
+            <p class="text-right text-xs text-gray-400">
+              {{ maintenanceDescription.value.length }}/{{ textMaxLength }}
+              caracteres
+            </p>
+            @if (showError(maintenanceDescription)) {
+              <p class="text-sm text-red-700" role="alert">
+                @if (
+                  maintenanceDescription.hasError("required") ||
+                  maintenanceDescription.hasError("pattern")
+                ) {
+                  A descrição da manutenção é obrigatória.
+                } @else {
+                  A descrição da manutenção deve ter no máximo
+                  {{ textMaxLength }} caracteres.
+                }
+              </p>
+            }
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label
+              for="customerInstructions"
+              class="text-sm font-medium text-gray-700"
+            >
+              Orientações para o cliente
+            </label>
+            <textarea
+              id="customerInstructions"
+              formControlName="customerInstructions"
+              rows="4"
+              [maxlength]="textMaxLength"
+              placeholder="Informe ao cliente o que ele precisa saber (cuidados, uso, garantia...)"
+              class="w-full rounded-lg border border-gray-300 p-3 text-gray-900 outline-none transition focus:border-primary-800 focus:ring-2 focus:ring-primary-800/20"
+            ></textarea>
+            <p class="text-right text-xs text-gray-400">
+              {{ customerInstructions.value.length }}/{{ textMaxLength }}
+              caracteres
+            </p>
+            @if (showError(customerInstructions)) {
+              <p class="text-sm text-red-700" role="alert">
+                @if (
+                  customerInstructions.hasError("required") ||
+                  customerInstructions.hasError("pattern")
+                ) {
+                  As orientações para o cliente são obrigatórias.
+                } @else {
+                  As orientações para o cliente devem ter no máximo
+                  {{ textMaxLength }} caracteres.
+                }
+              </p>
+            }
+          </div>
+
+          <p class="text-sm text-gray-500">
+            Ao registrar, a solicitação passa para o estado
+            <strong>Arrumada</strong>. A data/hora e o funcionário que fez a
+            manutenção são registrados automaticamente. Se não puder corrigir o
+            problema, redirecione a manutenção para outro funcionário.
+          </p>
+
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <button
+              type="button"
+              (click)="openRedirectModal()"
+              [disabled]="loadingEmployees() || submitting()"
+              class="cursor-pointer rounded-lg bg-purple-700 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-300 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              @if (loadingEmployees()) {
+                Carregando funcionários...
+              } @else {
+                Redirecionar Manutenção
+              }
+            </button>
+
+            <div class="flex gap-4">
+              <button
+                type="button"
+                (click)="cancel()"
+                class="cursor-pointer rounded-lg border border-gray-300 px-5 py-2 font-medium text-gray-700 transition hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-50"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                [disabled]="submitting() || redirecting()"
+                class="cursor-pointer rounded-lg bg-gray-500 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                @if (submitting()) {
+                  Registrando...
+                } @else {
+                  Registrar Manutenção
+                }
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </app-request-details-card>
+
+    @if (redirectModalOpen()) {
+      <app-redirect-modal
+        [request]="request"
+        [employees]="availableEmployees()"
+        [isRedirecting]="redirecting()"
+        (cancel)="closeRedirectModal()"
+        (confirm)="confirmRedirect($event)"
+      />
+    }
+  } @else {
+    <div
+      class="rounded-xl border border-gray-200 bg-white p-10 text-center text-gray-500 shadow-sm"
+    >
+      Carregando solicitação...
+    </div>
+  }
+</div>

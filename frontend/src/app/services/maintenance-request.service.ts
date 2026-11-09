@@ -46,6 +46,19 @@ export class MaintenanceRequestService {
       { quoteValue },
     );
   }
+
+  // Funcionário registra a manutenção feita (RF014) e a solicitação vai para
+  // ARRUMADA. A API recebe "customerInstructions", mas devolve "clientInstructions".
+  performMaintenance(
+    id: number,
+    maintenanceDescription: string,
+    customerInstructions: string,
+  ): Observable<MaintenanceRequest> {
+    return this.http.put<MaintenanceRequest>(
+      `${this.employeeUrl}/${id}/maintenance`,
+      { maintenanceDescription, customerInstructions },
+    );
+  }
   
   // Redireciona a manutenção da solicitação para outro funcionário.
   redirectRequest(
