@@ -1,11 +1,6 @@
 package br.ufpr.tads.manutencao.auth.controller;
 
-import br.ufpr.tads.manutencao.auth.dto.LoginRequest;
-import br.ufpr.tads.manutencao.auth.dto.LoginResponse;
-import br.ufpr.tads.manutencao.auth.dto.SignUpRequest;
-import br.ufpr.tads.manutencao.auth.dto.SignUpResponse;
-import br.ufpr.tads.manutencao.auth.service.LoginService;
-import br.ufpr.tads.manutencao.auth.service.SignUpService;
+import br.ufpr.tads.manutencao.auth.dto.*;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +9,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-  private final SignUpService signUpService;
-  private final LoginService loginService;
+  private final RegisterService signUpService;
+  private final AuthService loginService;
 
-  public AuthController(SignUpService signUpService, LoginService loginService) {
+  public AuthController(RegisterService signUpService, AuthService loginService) {
     this.signUpService = signUpService;
     this.loginService = loginService;
   }
