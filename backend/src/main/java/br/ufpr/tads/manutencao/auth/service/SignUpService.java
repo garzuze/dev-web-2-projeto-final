@@ -1,5 +1,6 @@
 package br.ufpr.tads.manutencao.auth.service;
 
+import br.ufpr.tads.manutencao.auth.dto.RegisterService;
 import br.ufpr.tads.manutencao.auth.dto.SignUpRequest;
 import br.ufpr.tads.manutencao.auth.dto.SignUpResponse;
 import br.ufpr.tads.manutencao.auth.dto.UserProfile;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class SignUpService {
+public class SignUpService implements RegisterService {
 
   private final UserRepository userRepository;
   private final CustomerRepository customerRepository;
