@@ -31,19 +31,19 @@ public class MaintenanceRequestMapper {
   }
 
   // Poderia ser um overload de toResponse, mas para ficar mais claro o que faz escolhi manter nomes diferentes
-  public static MaintenanceRequestResponse toEmployeeDetailsResponse(MaintenanceRequest request, Address adress) {
+  public static MaintenanceRequestResponse toEmployeeDetailsResponse(MaintenanceRequest request, Address address) {
     Customer customer = request.getCustomer();
     CustomerDetailsResponse clientDetails = null;
 
     if (customer != null) {
-      CustomerDetailsResponse.AddressInfo addressInfo = adress != null ? new CustomerDetailsResponse.AddressInfo(
-          adress.getZipCode(),
-          adress.getStreet(),
-          adress.getNumber(),
-          adress.getComplement(),
-          adress.getDistrict(),
-          adress.getCity(),
-          adress.getState()) : null;
+      CustomerDetailsResponse.AddressInfo addressInfo = address != null ? new CustomerDetailsResponse.AddressInfo(
+          address.getZipCode(),
+          address.getStreet(),
+          address.getNumber(),
+          address.getComplement(),
+          address.getDistrict(),
+          address.getCity(),
+          address.getState()) : null;
 
       clientDetails = new CustomerDetailsResponse(
           customer.getId(),
