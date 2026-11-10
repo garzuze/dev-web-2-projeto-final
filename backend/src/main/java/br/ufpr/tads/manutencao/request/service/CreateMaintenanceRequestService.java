@@ -2,7 +2,7 @@ package br.ufpr.tads.manutencao.request.service;
 
 import br.ufpr.tads.manutencao.category.model.Category;
 import br.ufpr.tads.manutencao.category.service.CategoryService;
-import br.ufpr.tads.manutencao.request.MaintenanceRequestMapper;
+import br.ufpr.tads.manutencao.request.mapper.MaintenanceRequestMapper;
 import br.ufpr.tads.manutencao.request.dto.CreateRequest;
 import br.ufpr.tads.manutencao.request.dto.CreateRequestHistory;
 import br.ufpr.tads.manutencao.request.dto.MaintenanceRequestResponse;

@@ -3,7 +3,7 @@ package br.ufpr.tads.manutencao.utils;
 import br.ufpr.tads.manutencao.auth.service.PasswordService;
 import br.ufpr.tads.manutencao.category.model.Category;
 import br.ufpr.tads.manutencao.category.repository.CategoryRepository;
-import br.ufpr.tads.manutencao.request.MaintenanceRequestMapper;
+import br.ufpr.tads.manutencao.request.mapper.MaintenanceRequestMapper;
 import br.ufpr.tads.manutencao.request.dto.CreateRequestHistory;
 import br.ufpr.tads.manutencao.request.model.MaintenanceRequest;
 import br.ufpr.tads.manutencao.request.repository.AddressRepository;

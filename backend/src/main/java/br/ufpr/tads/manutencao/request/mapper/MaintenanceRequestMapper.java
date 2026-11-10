@@ -1,4 +1,4 @@
-package br.ufpr.tads.manutencao.request;
+package br.ufpr.tads.manutencao.request.mapper;
 
 import br.ufpr.tads.manutencao.category.model.Category;
 import br.ufpr.tads.manutencao.request.dto.CreateRequest;
