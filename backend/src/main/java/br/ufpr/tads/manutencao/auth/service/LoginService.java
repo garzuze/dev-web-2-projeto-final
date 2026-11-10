@@ -1,5 +1,6 @@
 package br.ufpr.tads.manutencao.auth.service;
 
+import br.ufpr.tads.manutencao.auth.dto.AuthService;
 import br.ufpr.tads.manutencao.auth.dto.LoginRequest;
 import br.ufpr.tads.manutencao.auth.dto.LoginResponse;
 import br.ufpr.tads.manutencao.auth.dto.UserProfile;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class LoginService {
+public class LoginService implements AuthService {
 
   private final UserRepository userRepository;
   private final PasswordService passwordService;
