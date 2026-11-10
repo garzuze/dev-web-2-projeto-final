@@ -16,13 +16,19 @@ import java.time.LocalDateTime;
 public class MaintenanceRequestMapper {
   public static MaintenanceRequest fromCreateRequestToEntity(CreateRequest request, Customer customer,
       Category category, RequestStatus status) {
+    return toEntity(customer, category, request.equipmentDescription(), request.defectDescription(), status,
+        LocalDateTime.now());
+  }
+
+  public static MaintenanceRequest toEntity(Customer customer, Category category, String equipmentDescription,
+      String defectDescription, RequestStatus status, LocalDateTime openingDateTime) {
     return MaintenanceRequest.builder()
         .customer(customer)
         .category(category)
         .status(status)
-        .equipmentDescription(request.equipmentDescription().trim())
-        .defectDescription(request.defectDescription().trim())
-        .openingDateTime(LocalDateTime.now())
+        .equipmentDescription(equipmentDescription.trim())
+        .defectDescription(defectDescription.trim())
+        .openingDateTime(openingDateTime)
         .build();
   }
 
