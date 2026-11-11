@@ -51,7 +51,7 @@ export class CategoriesComponent implements OnInit {
       error: () => {
         this.loading.set(false);
         this.notifications.showNotification(
-          'Nao foi possivel carregar as categorias.',
+          'Não foi possível carregar as categorias.',
           NotificationType.error,
         );
       },
@@ -111,7 +111,7 @@ export class CategoriesComponent implements OnInit {
         this.isRemoving = false;
         this.removing = null;
         this.notifications.showNotification(
-          'Nao foi possivel remover a categoria.',
+          'Não foi possível remover a categoria.',
           NotificationType.error,
         );
       },
