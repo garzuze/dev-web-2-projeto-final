@@ -71,8 +71,6 @@ export class MaintenanceRequestService {
     );
   }
 
-  // Funcionário finaliza a solicitação PAGA (RF016). Quem finalizou e quando
-  // ficam no histórico, gravados pelo backend.
   finishRequest(id: number): Observable<MaintenanceRequest> {
     return this.http.put<MaintenanceRequest>(
       `${this.employeeUrl}/${id}/finish`,
