@@ -1,4 +1,10 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
 
 import { Category, CategoryService } from '../../../core/category.service';
 import { ConfirmDialogComponent } from '../../../components/confirm-dialog/confirm-dialog.component';
@@ -15,6 +21,7 @@ import { EmployeeHeaderComponent } from '../../../components/employee-header/emp
   ],
   selector: 'app-categories',
   templateUrl: './categories.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class CategoriesComponent implements OnInit {
   private readonly categoryService = inject(CategoryService);
