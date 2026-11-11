@@ -64,6 +64,10 @@ public class MaintenanceRequest {
   @Column(name = "payment_date_time")
   private LocalDateTime paymentDateTime;
 
+  @Version
+  @Column(nullable = false)
+  private Long version;
+
   @OrderBy("dateTime ASC")
   @OneToMany(mappedBy = "request", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<RequestHistory> history = new ArrayList<>();

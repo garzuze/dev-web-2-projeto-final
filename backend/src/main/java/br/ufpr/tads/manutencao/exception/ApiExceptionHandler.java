@@ -8,8 +8,10 @@ import br.ufpr.tads.manutencao.report.exception.InvalidPeriodException;
 import br.ufpr.tads.manutencao.request.exception.InvalidRequestStatusException;
 import br.ufpr.tads.manutencao.request.exception.RequestNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.OptimisticLockException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,6 +42,12 @@ public class ApiExceptionHandler {
   @ExceptionHandler(IllegalStateException.class)
   public ProblemDetail handleConflict(IllegalStateException exception) {
     return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, exception.getMessage());
+  }
+
+  @ExceptionHandler({ObjectOptimisticLockingFailureException.class, OptimisticLockException.class})
+  public ProblemDetail handleConcurrentUpdate(RuntimeException exception) {
+    return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT,
+            "A solicitação foi alterada por outra pessoa. Atualize a página e tente de novo.");
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
