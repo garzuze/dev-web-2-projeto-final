@@ -75,7 +75,7 @@
             <label class="block mb-1 text-sm font-medium text-gray-700" for="email">
               E-mail <span class="text-red-500">*</span>
             </label>
-            <input type="email" id="email" name="email" placeholder="unoRebaixado@exemplo.com" formControlName="email"
+            <input type="email" id="email" name="email" placeholder="unoRebaixado@exemplo.com" formControlName="email" maxlength="150"
                    class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
             @if (f.email.touched && f.email.invalid) {
               <p class="mb-2 text-sm text-red-700" role="alert">
@@ -125,7 +125,7 @@
             <label class="block mb-1 text-sm font-medium text-gray-700" for="cidade">
               Cidade <span class="text-red-500">*</span>
             </label>
-            <input type="text" id="cidade" name="cidade" placeholder="Curitiba" formControlName="cidade"
+            <input type="text" id="cidade" name="cidade" placeholder="Curitiba" formControlName="cidade" maxlength="80"
                    class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:bg-white
                 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
             @if (f.cidade.touched && f.cidade.invalid) {
@@ -138,7 +138,7 @@
             <label class="block mb-1 text-sm font-medium text-gray-700" for="bairro">
               Bairro <span class="text-red-500">*</span>
             </label>
-            <input type="text" id="bairro" name="bairro" placeholder="Cajurururururu" formControlName="bairro"
+            <input type="text" id="bairro" name="bairro" placeholder="Cajurururururu" formControlName="bairro" maxlength="80"
                    class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:bg-white
                 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
             @if (f.bairro.touched && f.bairro.invalid) {
@@ -151,7 +151,7 @@
             <label class="block mb-1 text-sm font-medium text-gray-700" for="rua">
               Rua / Endereço <span class="text-red-500">*</span>
             </label>
-            <input type="text" id="rua" name="rua" placeholder="Rua dos bruxao loco" formControlName="street"
+            <input type="text" id="rua" name="rua" placeholder="Rua dos bruxao loco" formControlName="street" maxlength="150"
                    class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:bg-white
                 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
             @if (f.street.touched && f.street.invalid) {
@@ -164,7 +164,7 @@
             <label class="block mb-1 text-sm font-medium text-gray-700" for="numero">
               Número <span class="text-red-500">*</span>
             </label>
-            <input type="text" id="numero" name="numero" placeholder="1001" formControlName="numero"
+            <input type="text" id="numero" name="numero" placeholder="1001" formControlName="numero" maxlength="10"
                    class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:bg-white focus:ring-
                 2 focus:ring-blue-500 focus:outline-none transition">
             @if (f.numero.touched && f.numero.invalid) {
@@ -176,7 +176,7 @@
           <div class="md:col-span-3">
             <label class="block mb-1 text-sm font-medium text-gray-700" for="complemento">Complemento (opcional)</label>
             <input type="text" id="complemento" name="complemento" placeholder=" ex: do lado do pe de manga"
-                   formControlName="complemento"
+                   formControlName="complemento" maxlength="60"
                    class="w-full px-3.5 py-2 text-sm bg-gray-50 border border-gray-300
                 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
           </div>

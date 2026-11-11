@@ -8,6 +8,7 @@ import { NotificationService } from '../services/notification.service';
 import { NotificationType } from '../models/notification.model';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { cpfValidator } from '../shared/validators/cpfValidator.validator';
+import { problemMessage } from '../core/api';
 
 @Component({
   imports: [RouterLink, ReactiveFormsModule, Header, NgxMaskDirective],
@@ -44,14 +45,14 @@ export class SelfRegister {
       [Validators.required, cpfValidator]
     ],
     phone: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
+    email: ['', [Validators.required, Validators.email, Validators.maxLength(150)]],
     cep: ['', Validators.required],
     estado: ['', Validators.required],
-    cidade: ['', Validators.required],
-    bairro: ['', Validators.required],
-    street: ['', Validators.required],
-    numero: ['', Validators.required],
-    complemento: [''],
+    cidade: ['', [Validators.required, Validators.maxLength(80)]],
+    bairro: ['', [Validators.required, Validators.maxLength(80)]],
+    street: ['', [Validators.required, Validators.maxLength(150)]],
+    numero: ['', [Validators.required, Validators.maxLength(10)]],
+    complemento: ['', Validators.maxLength(60)],
   });
 
   buscaCep() {
@@ -128,7 +129,7 @@ export class SelfRegister {
      error: (erro) => {
         console.error('Erro ao cadastrar:', erro);
         this.notificationService.showNotification(
-          'Erro ao realizar cadastro. Verifique se o CPF ou e-mail já estão cadastrados.',
+          problemMessage(erro, 'Não foi possível realizar o cadastro.'),
           NotificationType.error,
         );
       },
