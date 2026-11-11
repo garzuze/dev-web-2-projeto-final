@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   MaintenanceRequest,
@@ -37,6 +43,7 @@ import { NotificationType } from '../../../models/notification.model';
   selector: 'app-request-list',
   styleUrl: './request-list.component.scss',
   templateUrl: './request-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class RequestListComponent implements OnInit {
   private maintenanceRequestService = inject(MaintenanceRequestService);
