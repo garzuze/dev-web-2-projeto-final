@@ -13,7 +13,7 @@ public record SignUpRequest(
         String cpf,
 
         @NotBlank(message = "O nome é obrigatório")
-        @Size(max = 120, message = "O nome deve ter no máximo 120 caracteres")
+        @Size(min = 3, max = 120, message = "O nome deve ter entre 3 e 120 caracteres")
         String name,
 
         @NotBlank(message = "O e-mail é obrigatório")

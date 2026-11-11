@@ -1,4 +1,10 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
 
 import { Category, CategoryService } from '../../../core/category.service';
 import { ConfirmDialogComponent } from '../../../components/confirm-dialog/confirm-dialog.component';
@@ -15,6 +21,7 @@ import { EmployeeHeaderComponent } from '../../../components/employee-header/emp
   ],
   selector: 'app-categories',
   templateUrl: './categories.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class CategoriesComponent implements OnInit {
   private readonly categoryService = inject(CategoryService);
@@ -44,7 +51,7 @@ export class CategoriesComponent implements OnInit {
       error: () => {
         this.loading.set(false);
         this.notifications.showNotification(
-          'Nao foi possivel carregar as categorias.',
+          'Não foi possível carregar as categorias.',
           NotificationType.error,
         );
       },
@@ -104,7 +111,7 @@ export class CategoriesComponent implements OnInit {
         this.isRemoving = false;
         this.removing = null;
         this.notifications.showNotification(
-          'Nao foi possivel remover a categoria.',
+          'Não foi possível remover a categoria.',
           NotificationType.error,
         );
       },
