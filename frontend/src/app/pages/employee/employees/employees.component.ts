@@ -1,4 +1,10 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
 
 import { EmployeeService } from '../../../core/employee.service';
 import { Employee } from '../../../models/employee.model';
@@ -21,6 +27,7 @@ import { problemMessage } from '../../../core/api';
   ],
   selector: 'app-employees',
   templateUrl: './employees.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class EmployeesComponent implements OnInit {
   private readonly employeeService = inject(EmployeeService);

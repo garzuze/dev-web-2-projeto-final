@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { jsPDF } from 'jspdf';
 import { autoTable } from 'jspdf-autotable';
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, PercentPipe } from '@angular/common';
 
 
 @Component({
@@ -14,7 +14,7 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
     ],
     selector: 'app-reports',
     templateUrl: './reports.component.html',
-    providers: [DatePipe, CurrencyPipe]
+    providers: [DatePipe, CurrencyPipe, PercentPipe]
 })
 export class ReportsComponent {
     private readonly reportService = inject(ReportService)
@@ -25,12 +25,18 @@ export class ReportsComponent {
 
     private readonly datePipe = inject(DatePipe);
     private readonly currencyPipe = inject(CurrencyPipe);
+    private readonly percentPipe = inject(PercentPipe);
 
     start: string = '';
     end: string = '';
 
 
     onGenerate() {
+        if (this.start && this.end && this.start > this.end) {
+            this.revenueReport.set(null);
+            this.errorMessage.set('A data inicial não pode ser posterior à data final.');
+            return;
+        }
         this.loading.set(true);
         this.errorMessage.set('');
 
@@ -108,14 +114,14 @@ export class ReportsComponent {
                 const rows = report.categories.map(c => [
                     c.name,
                     this.currencyPipe.transform(c.total, 'BRL') ?? '',
-                    report.total > 0 ? `${((c.total / report.total) * 100).toFixed(1)}%` : '0%',
+                    this.percentPipe.transform(report.total > 0 ? c.total / report.total : 0, '1.1-1') ?? '',
                 ]);
 
                 autoTable(doc, {
                     startY: 30,
                     head: [['Categoria', 'Receita', '%']],
                     body: rows,
-                    foot: [['Total', this.currencyPipe.transform(report.total, 'BRL') ?? '', '100%']],
+                    foot: [['Total', this.currencyPipe.transform(report.total, 'BRL') ?? '', this.percentPipe.transform(1, '1.1-1') ?? '']],
                 });
 
                 doc.save(`receitas-por-categoria-${new Date().toISOString().slice(0, 10)}.pdf`);

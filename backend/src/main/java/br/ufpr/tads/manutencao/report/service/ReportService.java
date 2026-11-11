@@ -4,6 +4,7 @@ import br.ufpr.tads.manutencao.report.dto.CategoryRevenue;
 import br.ufpr.tads.manutencao.report.dto.CategoryRevenueReport;
 import br.ufpr.tads.manutencao.report.dto.DailyRevenue;
 import br.ufpr.tads.manutencao.report.dto.RevenueReport;
+import br.ufpr.tads.manutencao.report.exception.InvalidPeriodException;
 import br.ufpr.tads.manutencao.request.repository.MaintenanceRequestRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,9 @@ public class ReportService {
 
   @Transactional(readOnly = true)
   public RevenueReport revenueByDay(LocalDate start, LocalDate end) {
+    if (start != null && end != null && start.isAfter(end)) {
+      throw new InvalidPeriodException("A data inicial não pode ser posterior à data final.");
+    }
 
     List<DailyRevenue> revenues = requestRepository.findDailyRevenue(start, end);
 
