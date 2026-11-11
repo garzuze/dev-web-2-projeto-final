@@ -18,6 +18,7 @@ import { EmployeeHeaderComponent } from '../../../components/employee-header/emp
 import { HttpErrorResponse } from '@angular/common/http';
 import { problemMessage } from '../../../core/api';
 import { RedirectModalComponent } from './redirect-modal/redirect-modal.component';
+import { ConfirmDialogComponent } from '../../../components/confirm-dialog/confirm-dialog.component';
 import { EmployeeService } from '../../../core/employee.service';
 import { AuthService } from '../../../core/auth.service';
 import { NotificationService } from '../../../services/notification.service';
@@ -31,6 +32,7 @@ import { NotificationType } from '../../../models/notification.model';
     RouterLink,
     EmployeeHeaderComponent,
     RedirectModalComponent,
+    ConfirmDialogComponent,
   ],
   selector: 'app-request-list',
   styleUrl: './request-list.component.scss',
@@ -55,6 +57,9 @@ export class RequestListComponent implements OnInit {
   isRedirecting = false;
   selectedRequestForRedirect: MaintenanceRequest | null = null;
   availableEmployees: Employee[] = [];
+
+  selectedRequestForFinish: MaintenanceRequest | null = null;
+  isFinishing = false;
 
   getStatusClass = getStatusClass;
   getStatusLabel = getStatusLabel;
@@ -164,6 +169,40 @@ export class RequestListComponent implements OnInit {
           this.isRedirecting = false;
           this.notificationService.showNotification(
             problemMessage(err, 'Erro ao redirecionar a solicitação.'),
+            NotificationType.error,
+          );
+        },
+      });
+  }
+
+  openFinish(request: MaintenanceRequest): void {
+    this.selectedRequestForFinish = request;
+  }
+
+  cancelFinish(): void {
+    this.selectedRequestForFinish = null;
+  }
+
+  confirmFinish(): void {
+    if (!this.selectedRequestForFinish || this.isFinishing) return;
+
+    this.isFinishing = true;
+    this.maintenanceRequestService
+      .finishRequest(this.selectedRequestForFinish.id)
+      .subscribe({
+        next: (updated) => {
+          this.isFinishing = false;
+          this.selectedRequestForFinish = null;
+          this.notificationService.showNotification(
+            `Solicitação #${updated.id} finalizada com sucesso.`,
+            NotificationType.success,
+          );
+          this.loadRequests();
+        },
+        error: (err: HttpErrorResponse) => {
+          this.isFinishing = false;
+          this.notificationService.showNotification(
+            problemMessage(err, 'Erro ao finalizar a solicitação.'),
             NotificationType.error,
           );
         },

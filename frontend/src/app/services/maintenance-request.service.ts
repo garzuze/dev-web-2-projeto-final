@@ -71,6 +71,15 @@ export class MaintenanceRequestService {
     );
   }
 
+  // Funcionário finaliza a solicitação PAGA (RF016). Quem finalizou e quando
+  // ficam no histórico, gravados pelo backend.
+  finishRequest(id: number): Observable<MaintenanceRequest> {
+    return this.http.put<MaintenanceRequest>(
+      `${this.employeeUrl}/${id}/finish`,
+      null,
+    );
+  }
+
   // Lista as solicitações do cliente logado, já ordenadas pelo backend
   getClientRequests(): Observable<MaintenanceRequest[]> {
     return this.http.get<MaintenanceRequest[]>(this.url);
