@@ -40,6 +40,13 @@ describe('MaintenanceFormComponent', () => {
     statusName: RequestStatus.Approved,
     clientId: 25,
     clientName: 'José Pereira',
+    clientDetails: {
+      id: 25,
+      name: 'José Pereira',
+      email: 'jose@cliente.com',
+      cpf: '22233344455',
+      phone: '41988882222',
+    },
     categoryName: 'Desktop',
     equipmentDescription: 'Desktop Positivo Master D580',
     defectDescription: 'Reinicia sozinho',

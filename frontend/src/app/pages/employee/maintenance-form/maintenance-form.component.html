@@ -8,13 +8,10 @@
       </h1>
     </div>
 
-    <!-- Dados do cliente -->
-    <div class="mb-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-      <p class="text-sm font-medium text-gray-500">Cliente:</p>
-      <p class="mt-1 text-base text-gray-900">{{ request.clientName }}</p>
-    </div>
-
-    <app-request-details-card [requestData]="request">
+    <app-request-details-card
+      [requestData]="request"
+      [showClientDetails]="true"
+    >
       <div class="rounded-b-xl bg-white p-6">
         <form
           [formGroup]="form"
