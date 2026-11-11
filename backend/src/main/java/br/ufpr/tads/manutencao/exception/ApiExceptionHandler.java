@@ -4,6 +4,7 @@ import br.ufpr.tads.manutencao.auth.exception.CpfAlreadyUsedException;
 import br.ufpr.tads.manutencao.auth.exception.EmailAlreadyUsedException;
 import br.ufpr.tads.manutencao.auth.exception.InvalidCredentialsException;
 import br.ufpr.tads.manutencao.category.exception.CategoryAlreadyDefinedException;
+import br.ufpr.tads.manutencao.report.exception.InvalidPeriodException;
 import br.ufpr.tads.manutencao.request.exception.InvalidRequestStatusException;
 import br.ufpr.tads.manutencao.request.exception.RequestNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
@@ -62,6 +63,11 @@ public class ApiExceptionHandler {
   @ExceptionHandler(InvalidRequestStatusException.class)
   public ProblemDetail handleInvalidStatus(InvalidRequestStatusException exception) {
     return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, exception.getMessage());
+  }
+
+  @ExceptionHandler(InvalidPeriodException.class)
+  public ProblemDetail handleInvalidPeriod(InvalidPeriodException exception) {
+    return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
   }
 
 }
