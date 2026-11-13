@@ -17,6 +17,7 @@ export interface LoginResponse {
   name: string;
   email: string;
   profile: UserProfile;
+  token: string;
 }
 
 export interface Address {
