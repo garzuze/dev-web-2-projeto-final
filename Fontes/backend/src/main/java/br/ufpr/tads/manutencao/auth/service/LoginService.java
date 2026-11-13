@@ -9,6 +9,7 @@ import br.ufpr.tads.manutencao.user.model.Customer;
 import br.ufpr.tads.manutencao.user.model.Employee;
 import br.ufpr.tads.manutencao.user.model.User;
 import br.ufpr.tads.manutencao.user.repository.UserRepository;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,10 +18,12 @@ public class LoginService implements AuthService {
 
   private final UserRepository userRepository;
   private final PasswordService passwordService;
+  private final TokenStore tokenStore;
 
-  public LoginService(UserRepository userRepository, PasswordService passwordService) {
+  public LoginService(UserRepository userRepository, PasswordService passwordService, TokenStore tokenStore) {
     this.userRepository = userRepository;
     this.passwordService = passwordService;
+    this.tokenStore = tokenStore;
   }
 
   @Transactional(readOnly = true)
@@ -36,7 +39,10 @@ public class LoginService implements AuthService {
       throw new InvalidCredentialsException();
     }
 
-    return new LoginResponse(user.getId(), user.getName(), user.getEmail(), profileOf(user));
+    LoginResponse response = new LoginResponse(user.getId(), user.getName(), user.getEmail(),
+            profileOf(user), UUID.randomUUID().toString());
+    tokenStore.save(response);
+    return response;
   }
 
   private UserProfile profileOf(User user) {
